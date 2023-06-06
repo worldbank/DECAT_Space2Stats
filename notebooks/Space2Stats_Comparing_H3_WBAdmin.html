@@ -1,0 +1,1056 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comparing H3 cells to administrative boundaries</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="canonical" href="https://github.com/worldbank/DECAT_Space2Stats/notebooks/Space2Stats_Comparing_H3_WBAdmin.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="S2S Kenya - Zonal statistics" href="Space2Stats_RunZonal.html" />
+    <link rel="prev" title="Space2Stats" href="../docs/Introduction.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../README.html">
+   Space2Stats
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Concept Note
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../docs/Introduction.html">
+   Space2Stats
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Example summaries
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Comparing H3 cells to administrative boundaries
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Space2Stats_RunZonal.html">
+   S2S Kenya - Zonal statistics
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Space2Stats_RunZonal_HTI.html">
+   S2S Haiti - Zonal statistics
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Additional Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../docs/annexA.html">
+   Annex A: Datasets to be Summarized
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/notebooks/Space2Stats_Comparing_H3_WBAdmin.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/worldbank/DECAT_Space2Stats"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/worldbank/DECAT_Space2Stats/issues/new?title=Issue%20on%20page%20%2Fnotebooks/Space2Stats_Comparing_H3_WBAdmin.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/worldbank/DECAT_Space2Stats/edit/main/notebooks/Space2Stats_Comparing_H3_WBAdmin.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/worldbank/DECAT_Space2Stats/main?urlpath=tree/notebooks/Space2Stats_Comparing_H3_WBAdmin.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Comparing H3 cells to administrative boundaries
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mapping">
+   Mapping
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Comparing H3 cells to administrative boundaries</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Comparing H3 cells to administrative boundaries
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mapping">
+   Mapping
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="comparing-h3-cells-to-administrative-boundaries">
+<h1>Comparing H3 cells to administrative boundaries<a class="headerlink" href="#comparing-h3-cells-to-administrative-boundaries" title="Permalink to this headline">¶</a></h1>
+<p>The fundamental process of the Space2Stats program is to calculate zonal statistics on foundational geospatial data at a standard, global hexagon grid, and then aggregate that grid to the administrative boundaries.</p>
+<p>This notebook focuses on exploring the intersection of the <a class="reference external" href="https://h3geo.org/">H3 grids</a> with the official, high-resolution World Bank administrative boundaries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">importlib</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">rasterio</span><span class="o">,</span> <span class="nn">geojson</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">h3</span> <span class="kn">import</span> <span class="n">h3</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">import</span> <span class="nn">GOSTRocks.rasterMisc</span> <span class="k">as</span> <span class="nn">rMisc</span>
+<span class="kn">from</span> <span class="nn">GOSTRocks.misc</span> <span class="kn">import</span> <span class="n">tPrint</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../src&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">h3_helper</span>
+<span class="kn">import</span> <span class="nn">country_zonal</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">admin_bounds</span> <span class="o">=</span> <span class="s2">&quot;/home/public/Data/GLOBAL/ADMIN/ADMIN2/HighRes_20230328/shp/WB_GAD_ADM2.shp&quot;</span>
+<span class="n">sel_iso3</span> <span class="o">=</span> <span class="s2">&quot;UGA&quot;</span>
+<span class="n">out_folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/home/wb411133/projects/Space2Stats/&quot;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_folder</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_folder</span><span class="p">)</span>
+    
+<span class="n">h3_level</span> <span class="o">=</span> <span class="mi">6</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inA</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">admin_bounds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># run all of Africa at once</span>
+<span class="n">afr_iso3</span> <span class="o">=</span> <span class="n">inA</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">inA</span><span class="p">[</span><span class="s1">&#39;WB_REGION&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AFR&#39;</span><span class="p">,</span> <span class="s2">&quot;ISO_A3&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">afr_iso3</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">afr_iso3</span><span class="p">))</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">iso3</span> <span class="ow">in</span> <span class="n">afr_iso3</span><span class="p">:</span>
+    <span class="n">selA</span> <span class="o">=</span> <span class="n">inA</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">inA</span><span class="p">[</span><span class="s1">&#39;ISO_A3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">iso3</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">cur_out</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_folder</span><span class="p">,</span> <span class="n">iso3</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cur_out</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">cur_out</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">iso3</span><span class="p">,</span> <span class="n">selA</span><span class="p">,</span> <span class="n">cur_out</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for each country in Africa, calcluate the number of level 6 h3 hexabins in each admin3 region</span>
+<span class="c1">#     intersection is performed on hexabin centroid</span>
+
+<span class="k">def</span> <span class="nf">run_mp</span><span class="p">(</span><span class="n">sel_iso3</span><span class="p">,</span> <span class="n">selA</span><span class="p">,</span> <span class="n">out_folder</span><span class="p">):</span>
+    <span class="n">h3_generator</span> <span class="o">=</span> <span class="n">country_zonal</span><span class="o">.</span><span class="n">country_h3_zonal</span><span class="p">(</span><span class="n">sel_iso3</span><span class="p">,</span> <span class="n">selA</span><span class="p">,</span> <span class="s2">&quot;GAUL_2&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">out_folder</span><span class="p">)</span>
+    <span class="n">h3_res</span> <span class="o">=</span> <span class="n">h3_generator</span><span class="o">.</span><span class="n">generate_h3_grid</span><span class="p">(</span><span class="n">cols_to_include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NAM_1&quot;</span><span class="p">,</span> <span class="s2">&quot;NAM_2&quot;</span><span class="p">])</span>
+    <span class="n">adm_res</span> <span class="o">=</span> <span class="n">h3_generator</span><span class="o">.</span><span class="n">summarize_adm_h3_join</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">h3_generator</span><span class="o">.</span><span class="n">write_output</span><span class="p">(</span><span class="n">write_h3</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">write_admin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">adm_res</span><span class="p">)</span>
+    
+    
+<span class="sd">&#39;&#39;&#39; This worked well to generate the data, but kept hanging when looking for summary results</span>
+<span class="sd">with multiprocessing.Pool(len(args)) as pool:</span>
+<span class="sd">    res = pool.starmap(run_mp, args)</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">all_res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">run_mp</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+    <span class="n">all_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">1. Number of h3 cells</span>
+<span class="sd">2. Number of adm bounds</span>
+<span class="sd">3. Number of adm bounds with 0 h3 centroids</span>
+<span class="sd">4. Number of adm bounds with 0 - 1 h3 centroids</span>
+<span class="sd">5. Number of adm bounds with 2 - 5 h3 centroids    </span>
+<span class="sd">&#39;&#39;&#39;</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>08:49:27	UGA: H3 [6178], ADM [170], ADM0 [6], ADM1 [11], ADM2 [2]
+08:49:33	BWA: H3 [14013], ADM [10], ADM0 [0], ADM1 [0], ADM2 [0]
+08:49:38	ERI: H3 [3319], ADM [58], ADM0 [2], ADM1 [2], ADM2 [1]
+08:49:40	CPV: H3 [113], ADM [22], ADM0 [4], ADM1 [4], ADM2 [5]
+08:49:42	MRT: H3 [28833], ADM [44], ADM0 [0], ADM1 [0], ADM2 [0]
+08:49:49	SOM: H3 [20018], ADM [74], ADM0 [0], ADM1 [0], ADM2 [0]
+08:49:55	NER: H3 [31228], ADM [67], ADM0 [0], ADM1 [0], ADM2 [0]
+08:50:04	CAF: H3 [17441], ADM [71], ADM0 [0], ADM1 [1], ADM2 [0]
+08:50:10	MUS: H3 [50], ADM [10], ADM0 [0], ADM1 [1], ADM2 [4]
+08:50:11	GAB: H3 [7503], ADM [48], ADM0 [0], ADM1 [0], ADM2 [0]
+08:50:15	SWZ: H3 [436], ADM [53], ADM0 [0], ADM1 [2], ADM2 [16]
+08:50:18	NGA: H3 [27292], ADM [775], ADM0 [7], ADM1 [21], ADM2 [95]
+08:50:27	CIV: H3 [12305], ADM [33], ADM0 [0], ADM1 [0], ADM2 [0]
+08:50:33	KEN: H3 [15251], ADM [290], ADM0 [0], ADM1 [0], ADM2 [0]
+08:50:38	LBR: H3 [3622], ADM [136], ADM0 [0], ADM1 [0], ADM2 [0]
+08:50:42	ZWE: H3 [9151], ADM [62], ADM0 [0], ADM1 [1], ADM2 [0]
+08:50:49	GIN: H3 [8109], ADM [38], ADM0 [2], ADM1 [1], ADM2 [0]
+08:50:53	GMB: H3 [332], ADM [37], ADM0 [0], ADM1 [2], ADM2 [14]
+08:50:54	GNQ: H3 [809], ADM [7], ADM0 [0], ADM1 [1], ADM2 [0]
+08:50:54	STP: H3 [29], ADM [2], ADM0 [0], ADM1 [0], ADM2 [1]
+08:50:58	MLI: H3 [38481], ADM [53], ADM0 [0], ADM1 [0], ADM2 [0]
+08:51:11	ZAF: H3 [31968], ADM [52], ADM0 [0], ADM1 [0], ADM2 [0]
+08:51:24	RWA: H3 [623], ADM [30], ADM0 [0], ADM1 [0], ADM2 [2]
+08:51:26	SYC: H3 [10], ADM [60], ADM0 [53], ADM1 [6], ADM2 [1]
+08:51:27	BEN: H3 [3749], ADM [77], ADM0 [0], ADM1 [1], ADM2 [9]
+08:51:31	AGO: H3 [30701], ADM [164], ADM0 [0], ADM1 [0], ADM2 [1]
+08:51:41	MWI: H3 [2764], ADM [29], ADM0 [0], ADM1 [0], ADM2 [0]
+08:51:45	LSO: H3 [792], ADM [247], ADM0 [23], ADM1 [45], ADM2 [154]
+08:51:49	ZMB: H3 [17418], ADM [105], ADM0 [0], ADM1 [0], ADM2 [0]
+08:51:55	BFA: H3 [9159], ADM [45], ADM0 [0], ADM1 [0], ADM2 [0]
+08:52:00	SEN: H3 [5742], ADM [45], ADM0 [0], ADM1 [0], ADM2 [0]
+08:52:04	NAM: H3 [20997], ADM [107], ADM0 [6], ADM1 [4], ADM2 [9]
+08:52:15	COD: H3 [58131], ADM [30], ADM0 [0], ADM1 [0], ADM2 [1]
+08:52:33	CMR: H3 [13801], ADM [58], ADM0 [0], ADM1 [0], ADM2 [0]
+08:52:40	MDG: H3 [15878], ADM [119], ADM0 [5], ADM1 [3], ADM2 [5]
+08:52:48	SLE: H3 [2498], ADM [16], ADM0 [0], ADM1 [0], ADM2 [1]
+08:52:52	GHA: H3 [8628], ADM [217], ADM0 [1], ADM1 [2], ADM2 [11]
+08:52:59	BDI: H3 [644], ADM [134], ADM0 [10], ADM1 [8], ADM2 [70]
+08:53:02	TGO: H3 [1930], ADM [30], ADM0 [0], ADM1 [0], ADM2 [0]
+08:53:06	ETH: H3 [33201], ADM [92], ADM0 [0], ADM1 [0], ADM2 [0]
+08:53:18	SDN: H3 [46894], ADM [87], ADM0 [0], ADM1 [0], ADM2 [0]
+08:53:33	TZA: H3 [22617], ADM [182], ADM0 [2], ADM1 [2], ADM2 [9]
+08:53:47	SSD: H3 [17256], ADM [78], ADM0 [0], ADM1 [0], ADM2 [0]
+08:53:57	TCD: H3 [32141], ADM [70], ADM0 [0], ADM1 [0], ADM2 [0]
+08:54:09	COG: H3 [9279], ADM [89], ADM0 [1], ADM1 [0], ADM2 [0]
+08:54:20	MOZ: H3 [18766], ADM [154], ADM0 [0], ADM1 [0], ADM2 [0]
+08:54:32	COM: H3 [46], ADM [3], ADM0 [0], ADM1 [0], ADM2 [0]
+08:54:33	GNB: H3 [1042], ADM [39], ADM0 [0], ADM1 [0], ADM2 [3]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_res</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_H3&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM0&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM1&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM2&#39;</span><span class="p">])</span>
+<span class="n">all_res</span><span class="p">[</span><span class="s1">&#39;iso3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">afr_iso3</span>
+<span class="n">all_res</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_folder</span><span class="p">,</span> <span class="s2">&quot;H3_admin_summary.csv&quot;</span><span class="p">))</span>
+<span class="n">all_res</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_H3</th>
+      <th>n_ADM</th>
+      <th>n_ADM0</th>
+      <th>n_ADM1</th>
+      <th>n_ADM2</th>
+      <th>iso3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>6178</td>
+      <td>170</td>
+      <td>6</td>
+      <td>11</td>
+      <td>2</td>
+      <td>UGA</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>14013</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>BWA</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3319</td>
+      <td>58</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>ERI</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>113</td>
+      <td>22</td>
+      <td>4</td>
+      <td>4</td>
+      <td>5</td>
+      <td>CPV</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>28833</td>
+      <td>44</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>MRT</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>20018</td>
+      <td>74</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SOM</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>31228</td>
+      <td>67</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NER</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>17441</td>
+      <td>71</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>CAF</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>50</td>
+      <td>10</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>MUS</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>7503</td>
+      <td>48</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>GAB</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>436</td>
+      <td>53</td>
+      <td>0</td>
+      <td>2</td>
+      <td>16</td>
+      <td>SWZ</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>27292</td>
+      <td>775</td>
+      <td>7</td>
+      <td>21</td>
+      <td>95</td>
+      <td>NGA</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>12305</td>
+      <td>33</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>CIV</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>15251</td>
+      <td>290</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>KEN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>3622</td>
+      <td>136</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>LBR</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>9151</td>
+      <td>62</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>ZWE</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>8109</td>
+      <td>38</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>GIN</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>332</td>
+      <td>37</td>
+      <td>0</td>
+      <td>2</td>
+      <td>14</td>
+      <td>GMB</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>809</td>
+      <td>7</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>GNQ</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>29</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>STP</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>38481</td>
+      <td>53</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>MLI</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>31968</td>
+      <td>52</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>ZAF</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>623</td>
+      <td>30</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>RWA</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>10</td>
+      <td>60</td>
+      <td>53</td>
+      <td>6</td>
+      <td>1</td>
+      <td>SYC</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>3749</td>
+      <td>77</td>
+      <td>0</td>
+      <td>1</td>
+      <td>9</td>
+      <td>BEN</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>30701</td>
+      <td>164</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>AGO</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2764</td>
+      <td>29</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>MWI</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>792</td>
+      <td>247</td>
+      <td>23</td>
+      <td>45</td>
+      <td>154</td>
+      <td>LSO</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>17418</td>
+      <td>105</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>ZMB</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>9159</td>
+      <td>45</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>BFA</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>5742</td>
+      <td>45</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SEN</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>20997</td>
+      <td>107</td>
+      <td>6</td>
+      <td>4</td>
+      <td>9</td>
+      <td>NAM</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>58131</td>
+      <td>30</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>COD</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>13801</td>
+      <td>58</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>CMR</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>15878</td>
+      <td>119</td>
+      <td>5</td>
+      <td>3</td>
+      <td>5</td>
+      <td>MDG</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>2498</td>
+      <td>16</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>SLE</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>8628</td>
+      <td>217</td>
+      <td>1</td>
+      <td>2</td>
+      <td>11</td>
+      <td>GHA</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>644</td>
+      <td>134</td>
+      <td>10</td>
+      <td>8</td>
+      <td>70</td>
+      <td>BDI</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>1930</td>
+      <td>30</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>TGO</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>33201</td>
+      <td>92</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>ETH</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>46894</td>
+      <td>87</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SDN</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>22617</td>
+      <td>182</td>
+      <td>2</td>
+      <td>2</td>
+      <td>9</td>
+      <td>TZA</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>17256</td>
+      <td>78</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SSD</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>32141</td>
+      <td>70</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>TCD</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>9279</td>
+      <td>89</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>COG</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>18766</td>
+      <td>154</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>MOZ</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>46</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>COM</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>1042</td>
+      <td>39</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>GNB</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="mapping">
+<h1>Mapping<a class="headerlink" href="#mapping" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate map for NGA</span>
+<span class="k">def</span> <span class="nf">map_country</span><span class="p">(</span><span class="n">sel_iso3</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">):</span>
+    <span class="n">selA</span> <span class="o">=</span> <span class="n">inA</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">inA</span><span class="p">[</span><span class="s1">&#39;ISO_A3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sel_iso3</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">cur_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_folder</span><span class="p">,</span> <span class="n">sel_iso3</span><span class="p">)</span>
+    <span class="n">h3_generator</span> <span class="o">=</span> <span class="n">country_zonal</span><span class="o">.</span><span class="n">country_h3_zonal</span><span class="p">(</span><span class="n">sel_iso3</span><span class="p">,</span> <span class="n">selA</span><span class="p">,</span> <span class="s2">&quot;GAUL_2&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">cur_folder</span><span class="p">)</span>
+    <span class="n">cMap</span> <span class="o">=</span> <span class="n">h3_helper</span><span class="o">.</span><span class="n">map_choropleth</span><span class="p">(</span><span class="n">h3_generator</span><span class="o">.</span><span class="n">adm_bounds_h3</span><span class="p">,</span> <span class="s2">&quot;h3_count&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="n">legend_loc</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sel_iso3</span><span class="si">}</span><span class="s2"> count of intersecting h3 cells&quot;</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">cMap</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">map_country</span><span class="p">(</span><span class="s2">&quot;NGA&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/Space2Stats_Comparing_H3_WBAdmin_9_0.png" src="../_images/Space2Stats_Comparing_H3_WBAdmin_9_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">map_country</span><span class="p">(</span><span class="s2">&quot;LSO&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/wb411133/.conda/envs/ee/lib/python3.9/site-packages/geopandas/plotting.py:678: UserWarning: The GeoDataFrame you are attempting to plot is empty. Nothing has been displayed.
+  warnings.warn(
+</pre></div>
+</div>
+<img alt="../_images/Space2Stats_Comparing_H3_WBAdmin_10_1.png" src="../_images/Space2Stats_Comparing_H3_WBAdmin_10_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">map_country</span><span class="p">(</span><span class="s2">&quot;BDI&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/Space2Stats_Comparing_H3_WBAdmin_11_0.png" src="../_images/Space2Stats_Comparing_H3_WBAdmin_11_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">map_country</span><span class="p">(</span><span class="s1">&#39;UGA&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/Space2Stats_Comparing_H3_WBAdmin_12_0.png" src="../_images/Space2Stats_Comparing_H3_WBAdmin_12_0.png" />
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "ee"
+        },
+        kernelOptions: {
+            kernelName: "ee",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'ee'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="../docs/Introduction.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Space2Stats</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="Space2Stats_RunZonal.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">S2S Kenya - Zonal statistics</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By World Bank<br/>
+    
+      Last updated on Jun 06, 2023.<br/>
+      <div class="extra_footer">
+        <div>
+    <b>All content (unless otherwise specified) is subject to the <a href="https://raw.githubusercontent.com/worldbank/template/main/LICENSE">World Bank Master Community License Agreement.</a></b>
+</div>
+
+      </div>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
