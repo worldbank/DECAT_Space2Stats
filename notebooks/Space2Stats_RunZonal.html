@@ -105,7 +105,7 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../docs/Introduction.html">
-   Space2Stats
+   Project Description
   </a>
  </li>
 </ul>
@@ -331,7 +331,7 @@ const thebe_selector_output = ".output, .cell_output"
 <h1>S2S Kenya - Zonal statistics<a class="headerlink" href="#s2s-kenya-zonal-statistics" title="Permalink to this headline">¶</a></h1>
 <p>Zonal statistics are run on the standardized <a class="reference external" href="https://h3geo.org/docs/core-library/restable/">H3 grid</a>; the process is run on a country-by-country basis.</p>
 <p>For the zonal statistics, each zonal statistic is run against the source dataset as a whole, then it is stratified by urban classification from the European Commission - <a class="reference external" href="https://ghsl.jrc.ec.europa.eu/ghs_smod2019.php">GHS-SMOD</a>. This creates an summary dataset that has the standard zonal stats columns (SUM, MEAN, MAX, MIN) as well as the same for urban areas (SUM_urban, MEAN_urban, MAX_urban, MIN_urban).</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">importlib</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">rasterio</span><span class="o">,</span> <span class="nn">geojson</span>
@@ -366,7 +366,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sel_iso3</span> <span class="o">=</span> <span class="s2">&quot;KEN&quot;</span>
 <span class="n">h3_level</span> <span class="o">=</span> <span class="mi">6</span>
@@ -403,7 +403,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="tex2jax_ignore mathjax_ignore section" id="generate-zonal-statistics-at-h3-based-on-urbanization-levels">
 <h1>Generate zonal statistics at h3 based on urbanization levels<a class="headerlink" href="#generate-zonal-statistics-at-h3-based-on-urbanization-levels" title="Permalink to this headline">¶</a></h1>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_per</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>

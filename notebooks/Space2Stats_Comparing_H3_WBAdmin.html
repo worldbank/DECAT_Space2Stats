@@ -55,7 +55,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="S2S Kenya - Zonal statistics" href="Space2Stats_RunZonal.html" />
-    <link rel="prev" title="Space2Stats" href="../docs/Introduction.html" />
+    <link rel="prev" title="Project Description" href="../docs/Introduction.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -105,7 +105,7 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../docs/Introduction.html">
-   Space2Stats
+   Project Description
   </a>
  </li>
 </ul>
@@ -297,7 +297,7 @@ const thebe_selector_output = ".output, .cell_output"
 <h1>Comparing H3 cells to administrative boundaries<a class="headerlink" href="#comparing-h3-cells-to-administrative-boundaries" title="Permalink to this headline">¶</a></h1>
 <p>The fundamental process of the Space2Stats program is to calculate zonal statistics on foundational geospatial data at a standard, global hexagon grid, and then aggregate that grid to the administrative boundaries.</p>
 <p>This notebook focuses on exploring the intersection of the <a class="reference external" href="https://h3geo.org/">H3 grids</a> with the official, high-resolution World Bank administrative boundaries.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">importlib</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">rasterio</span><span class="o">,</span> <span class="nn">geojson</span>
@@ -329,7 +329,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">admin_bounds</span> <span class="o">=</span> <span class="s2">&quot;/home/public/Data/GLOBAL/ADMIN/ADMIN2/HighRes_20230328/shp/WB_GAD_ADM2.shp&quot;</span>
 <span class="n">sel_iso3</span> <span class="o">=</span> <span class="s2">&quot;UGA&quot;</span>
@@ -342,7 +342,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inA</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">admin_bounds</span><span class="p">)</span>
 </pre></div>
@@ -451,478 +451,14 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_res</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_H3&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM0&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM1&#39;</span><span class="p">,</span> <span class="s1">&#39;n_ADM2&#39;</span><span class="p">])</span>
 <span class="n">all_res</span><span class="p">[</span><span class="s1">&#39;iso3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">afr_iso3</span>
 <span class="n">all_res</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_folder</span><span class="p">,</span> <span class="s2">&quot;H3_admin_summary.csv&quot;</span><span class="p">))</span>
-<span class="n">all_res</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>n_H3</th>
-      <th>n_ADM</th>
-      <th>n_ADM0</th>
-      <th>n_ADM1</th>
-      <th>n_ADM2</th>
-      <th>iso3</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>6178</td>
-      <td>170</td>
-      <td>6</td>
-      <td>11</td>
-      <td>2</td>
-      <td>UGA</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>14013</td>
-      <td>10</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>BWA</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3319</td>
-      <td>58</td>
-      <td>2</td>
-      <td>2</td>
-      <td>1</td>
-      <td>ERI</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>113</td>
-      <td>22</td>
-      <td>4</td>
-      <td>4</td>
-      <td>5</td>
-      <td>CPV</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>28833</td>
-      <td>44</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>MRT</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>20018</td>
-      <td>74</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>SOM</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>31228</td>
-      <td>67</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>NER</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>17441</td>
-      <td>71</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>CAF</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>50</td>
-      <td>10</td>
-      <td>0</td>
-      <td>1</td>
-      <td>4</td>
-      <td>MUS</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>7503</td>
-      <td>48</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>GAB</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>436</td>
-      <td>53</td>
-      <td>0</td>
-      <td>2</td>
-      <td>16</td>
-      <td>SWZ</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>27292</td>
-      <td>775</td>
-      <td>7</td>
-      <td>21</td>
-      <td>95</td>
-      <td>NGA</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>12305</td>
-      <td>33</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>CIV</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>15251</td>
-      <td>290</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>KEN</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>3622</td>
-      <td>136</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>LBR</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>9151</td>
-      <td>62</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>ZWE</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>8109</td>
-      <td>38</td>
-      <td>2</td>
-      <td>1</td>
-      <td>0</td>
-      <td>GIN</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>332</td>
-      <td>37</td>
-      <td>0</td>
-      <td>2</td>
-      <td>14</td>
-      <td>GMB</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>809</td>
-      <td>7</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>GNQ</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>29</td>
-      <td>2</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>STP</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>38481</td>
-      <td>53</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>MLI</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>31968</td>
-      <td>52</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>ZAF</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>623</td>
-      <td>30</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2</td>
-      <td>RWA</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>10</td>
-      <td>60</td>
-      <td>53</td>
-      <td>6</td>
-      <td>1</td>
-      <td>SYC</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>3749</td>
-      <td>77</td>
-      <td>0</td>
-      <td>1</td>
-      <td>9</td>
-      <td>BEN</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>30701</td>
-      <td>164</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>AGO</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>2764</td>
-      <td>29</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>MWI</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>792</td>
-      <td>247</td>
-      <td>23</td>
-      <td>45</td>
-      <td>154</td>
-      <td>LSO</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>17418</td>
-      <td>105</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>ZMB</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>9159</td>
-      <td>45</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>BFA</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>5742</td>
-      <td>45</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>SEN</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>20997</td>
-      <td>107</td>
-      <td>6</td>
-      <td>4</td>
-      <td>9</td>
-      <td>NAM</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>58131</td>
-      <td>30</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>COD</td>
-    </tr>
-    <tr>
-      <th>33</th>
-      <td>13801</td>
-      <td>58</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>CMR</td>
-    </tr>
-    <tr>
-      <th>34</th>
-      <td>15878</td>
-      <td>119</td>
-      <td>5</td>
-      <td>3</td>
-      <td>5</td>
-      <td>MDG</td>
-    </tr>
-    <tr>
-      <th>35</th>
-      <td>2498</td>
-      <td>16</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>SLE</td>
-    </tr>
-    <tr>
-      <th>36</th>
-      <td>8628</td>
-      <td>217</td>
-      <td>1</td>
-      <td>2</td>
-      <td>11</td>
-      <td>GHA</td>
-    </tr>
-    <tr>
-      <th>37</th>
-      <td>644</td>
-      <td>134</td>
-      <td>10</td>
-      <td>8</td>
-      <td>70</td>
-      <td>BDI</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td>1930</td>
-      <td>30</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>TGO</td>
-    </tr>
-    <tr>
-      <th>39</th>
-      <td>33201</td>
-      <td>92</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>ETH</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>46894</td>
-      <td>87</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>SDN</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>22617</td>
-      <td>182</td>
-      <td>2</td>
-      <td>2</td>
-      <td>9</td>
-      <td>TZA</td>
-    </tr>
-    <tr>
-      <th>42</th>
-      <td>17256</td>
-      <td>78</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>SSD</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>32141</td>
-      <td>70</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>TCD</td>
-    </tr>
-    <tr>
-      <th>44</th>
-      <td>9279</td>
-      <td>89</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>COG</td>
-    </tr>
-    <tr>
-      <th>45</th>
-      <td>18766</td>
-      <td>154</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>MOZ</td>
-    </tr>
-    <tr>
-      <th>46</th>
-      <td>46</td>
-      <td>3</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>COM</td>
-    </tr>
-    <tr>
-      <th>47</th>
-      <td>1042</td>
-      <td>39</td>
-      <td>0</td>
-      <td>0</td>
-      <td>3</td>
-      <td>GNB</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
 </div>
 <div class="tex2jax_ignore mathjax_ignore section" id="mapping">
@@ -1016,7 +552,7 @@ const thebe_selector_output = ".output, .cell_output"
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Space2Stats</p>
+            <p class="prev-next-title">Project Description</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="Space2Stats_RunZonal.html" title="next page">

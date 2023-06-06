@@ -105,7 +105,7 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../docs/Introduction.html">
-   Space2Stats
+   Project Description
   </a>
  </li>
 </ul>
@@ -341,7 +341,7 @@ const thebe_selector_output = ".output, .cell_output"
 <h1>S2S Haiti - Zonal statistics<a class="headerlink" href="#s2s-haiti-zonal-statistics" title="Permalink to this headline">¶</a></h1>
 <p>Zonal statistics are run on the standardized <a class="reference external" href="https://h3geo.org/docs/core-library/restable/">H3 grid</a>; the process is run on a country-by-country basis.</p>
 <p>For the zonal statistics, each zonal statistic is run against the source dataset as a whole, then it is stratified by urban classification from the European Commission - <a class="reference external" href="https://ghsl.jrc.ec.europa.eu/ghs_smod2019.php">GHS-SMOD</a>. This creates an summary dataset that has the standard zonal stats columns (SUM, MEAN, MAX, MIN) as well as the same for urban areas (SUM_urban, MEAN_urban, MAX_urban, MIN_urban).</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">importlib</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">rasterio</span><span class="o">,</span> <span class="nn">geojson</span>
@@ -370,7 +370,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sel_iso3</span> <span class="o">=</span> <span class="s2">&quot;HTI&quot;</span>
 <span class="n">h3_level</span> <span class="o">=</span> <span class="mi">6</span>
@@ -397,7 +397,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># As a demo, we will begin with nighttime lights layers</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># As a demo, we will process with nighttime lights layers</span>
 <span class="n">ntl_layers</span> <span class="o">=</span> <span class="n">ntl</span><span class="o">.</span><span class="n">aws_search_ntl</span><span class="p">()</span>
 <span class="n">ntl_file</span> <span class="o">=</span> <span class="n">ntl_layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -407,7 +407,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="tex2jax_ignore mathjax_ignore section" id="generate-zonal-statistics-at-h3-based-on-urbanization-levels">
 <h1>Generate zonal statistics at h3 based on urbanization levels<a class="headerlink" href="#generate-zonal-statistics-at-h3-based-on-urbanization-levels" title="Permalink to this headline">¶</a></h1>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_per</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
@@ -420,7 +420,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <div class="section" id="population">
 <h2>Population<a class="headerlink" href="#population" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">global_pop_layer</span> <span class="o">=</span> <span class="s2">&quot;/home/public/Data/GLOBAL/GHSL/Pop/GHS_POP_E2020_GLOBE_R2023A_54009_100_V1_0.tif&quot;</span>
 </pre></div>
@@ -841,15 +841,25 @@ const thebe_selector_output = ".output, .cell_output"
 <p>below we compare timing the administrative summaries with and without fractional intersections. While there is a difference between the two, the overall process is quite fast. As the is no computational limitation, we will rely on the fractional intersection as it is more accurate.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### These two cells are used to test the speed of joining with and without</span>
-<span class="c1"># %timeit cur_res = country_zonal.connect_polygons_h3_stats(selA, zonal_res, h3_level, &quot;ID&quot;, True)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### These two cells are used to test the speed of joining with and without fractional intersection</span>
+<span class="o">%</span><span class="k">timeit</span> cur_res = country_zonal.connect_polygons_h3_stats(selA, zonal_res, h3_level, &quot;ID&quot;, True)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.18 s ± 78 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %timeit cur_res = country_zonal.connect_polygons_h3_stats(selA, zonal_res, h3_level, &quot;ID&quot;, False)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> cur_res = country_zonal.connect_polygons_h3_stats(selA, zonal_res, h3_level, &quot;ID&quot;, False)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6.76 s ± 17.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
