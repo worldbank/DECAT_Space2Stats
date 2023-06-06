@@ -2,13 +2,16 @@ format: jb-book
 root: README
 
 parts:
+  - caption: Concept Note
+    numbered: False
+    chapters:
+      - file: docs/Introduction.md    
+  - caption: Example summaries
+    numbered: False
+    chapters:
+        - file: notebooks/Space2Stats_Comparing_H3_WBAdmin.ipynb
+        - file: notebooks/Space2Stats_RunZonal.ipynb
+        - file: notebooks/Space2Stats_RunZonal_HTI.ipynb
   - caption: Additional Resources
     chapters:
-      - url: https://datapartnership.org
-        title: Development Data Partnership
-      - url: https://wbdatalab.org
-        title: World Bank Data Lab
-      - url: https://www.worldbank.org/en/about/unit/unit-dec
-        title: World Bank DEC
-      - url: https://www.worldbank.org/en/research/dime
-        title: World Bank DIME
+      - file: docs/annexA.md

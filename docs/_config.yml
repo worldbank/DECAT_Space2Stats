@@ -11,7 +11,7 @@ repository:
 #######################################################################################
 # HTML-specific settings
 html:
-  home_page_in_navbar: false
+  home_page_in_navbar: true
   extra_navbar: ""
   use_edit_page_button: true
   use_repository_button: true
@@ -24,7 +24,10 @@ html:
 #######################################################################################
 # Execution settings
 execute:
-  execute_notebooks: "off"
+  execute_notebooks: off
+  allow_errors: true
+  exclude_patterns:
+    - notebooks/*.ipynb
 
 #######################################################################################
 # Sphinx settings
