@@ -12,6 +12,10 @@ parts:
         - file: notebooks/Space2Stats_Comparing_H3_WBAdmin.ipynb
         - file: notebooks/Space2Stats_RunZonal.ipynb
         - file: notebooks/Space2Stats_RunZonal_HTI.ipynb
+  - caption: Food Security
+    numbered: False
+    chapters:
+        - file: notebooks/h3-food-security.ipynb
   - caption: Additional Resources
     chapters:
       - file: docs/annexA.md
