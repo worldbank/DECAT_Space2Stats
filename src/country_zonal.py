@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import pandas as pd
 import geopandas as gpd
+import numpy as np
 
 from rasterio.crs import CRS
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -20,8 +21,9 @@ import GOSTRocks.rasterMisc as rMisc
 import GOSTRocks.ntlMisc as ntl
 from GOSTRocks.misc import tPrint
 
-def calculate_value(in_shp, zonal_res, h3_level, feat_id, fractional_res=True):
-    ''' tabulate hexabin stats for all bins that intersect shape x
+def calculate_value(in_shp, zonal_res, h3_level, feat_id, fractional_res=True, 
+                    zonal_res_id='shape_id', default_sum='SUM'):
+    ''' tabulate hexabin stats for all bins that intersect shape in_shp
 
     :param in_shp: shape of boundary to intersect with hexabins
     :type in_shp: shapely polygon
@@ -30,7 +32,13 @@ def calculate_value(in_shp, zonal_res, h3_level, feat_id, fractional_res=True):
     :param h3_level: level of h3 grid to search for
     :type h3_level: int
     :param fractional_res: should admin intersection with h3 account for fractional overlaps, default is True
-    :type fractional_res: Boolean
+    :type fractional_res: Boolean, optional
+    :param zonal_res_id: id column in zonal_res thta contains hex ids, defaults to "shape_id"
+    :type zonal_res_id: string, optional
+    :param default_sum: default function for aggregating intersecting hexs if arg is not in coulmn name;
+                        function sill pick up [SUM,MIN,MAX,MEAN], defaults to sum
+    :type default_sum: string, optional
+
 
     :return: dictionary of results summarized based on type (SUM, MIN, MEAN, MAX)
     :rtype: Dictionary
@@ -44,15 +52,22 @@ def calculate_value(in_shp, zonal_res, h3_level, feat_id, fractional_res=True):
             return(admin_shp.intersection(hex_shp).area/hex_shp.area)
     
     res = {'id':feat_id}
-    if in_shp.geom_type == "Polygon":
-        sel_h3 = h3.polyfill(in_shp.__geo_interface__, h3_level, geo_json_conformant=True)
-    elif in_shp.geom_type == "MultiPolygon":
-        for cPoly in in_shp:
-            temp_h3 = h3.polyfill(cPoly.__geo_interface__, h3_level, geo_json_conformant=True)
-            try:
-                sel_h3 = sel_h3.union(temp_h3)
-            except:
-                sel_h3 = temp_h3
+    process_h3 = True
+    # Generate h3 cells that intersect current shape; if none are generated first time through, buffer
+    #  the geometry by a little bit, and then search again
+    while process_h3:        
+        if in_shp.geom_type == "Polygon":
+            sel_h3 = h3.polyfill(in_shp.__geo_interface__, h3_level, geo_json_conformant=True)
+        elif in_shp.geom_type == "MultiPolygon":
+            for cPoly in in_shp:
+                temp_h3 = h3.polyfill(cPoly.__geo_interface__, h3_level, geo_json_conformant=True)
+                try:
+                    sel_h3 = sel_h3.union(temp_h3)
+                except:
+                    sel_h3 = temp_h3
+        process_h3 = len(sel_h3) == 0
+        in_shp = in_shp.buffer(0.1)
+
     if len(sel_h3) > 0:
         hex_poly = lambda hex_id: Polygon(h3.h3_to_geo_boundary(hex_id, geo_json=True))
         all_polys = gpd.GeoSeries(list(map(hex_poly, sel_h3)), index=sel_h3, crs="EPSG:4326")
@@ -61,31 +76,37 @@ def calculate_value(in_shp, zonal_res, h3_level, feat_id, fractional_res=True):
         if fractional_res:
             all_polys['inter_area'] = all_polys['geometry'].apply(lambda x: get_intersection(in_shp, x))
         else:
-            all_polys['inter_area'] = 1
-        all_polys = all_polys.merge(zonal_res, on='shape_id')
-        for col in all_polys.columns:        
-            if "SUM" in col:
-                # For sum columns, multiply column by inter_area and sum results
-                cur_val = sum(all_polys[col] * all_polys['inter_area'])
-            elif "MIN" in col:
-                cur_val = all_polys[col].min()
-            elif "MAX" in col:
-                cur_val = all_polys[col].max()
-            elif "MEAN" in col:
-                cur_val = sum(all_polys[col] * all_polys['inter_area'])/sum(all_polys['inter_area'])
-            try:
-                res[col] = cur_val
-            except:
-                pass
-            try:
-                del(cur_val)
-            except:
-                pass
+            all_polys['inter_area'] = 1        
+        all_polys = pd.merge(all_polys, zonal_res, left_on='shape_id', right_on=zonal_res_id)
+        for col in all_polys.columns: 
+            if not col in ['inter_area','geometry','shape_id']: 
+                calc_type = default_sum
+                if "SUM" in col: calc_type = "SUM"
+                if "MIN" in col: calc_type = "MIN"
+                if "MAX" in col: calc_type = "MAX"
+                if "MEAN" in col: calc_type = "MEAN"            
+                try:
+                    if calc_type == "SUM": # For sum columns, multiply column by inter_area and sum results
+                        cur_val = sum(all_polys[col] * all_polys['inter_area'])
+                    elif calc_type == "MIN":
+                        cur_val = all_polys[col].min()
+                    elif calc_type == "MAX":
+                        cur_val = all_polys[col].max()
+                    elif calc_type == "MEAN":
+                        cur_val = sum(all_polys[col] * all_polys['inter_area'])/sum(all_polys['inter_area'])
+                    res[col] = cur_val
+                except:
+                    pass
+                try:
+                    del(cur_val)
+                except:
+                    pass
     else:
         pass
     return(res)
 
-def connect_polygons_h3_stats(inA, stats_df, h3_level, id_col, fractional_res=False):
+def connect_polygons_h3_stats(inA, stats_df, h3_level, id_col, fractional_res=True,
+                              zonal_res_id='shape_id', default_sum='SUM'):
     ''' merge stats from hexabin stats dataframe (stats_df) with the inA geodataframe
     
     :param inA: input boundary dataset
@@ -96,6 +117,12 @@ def connect_polygons_h3_stats(inA, stats_df, h3_level, id_col, fractional_res=Fa
     :type h3_level: int
     :param id_col: column in inA that uniquely identifies rows
     :type id_col: string
+    :param zonal_res_id: id column in zonal_res thta contains hex ids, defaults to "shape_id"
+    :type zonal_res_id: string, optional
+    :param default_sum: default function for aggregating intersecting hexs if arg is not in coulmn name;
+                        function sill pick up [SUM,MIN,MAX,MEAN], defaults to sum
+    :type default_sum: string, optional
+
     
     :return: pandas dataframe with attached statistics and matching id from id_col
     :rtype: geopandas.GeoDataFrame
@@ -103,7 +130,7 @@ def connect_polygons_h3_stats(inA, stats_df, h3_level, id_col, fractional_res=Fa
     all_res = []
     for idx, row in inA.iterrows():               
         try:
-            all_res.append(calculate_value(row['geometry'], stats_df, h3_level, row[id_col], fractional_res))
+            all_res.append(calculate_value(row['geometry'], stats_df, h3_level, row[id_col], fractional_res, zonal_res_id, default_sum))
         except:
             print(f'Error processing {idx}')        
         
@@ -207,7 +234,8 @@ class country_h3_zonal():
         if write_admin:
             self.adm_bounds_h3.to_file(self.out_admin, driver="GeoJSON")
 
-    def zonal_raster_urban(self, in_raster, urban_raster, resampling_type="nearest", minVal='', rastType='N'):
+    def zonal_raster_urban(self, in_raster, urban_raster, resampling_type="nearest", minVal='', maxVal='', rastType='N',
+                           urban_mask_val=[21,22,23,30], unqVals=[], all_touched=False, weighted=False):
         ''' extract raster data from in_raster, urban_raster for selected country, standardize urban_raster to in_raster
 
             :param in_raster: string path to raster file for calculations
@@ -218,34 +246,54 @@ class country_h3_zonal():
             :type minVal: numeric
             :param rastType: define the input data in the in_raster. Options are N (for numeric, default) or C (categorical)
             :type rastType: string
+            :param urban_mask_val: list of values in urban_raster to be used for mask
+            :type urban_mask_val: list of int
+            :param unqVals:
+            :type unqVals:
             
             :return: dictionary of rasterio objects for in_raster and urban_raster
             :rtype: dictionary of 'in_raster': rasterio.DatasetReader, 'urban_raster': rasterio.DatasetReader                    
         '''        
         h3_grid = self.generate_h3_grid()
         
-        inR = rasterio.open(in_raster)
-        inU = rasterio.open(urban_raster)
+        if isinstance(in_raster, str):
+            inR = rasterio.open(in_raster, 'r')
+        else:
+            inR = in_raster
+        
+        if isinstance(urban_raster, str):
+            inU = rasterio.open(urban_raster, 'r')
+        else:
+            inU = urban_raster
+
         # Clip inR to extent of country
         inN, profile1 = rMisc.clipRaster(inR, self.adm_bounds, crop=False)
-        #return((inN, profile1))
         with rMisc.create_rasterio_inmemory(profile1, inN) as tempR:
-            # Run zonal statistics on in_raster
-            res = rMisc.zonalStats(h3_grid, tempR, rastType=rastType, reProj=True)
-            res = pd.DataFrame(res, columns=["SUM", "MIN", "MAX", "MEAN"])            
-            res['shape_id'] = h3_grid['shape_id'].astype(object)            
-            
-            # Standardize in_urban raster to clippedR
-            outU, profile2 = rMisc.standardizeInputRasters(inU, tempR, resampling_type=resampling_type)
-            # Isolate values in in_raster that are urban
-            inN_urban = inN * (outU > 20)            
-            with rMisc.create_rasterio_inmemory(profile2, inN_urban) as urbanR:
-                resU = rMisc.zonalStats(h3_grid, urbanR, rastType=rastType, reProj=True)
-                resU = pd.DataFrame(resU, columns=["SUM_urban", "MIN_urban", "MAX_urban", "MEAN_urban"])
-                resU = resU.astype(float)
-                resU['shape_id'] = h3_grid['shape_id']
-                
-        res_final = res.merge(resU, on='shape_id')
+            if rastType == 'N':
+                # Run zonal statistics on in_raster
+                res = rMisc.zonalStats(h3_grid, tempR, rastType=rastType, reProj=True, minVal=minVal, maxVal=maxVal,
+                                       allTouched=all_touched, weighted=weighted)
+                res = pd.DataFrame(res, columns=["SUM", "MIN", "MAX", "MEAN"])            
+                res['shape_id'] = h3_grid['shape_id'].astype(object)            
+                # Standardize in_urban raster to clippedR
+                outU, profile2 = rMisc.standardizeInputRasters(inU, tempR, resampling_type=resampling_type)
+                # Isolate values in in_raster that are urban
+                inN_urban = np.isin(outU, urban_mask_val)  
+                print(inN_urban.shape)          
+                with rMisc.create_rasterio_inmemory(profile2, inN_urban) as urbanR:
+                    resU = rMisc.zonalStats(h3_grid, urbanR, rastType=rastType, reProj=True, minVal=minVal, maxVal=maxVal,
+                                            allTouched=all_touched, weighted=weighted)
+                    resU = pd.DataFrame(resU, columns=["SUM_urban", "MIN_urban", "MAX_urban", "MEAN_urban"])
+                    resU = resU.astype(float)
+                    resU['shape_id'] = h3_grid['shape_id']
+                res_final = res.merge(resU, on='shape_id')        
+            elif rastType == 'C':
+                # Run zonal statistics on in_raster
+                res_final = rMisc.zonalStats(h3_grid, tempR, rastType=rastType, reProj=True, unqVals=unqVals,
+                                             allTouched=all_touched, weighted=weighted)
+                res_final = pd.DataFrame(res_final, columns=[f'c_x' for x in unqVals])            
+                res_final['shape_id'] = h3_grid['shape_id'].astype(object)   
+
         return(res_final)
             
                 

@@ -33,7 +33,7 @@ def generate_h3_gdf(in_gdf, h3_level=7):
     try:
         final_hexs = list(h3.polyfill(in_gdf.unary_union.__geo_interface__, h3_level, geo_json_conformant=True))
     except:
-        for cPoly in tqdm(in_gdf.unary_union):
+        for cPoly in tqdm(in_gdf.unary_union, desc=f"Generating h3 grid level {h3_level}"):
             all_hexs = list(h3.polyfill(cPoly.__geo_interface__, h3_level, geo_json_conformant=True))
             try:        
                 final_hexs = final_hexs + all_hexs
