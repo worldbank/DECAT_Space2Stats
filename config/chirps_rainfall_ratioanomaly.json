@@ -1,0 +1,150 @@
+{
+  "rainfall_ratioanomaly": {
+    "source": "Derived from CHIRPS data",
+    "source_link": "https://www.chc.ucsb.edu/data/chirps",  
+    "description": "Ratio Anomaly movingby Dekad",
+    "coverage": {
+      "description": "Global",
+      "bounding_box": {
+        "min_longitude": -180,
+        "min_latitude": -50,
+        "max_longitude": 180,
+        "max_latitude": 50
+      }
+    },
+    "period": {
+      "start_year": 1981,
+      "end_year": 2022
+    },
+    "coordinate_system": "EPSG:4326",
+    "spatial_resolution": "0.05deg",
+    "temporal_resolution": "dekad",
+    "format": "GeoTIFF",
+    "units": "percent",
+    "missing_value": "NaN",
+    "cdm_data_type": "GRID",
+    "s3_bucket_base": "s3://wbgdecinternal-ntl/climate/products/rainfall-ratioanomaly-chirps",
+    "notes": "This datasets developed by GOST/DECAT/DEC Data Group of The World Bank",
+    "references": "https://doi.org/10.1038/sdata.2015.66",
+    "timescales": {
+      "dekad": {
+        "description": "Dekad rainfall ratio anomaly",
+        "s3_path": "dekad",
+        "naming_convention": "wld_cli_chirps_ratioanom_dekad_yyyymmdd.tif"
+      },
+      "1_month": {
+        "description": "1-month rainfall ratio anomaly",
+        "s3_path": "1month-movingby-dekad",
+        "naming_convention": "wld_cli_chirps_ratioanom_1mo_yyyymmdd.tif"
+      },
+      "3_month": {
+        "description": "3-month rainfall ratio anomaly",
+        "s3_path": "3month-movingby-dekad",
+        "naming_convention": "wld_cli_chirps_ratioanom_3mo_yyyymmdd.tif"
+      },
+      "6_month": {
+        "description": "6-month rainfall ratio anomaly",
+        "s3_path": "6month-movingby-dekad",
+        "naming_convention": "wld_cli_chirps_ratioanom_6mo_yyyymmdd.tif"
+      },
+      "9_month": {
+        "description": "9-month rainfall ratio anomaly",
+        "s3_path": "9month-movingby-dekad",
+        "naming_convention": "wld_cli_chirps_ratioanom_9mo_yyyymmdd.tif"
+      },
+      "12_month": {
+        "description": "12-month rainfall ratio anomaly",
+        "s3_path": "12month-movingby-dekad",
+        "naming_convention": "wld_cli_chirps_ratioanom_12mo_yyyymmdd.tif"
+      },
+      "24_month": {
+        "description": "24-month rainfall ratio anomaly",
+        "s3_path": "24month-movingby-dekad",
+        "naming_convention": "wld_cli_chirps_ratioanom_24mo_yyyymmdd.tif"
+      }
+    },
+    "symbology": [
+      {
+        "class": "20% and below",
+        "threshold": {
+          "min": 0,
+          "max": 20
+        },
+        "hex": "#d73027",
+        "rgb": "rgb(215,48,39)"
+      },
+      {
+        "class": "20 to 50%",
+        "threshold": {
+          "min": 20,
+          "max": 50
+        },
+        "hex": "#f46d43",
+        "rgb": "rgb(244,109,67)"
+      },
+      {
+        "class": "50 to 70%",
+        "threshold": {
+          "min": 50,
+          "max": 70
+        },
+        "hex": "#fdae61",
+        "rgb": "rgb(253,174,97)"
+      },
+      {
+        "class": "70 to 90%",
+        "threshold": {
+          "min": 70,
+          "max": 90
+        },
+        "hex": "#fee090",
+        "rgb": "rgb(254,224,144)"
+      },
+      {
+        "class": "90 to 110%",
+        "threshold": {
+          "min": 90,
+          "max": 110
+        },
+        "hex": "#ffffbf",
+        "rgb": "rgb(255,255,191)"
+      },
+      {
+        "class": "110 to 130%",
+        "threshold": {
+          "min": 110,
+          "max": 130
+        },
+        "hex": "#e0f3f8",
+        "rgb": "rgb(224,243,248)"
+      },
+      {
+        "class": "130 to 150%",
+        "threshold": {
+          "min": 130,
+          "max": 150
+        },
+        "hex": "#abd9e9",
+        "rgb": "rgb(171,217,233)"
+      },
+      {
+        "class": "150 to 180%",
+        "threshold": {
+          "min": 150,
+          "max": 180
+        },
+        "hex": "#74add1",
+        "rgb": "rgb(116,173,209)"
+      },
+      {
+        "class": "180% and above",
+        "threshold": {
+          "min": 180,
+          "max": 400
+        },
+        "hex": "#4575b4",
+        "rgb": "rgb(69,117,180)"
+      }
+    ]
+  }
+}
