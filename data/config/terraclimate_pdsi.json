@@ -1,0 +1,41 @@
+{
+  "pdsi": {
+    "source": "TerraClimate",
+    "source_link": "https://www.climatologylab.org/terraclimate.html",  
+    "description": "Palmer Drought Severity Index",
+    "coverage": {
+      "description": "Global",
+      "bounding_box": {
+        "min_longitude": -180,
+        "min_latitude": -90,
+        "max_longitude": 180,
+        "max_latitude": 90
+      }
+    },
+    "period": {
+      "start_year": 1958,
+      "end_year": 2022
+    },
+    "coordinate_system": "EPSG:4326",
+    "spatial_resolution": "4km",
+    "temporal_resolution": "monthly",
+    "file_structure": {
+      "frequency": "annual",
+      "content": "Each file contains monthly data for one year",
+      "naming_convention": "TerraClimate_PDSI_yyyy.nc"
+    },
+    "format": "NetCDF",
+    "NetCDF": {
+      "standard_name": "palmer_drought_severity_index",
+      "packed": "yes",
+      "scale_factor": 0.01,
+      "offset": -45.0
+    },
+    "units": "unitless",
+    "missing_value": -32768,
+    "cdm_data_type": "GRID",
+    "s3_bucket_base": "s3://wbgdecinternal-ntl/climate/data/terraclimate/pdsi",
+    "notes": "This datasets downloaded from TerraClimate website",
+    "references": "https://doi.org/10.1038/sdata.2017.191"
+  }
+}

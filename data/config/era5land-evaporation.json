@@ -1,0 +1,40 @@
+{
+  "evaporation": {
+    "source": "ERA5-Land",
+    "source_link": "https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land-monthly-means?tab=overview",  
+    "description": "Total evaporation",
+    "coverage": {
+      "description": "Global",
+      "bounding_box": {
+        "min_longitude": -180,
+        "min_latitude": -90,
+        "max_longitude": 180,
+        "max_latitude": 90
+      }
+    },
+    "period": {
+      "start_year": 1950,
+      "end_year": 2022
+    },
+    "coordinate_system": "EPSG:4326",
+    "spatial_resolution": "0.1deg",
+    "temporal_resolution": "monthly",
+    "file_structure": {
+      "content": "Single NetCDF file contains monthly data for the whole period",
+      "naming_convention": "wld_cli_era5land_e_monthly_1950_2022.nc"
+    },
+    "format": "NetCDF",
+    "NetCDF": {
+      "standard_name": "lwe_thickness_of_water_evaporation_amount",
+      "packed": "yes",
+      "scale_factor": 2.234991845464582E-7,
+      "offset": -0.0056415558701483895
+    },
+    "units": "m of water equivalent",
+    "missing_value": -32767,
+    "cdm_data_type": "GRID",
+    "s3_bucket_base": "s3://wbgdecinternal-ntl/climate/data/era5land/evaporation/monthly",
+    "notes": "This datasets downloaded from Copernicus Climate Data Store website",
+    "references": "https://doi.org/10.24381/cds.68d2bb30"
+  }
+}

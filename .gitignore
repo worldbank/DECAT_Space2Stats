@@ -1,3 +1,6 @@
+# repo-specific to ignore
+data/config/LOCAL_FILES/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

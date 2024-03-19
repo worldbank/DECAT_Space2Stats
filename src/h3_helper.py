@@ -47,7 +47,42 @@ def generate_h3_gdf(in_gdf, h3_level=7):
     all_polys = gpd.GeoDataFrame(all_polys, crs=4326, columns=['geometry'])
     all_polys['shape_id'] = list(all_polys.index)
     return(all_polys)
-    
+
+def generate_lvl0_lists(h3_lvl, return_gdf=False, buffer0=False):
+    """ generate a dictionary with keys as lvl0 codes with all children at h3_lvl level as values
+
+    Parameters
+    ----------
+    h3_lvl : int
+        h3 level to generate children of h0 parents
+
+    Returns
+    -------
+    dict
+        dictionary with keys as lvl0 codes with all children at h3_lvl level as values
+    """
+    # Get list of all h3 lvl 0 cells
+    h3_lvl0 = list(h3.get_res0_indexes())
+
+    # Generate list of all children of h3 lvl 0 cells
+    h3_lvl0_children = {}
+    for h3_0 in h3_lvl0:
+        h3_children = list(h3.h3_to_children(h3_0, h3_lvl))
+        if return_gdf:
+            hex_poly = lambda hex_id: Polygon(h3.h3_to_geo_boundary(hex_id, geo_json=True))
+            all_polys = gpd.GeoSeries(list(map(hex_poly, h3_children)), index=h3_children, crs=4326)
+            all_polys = gpd.GeoDataFrame(all_polys, crs=4326, columns=['geometry'])
+            if buffer0:
+                all_polys['geometry'] = all_polys['geometry'].apply(lambda x: x.buffer(0))
+            all_polys['shape_id'] = list(all_polys.index)
+            
+            h3_lvl0_children[h3_0] = all_polys
+        else:
+            h3_lvl0_children[h3_0] = h3_children
+    return h3_lvl0_children
+
+
+
 def map_choropleth(sub, map_column, thresh=[], colour_ramp = 'Reds', invert=False, map_epsg=3857, legend_loc='upper right'):
         ''' generate a static map of variables in GeoDataFrame sub
             

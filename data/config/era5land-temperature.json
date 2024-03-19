@@ -1,0 +1,73 @@
+{
+  "air_temperature": {
+    "source": "ERA5-Land",
+    "source_link": "https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land-monthly-means?tab=overview",  
+    "description": "Temperature of air at 2m above the surface of land, sea or in-land waters",
+    "coverage": {
+      "description": "Global",
+      "bounding_box": {
+        "min_longitude": -180,
+        "min_latitude": -90,
+        "max_longitude": 180,
+        "max_latitude": 90
+      }
+    },
+    "period": {
+      "start_year": 1950,
+      "end_year": 2022
+    },
+    "coordinate_system": "EPSG:4326",
+    "spatial_resolution": "0.1deg",
+    "temporal_resolution": ["daily", "monthly"],
+    "file_structure": {
+      "content": {
+        "daily": "Each NetCDF file contains daily data for one year",
+        "monthly": "Single NetCDF file contains monthly data for the whole period"
+      },
+      "naming_convention": {
+        "daily": {
+          "tasmax": "wld_cli_era5land_daily_tasmax_yyyy.nc",
+          "tasmin": "wld_cli_era5land_daily_tasmin_yyyy.nc"
+        },  
+        "monthly": "wld_cli_era5land_t2m_monthly_1950_2022.nc"
+      }
+    },
+    "format": "NetCDF",
+    "NetCDF": {
+      "daily": {
+        "tasmax": {
+          "notes": "This datasets developed by GOST/DECAT/DEC Data Group of The World Bank based on ERA5-Land hourly data",
+          "standard_name": "maximum_air_temperature",
+          "packed": "no",
+          "scale_factor": 0,
+          "offset": 0,
+          "units": "degree_Celsius",
+          "missing_value": -9999,
+          "s3_path": "daily/tasmax"
+        },
+        "tasmin": {
+          "notes": "This datasets developed by GOST/DECAT/DEC Data Group of The World Bank based on ERA5-Land hourly data",
+          "standard_name": "minimum_air_temperature",
+          "packed": "no",
+          "scale_factor": 0,
+          "offset": 0,
+          "units": "degree_Celsius",
+          "missing_value": -9999,
+          "s3_path": "daily/tasmin"
+        },
+      "monthly": {
+        "notes": "This datasets downloaded from Copernicus Climate Data Store website",
+        "standard_name": "2_meter_temperature",
+        "packed": "yes",
+        "scale_factor": 0.001770831216029758,
+        "offset": 257.2174831146654,
+        "units": "K",
+        "missing_value": -32767,
+        "s3_path": "monthly"
+      }
+    },
+    "cdm_data_type": "GRID",
+    "s3_bucket_base": "s3://wbgdecinternal-ntl/climate/data/era5land/temperature",
+    "references": "https://doi.org/10.24381/cds.68d2bb30"
+  }
+}

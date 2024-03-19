@@ -1,0 +1,42 @@
+{
+  "hotdays": {
+    "source": "Derived from ERA5-Land data",
+    "source_link": "https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land?tab=overview",  
+    "description": "Day with maximum temperature exceeding 35 degC",
+    "coverage": {
+      "description": "Global",
+      "bounding_box": {
+        "min_longitude": -180,
+        "min_latitude": -90,
+        "max_longitude": 180,
+        "max_latitude": 90
+      }
+    },
+    "period": {
+      "start_year": 1981,
+      "end_year": 2022
+    },
+    "coordinate_system": "EPSG:4326",
+    "spatial_resolution": "0.1deg",
+    "temporal_resolution": ["monthly", "annual"],
+    "format": "GeoTIFF",
+    "units": "day",
+    "missing_value": -9999,
+    "cdm_data_type": "GRID",
+    "s3_bucket_base": "s3://wbgdecinternal-ntl/climate/products/hotdays-era5land",
+    "notes": "This datasets developed by GOST/DECAT/DEC Data Group of The World Bank",
+    "references": "https://doi.org/10.24381/cds.e2161bac",
+    "timescales": {
+      "monthly": {
+        "description": "Number of day in a month with maximum temperature exceeding 35 degC",
+        "s3_path": "geotiff_monthly",
+        "naming_convention": "wld_cli_era5land_hotdays_monsum_yyyymm.tif"
+      },
+      "annual": {
+        "description": "Number of day in a year with maximum temperature exceeding 35 degC",
+        "s3_path": "geotiff_annual",
+        "naming_convention": "wld_cli_era5land_hotdays_yearsum_yyyy.tif"
+      }
+    }
+  }
+}

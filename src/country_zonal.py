@@ -148,7 +148,7 @@ class country_h3_zonal():
         :param h3_level: size of h3 grid to create; we suggest starting with 6 or 5 (5 is larger)
         :type h3_level: int
     '''
-    def __init__(self, iso3, adm_bounds, adm_bounds_id, h3_level, out_folder):
+    def __init__(self, iso3, adm_bounds, adm_bounds_id, h3_level, out_folder, h3_grid = ''):
         self.iso3 = iso3
         self.adm_bounds = adm_bounds
         self.adm_bounds_id = adm_bounds_id
@@ -156,15 +156,22 @@ class country_h3_zonal():
         self.out_folder = out_folder
         
         #define output variables
-        self.out_h3_grid = os.path.join(out_folder, f'h3_{h3_level}_grid.geojson')
-        if os.path.exists(self.out_h3_grid):
+        if h3_grid != '':
+            self.out_h3_grid = os.path.join(out_folder, f'h3_level_{h3_level}.geojson')
+        else:
+            self.out_h3_grid = h3_grid
+        try:
             self.h3_cells = gpd.read_file(self.out_h3_grid)
+        except:
+            pass
         self.out_admin = os.path.join(out_folder, 'admin_bounds.geojson')
-        if os.path.exists(self.out_admin):
+        try:
             self.adm_bounds_h3 = gpd.read_file(self.out_admin)
+        except:
+            pass
         
         
-    def generate_h3_grid(self, cols_to_include=[]):
+    def generate_h3_grid(self, cols_to_include=[], attach_admin=False):
         ''' Generate the h3 grid and join to the admin boundaries
             
             :param cols_to_include: list of columns to include from adm_bounds in joined output
@@ -188,13 +195,13 @@ class country_h3_zonal():
         cols_to_include.append(self.adm_bounds_id)
         cols_to_include = list(set(cols_to_include))
         h3_joined = gpd.sjoin(h3_centroids, selA.loc[:,cols_to_include], how='left')        
-        h3_pivot = pd.pivot_table(h3_joined, index=self.adm_bounds_id, aggfunc={cols_to_include[0]:len})
-        h3_pivot.columns = [*h3_pivot.columns[:-1], 'h3_count']
-        h3_pivot = h3_pivot.reset_index()
-        h3_pivot = selA.loc[:,cols_to_include].merge(h3_pivot, how='left', on=self.adm_bounds_id)
-        
-        
-        self.adm_bounds_h3 = h3_pivot
+        if attach_admin:        
+            h3_pivot = pd.pivot_table(h3_joined, index=self.adm_bounds_id, aggfunc={cols_to_include[0]:len})        
+            h3_pivot.columns = [*h3_pivot.columns[:-1], 'h3_count']
+            h3_pivot = h3_pivot.reset_index()
+            h3_pivot = selA.loc[:,cols_to_include].merge(h3_pivot, how='left', on=self.adm_bounds_id)
+            self.adm_bounds_h3 = h3_pivot
+
         h3_joined = h3_joined.set_geometry("geometry").drop(['centroid'], axis=1)
         h3_joined = h3_joined.reset_index()
         self.h3_cells = h3_joined
@@ -233,6 +240,97 @@ class country_h3_zonal():
             self.h3_cells.to_file(self.out_h3_grid, driver="GeoJSON")
         if write_admin:
             self.adm_bounds_h3.to_file(self.out_admin, driver="GeoJSON")
+
+    def zonal_raster(self, in_raster, minVal='', maxVal='', all_touched=False, weighted=False):
+        '''
+
+            :param in_raster: string path to raster file for calculations
+            :type in_raster: string
+            :param minVal: minimum value in in_raster to pass to zonal function; everything below is considered 0. Default is no threshold
+            :type minVal: numeric
+        '''
+        h3_grid = self.generate_h3_grid()
+        
+        if isinstance(in_raster, str):
+            inR = rasterio.open(in_raster, 'r')
+        else:
+            inR = in_raster
+        
+        # Run zonal statistics on pop_raster
+        res = rMisc.zonalStats(h3_grid, inR, reProj=True, minVal=minVal, maxVal=maxVal,
+                                allTouched=all_touched, weighted=weighted)
+        res = pd.DataFrame(res, columns=["SUM", "MIN", "MAX", "MEAN"])            
+        res['shape_id'] = h3_grid['shape_id'].astype(object)
+        return(res)
+            
+
+    
+    def zonal_raster_population(self, in_raster, pop_raster, raster_thresh, thresh_label='thresh',
+                    resampling_type="sum", minVal='', maxVal='', all_touched=False, weighted=False):
+        ''' extract raster data from in_raster, urban_raster for selected country, standardize urban_raster to in_raster
+
+            :param in_raster: string path to raster file for calculations
+            :type in_raster: string
+            :param pop_raster: string path to population file for summarizing calculations
+            :type pop_raster: string 
+            :param raster_thresh: value to threshold in_raster in order to summarize population
+            :type raster_thresh: number
+
+            :param thresh_label: label to append to thresholded summaries in output table, default is to 'thresh'
+            :type thresh_label: string
+            :param resampling_type: how to re-sample in_raster to pop_raster, using rasterio resampling options, default is to 'SUM'         
+            :type resampling_type: string
+            :param minVal: minimum value in in_raster to pass to zonal function; everything below is considered 0. Default is no threshold
+            :type minVal: numeric
+            :param urban_mask_val: list of values in urban_raster to be used for mask
+            :type urban_mask_val: list of int
+            :param unqVals:
+            :type unqVals:
+
+
+        '''
+        h3_grid = self.generate_h3_grid()
+        
+        if isinstance(in_raster, str):
+            inR = rasterio.open(in_raster, 'r')
+        else:
+            inR = in_raster
+        if isinstance(pop_raster, str):
+            popR = rasterio.open(pop_raster, 'r')
+        else:
+            popR = pop_raster
+
+        # Clip pop_r to extent of country
+        inN, profile1 = rMisc.clipRaster(popR, self.adm_bounds, crop=False)
+
+        # Clip inR to extent of country
+        inD, profile2 = rMisc.clipRaster(inR, self.adm_bounds, crop=False)
+
+        with rMisc.create_rasterio_inmemory(profile1, inN) as tempR:
+            # Run zonal statistics on pop_raster
+            res = rMisc.zonalStats(h3_grid, tempR, reProj=True, minVal=minVal, maxVal=maxVal,
+                                    allTouched=all_touched, weighted=weighted)
+            res = pd.DataFrame(res, columns=["SUM", "MIN", "MAX", "MEAN"])            
+            res['shape_id'] = h3_grid['shape_id'].astype(object)            
+            # Standardize in_raster to pop_raster
+            with rMisc.create_rasterio_inmemory(profile2, inD) as tempD:
+                inD, profile2 = rMisc.standardizeInputRasters(tempD, tempR, resampling_type=resampling_type)
+
+                # threhsold in raster to create binary
+                inR_thresh = (inD >= raster_thresh)
+                pop_thresh = inN * inR_thresh
+                
+                # Summarize thresholded populatino
+                with rMisc.create_rasterio_inmemory(profile1, pop_thresh) as urbanR:
+                    resU = rMisc.zonalStats(h3_grid, urbanR, reProj=True, minVal=minVal, maxVal=maxVal,
+                                            allTouched=all_touched, weighted=weighted)
+                    resU = pd.DataFrame(resU, columns=[f"SUM_{thresh_label}", f"MIN_{thresh_label}", f"MAX_{thresh_label}", f"MEAN_{thresh_label}"])
+                    resU = resU.astype(float)
+                    resU['shape_id'] = h3_grid['shape_id']
+                res_final = res.merge(resU, on='shape_id')        
+        return res_final
+
+
 
     def zonal_raster_urban(self, in_raster, urban_raster, resampling_type="nearest", minVal='', maxVal='', rastType='N',
                            urban_mask_val=[21,22,23,30], unqVals=[], all_touched=False, weighted=False):
@@ -279,7 +377,6 @@ class country_h3_zonal():
                 outU, profile2 = rMisc.standardizeInputRasters(inU, tempR, resampling_type=resampling_type)
                 # Isolate values in in_raster that are urban
                 inN_urban = np.isin(outU, urban_mask_val)  
-                print(inN_urban.shape)          
                 with rMisc.create_rasterio_inmemory(profile2, inN_urban) as urbanR:
                     resU = rMisc.zonalStats(h3_grid, urbanR, rastType=rastType, reProj=True, minVal=minVal, maxVal=maxVal,
                                             allTouched=all_touched, weighted=weighted)
