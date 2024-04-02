@@ -10,14 +10,12 @@ import geopandas as gpd
 from rasterio.crs import CRS
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from h3 import h3
-from shapely.geometry import Polygon, Point, mapping
+from shapely.geometry import Polygon, mapping
 from shapely.ops import unary_union
 from urllib.request import urlopen
 from tqdm import tqdm
 
-import GOSTRocks.rasterMisc as rMisc
-import GOSTRocks.ntlMisc as ntl
-from GOSTRocks.misc import tPrint
+from GOSTrocks.misc import tPrint
 
 def generate_h3_gdf(in_gdf, h3_level=7):
     ''' Generate a GeoDataFrame of h3 grid cells from an input geodataframe
@@ -55,11 +53,15 @@ def generate_lvl0_lists(h3_lvl, return_gdf=False, buffer0=False):
     ----------
     h3_lvl : int
         h3 level to generate children of h0 parents
+    return_gdf : bool, optional
+        return a GeoDataFrame instead of a dictionary, by default False
+    buffer0 : bool, optional
+        buffer the h3 lvl 0 cells by 0 to fix inherent topological errors, by default False
 
     Returns
     -------
     dict
-        dictionary with keys as lvl0 codes with all children at h3_lvl level as values
+        dictionary with keys as lvl0 codes with all children at h3_lvl level as values; returns a GeoDataFrame if return_gdf is True
     """
     # Get list of all h3 lvl 0 cells
     h3_lvl0 = list(h3.get_res0_indexes())
