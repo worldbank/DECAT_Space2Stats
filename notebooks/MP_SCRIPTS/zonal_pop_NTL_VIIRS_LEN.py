@@ -1,20 +1,17 @@
-import sys, os, importlib, math, multiprocessing
-import rasterio, geojson
+import sys, os, multiprocessing
 
 import pandas as pd
-import geopandas as gpd
-import numpy as np
+#import geopandas as gpd
+#import numpy as np
 
 from h3 import h3
-from tqdm import tqdm
-from shapely.geometry import Polygon
 
 import GOSTrocks.rasterMisc as rMisc
+import GOSTrocks.ntlMisc as ntl
 from GOSTrocks.misc import tPrint
 
 sys.path.append("../../src")
 import h3_helper
-import country_zonal
 
 AWS_S3_BUCKET = 'wbg-geography01'
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
@@ -39,15 +36,10 @@ if __name__ == "__main__":
     verbose = True
     tPrint("Starting")
     h3_level = 6
-    data_prefix = "WorldPop_2020_Demographics"
+    data_prefix = "VIIRS_Monthly_LEN"
     
-    '''
-    admin_bounds = "/home/public/Data/GLOBAL/ADMIN/ADMIN2/HighRes_20230328/shp/WB_GAD_ADM2.shp"
-    global_urban = "/home/public/Data/GLOBAL/GHSL/SMOD/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_V1_0.tif"
-    '''
-    # Define input raster variables
-    population_folder = "/home/public/Data/GLOBAL/Population/WorldPop_PPP_2020/GLOBAL_1km_Demographics"
-    pop_files = [os.path.join(population_folder, x) for x in os.listdir(population_folder) if x.endswith("1km.tif")]
+    # Get list of nighttime lights VIIRS data
+    ntl_files = ntl.aws_search_ntl()
 
     h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False)
     if verbose:
@@ -57,7 +49,7 @@ if __name__ == "__main__":
     for h3_0_key, cur_gdf in h3_0_list.items():
         arg_list = []
         processed_list = []    
-        for pop_file in pop_files:
+        for pop_file in ntl_files:
             filename = os.path.basename(f'{pop_file.replace(".tif", "")}_zonal.csv')
             out_s3_key = f'Space2Stats/h3_stats_data/GLOBAL/{data_prefix}/{h3_0_key}/{filename}'
             full_path = os.path.join("s3://", AWS_S3_BUCKET, out_s3_key)        
@@ -68,7 +60,7 @@ if __name__ == "__main__":
                 arg_list.append([cur_gdf, pop_file, out_s3_key, True, verbose])
 
         if multiprocess:
-            with multiprocessing.Pool(processes=min([70,len(pop_files)])) as pool:
+            with multiprocessing.Pool(processes=min([70,len(ntl_files)])) as pool:
                 results = pool.starmap(run_zonal, arg_list)    
         else:
             for a in arg_list:
