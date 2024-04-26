@@ -9,10 +9,8 @@ from h3 import h3
 from tqdm import tqdm
 from shapely.geometry import Polygon
 
-import GOSTRocks.rasterMisc as rMisc
-import GOSTRocks.ntlMisc as ntl
-#import GOSTRocks.mapMisc as mapMisc
-from GOSTRocks.misc import tPrint
+import GOSTrocks.rasterMisc as rMisc
+from GOSTrocks.misc import tPrint
 
 sys.path.append("../../src")
 import h3_helper
@@ -47,6 +45,7 @@ if __name__ == "__main__":
     admin_bounds = "/home/public/Data/GLOBAL/ADMIN/ADMIN2/HighRes_20230328/shp/WB_GAD_ADM2.shp"
     global_urban = "/home/public/Data/GLOBAL/GHSL/SMOD/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_V1_0.tif"
     '''
+    # Define input raster variables
     population_folder = "/home/public/Data/GLOBAL/Population/WorldPop_PPP_2020/GLOBAL_1km_Demographics"
     pop_files = [os.path.join(population_folder, x) for x in os.listdir(population_folder) if x.endswith("1km.tif")]
 

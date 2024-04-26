@@ -1,5 +1,6 @@
 # repo-specific to ignore
 data/config/LOCAL_FILES/
+*.pickle
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

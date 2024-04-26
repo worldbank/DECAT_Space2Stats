@@ -1,4 +1,4 @@
-import sys, os, importlib, json, pickle
+import sys, os, importlib, json
 import folium, shapely, rasterio, matplotlib
 
 import contextily as ctx
@@ -10,11 +10,13 @@ import geopandas as gpd
 from rasterio.crs import CRS
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from h3 import h3
-from shapely.geometry import Polygon, mapping
+from shapely.geometry import Polygon, Point, mapping
 from shapely.ops import unary_union
 from urllib.request import urlopen
 from tqdm import tqdm
 
+import GOSTrocks.rasterMisc as rMisc
+import GOSTrocks.ntlMisc as ntl
 from GOSTrocks.misc import tPrint
 
 def generate_h3_gdf(in_gdf, h3_level=7):
@@ -46,41 +48,19 @@ def generate_h3_gdf(in_gdf, h3_level=7):
     all_polys['shape_id'] = list(all_polys.index)
     return(all_polys)
 
-def generate_lvl0_lists(h3_lvl, return_gdf=False, buffer0=False, 
-                        read_pickle=True, pickle_file = "h0_dictionary_of_h{lvl}_geodata_frames.pickle"):
+def generate_lvl0_lists(h3_lvl, return_gdf=False, buffer0=False):
     """ generate a dictionary with keys as lvl0 codes with all children at h3_lvl level as values
 
     Parameters
     ----------
     h3_lvl : int
         h3 level to generate children of h0 parents
-    return_gdf : bool, optional
-        return a GeoDataFrame instead of a dictionary, by default False
-    buffer0 : bool, optional
-        buffer the h3 lvl 0 cells by 0 to fix inherent topological errors, by default False
-    read_pickle : bool, optional
-        Optionally choose the read resulting data from a [ickle file defined by pickle_file, by default True. If pickle 
-        file is not present, function will continue to generate results as if flag was set to False
-    pickle_file : str, optional
-        Path of pickle file to read if read_pickle is set to True
 
     Returns
     -------
     dict
-        dictionary with keys as lvl0 codes with all children at h3_lvl level as values; returns a GeoDataFrame if return_gdf is True
+        dictionary with keys as lvl0 codes with all children at h3_lvl level as values
     """
-    if read_pickle:
-        try:
-            pickle_file = pickle_file.format(lvl=h3_lvl)
-            pickle_path = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))), pickle_file)
-            print(f"Loading pickle file {pickle_file}: it exists {os.path.exists(pickle_path)}")
-            with open(pickle_path, 'rb') as handle:
-                xx = pickle.load(handle)
-            return(xx)
-        except:
-            #print("Could not load pickle file, continuing to process h0 manually")
-            raise(ValueError("Could not load pickle file, continuing to process h0 manually"))
-    
     # Get list of all h3 lvl 0 cells
     h3_lvl0 = list(h3.get_res0_indexes())
 
@@ -101,60 +81,7 @@ def generate_lvl0_lists(h3_lvl, return_gdf=False, buffer0=False,
             h3_lvl0_children[h3_0] = h3_children
     return h3_lvl0_children
 
-def generate_lvl1_lists(h3_lvl, return_gdf=False, buffer0=False, 
-                        read_pickle=True, pickle_file = "h1_dictionary_of_h{lvl}_geodata_frames.pickle"):
-    """ generate a dictionary with keys as lvl1 codes with all children at h3_lvl level as values
 
-    Parameters
-    ----------
-    h3_lvl : int
-        h3 level to generate children of h0 parents
-    return_gdf : bool, optional
-        return a GeoDataFrame instead of a dictionary, by default False
-    buffer0 : bool, optional
-        buffer the h3 lvl 0 cells by 0 to fix inherent topological errors, by default False
-    read_pickle : bool, optional
-        Optionally choose the read resulting data from a [ickle file defined by pickle_file, by default True. If pickle 
-        file is not present, function will continue to generate results as if flag was set to False
-    pickle_file : str, optional
-        Path of pickle file to read if read_pickle is set to True
-
-    Returns
-    -------
-    dict
-        dictionary with keys as lvl0 codes with all children at h3_lvl level as values; returns a GeoDataFrame if return_gdf is True
-    """
-    if read_pickle:
-        try:
-            pickle_file = pickle_file.format(lvl=h3_lvl)
-            pickle_path = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))), pickle_file)
-            with open(pickle_path, 'rb') as handle:
-                xx = pickle.load(handle)
-            return(xx)
-        except:
-            print("Could not load pickle file, continuing to process h1 manually")            
-    
-    # Get list of all h3 lvl 0 cells
-    h3_lvl0 = list(h3.get_res0_indexes())
-
-    # Generate list of all children of h3 lvl 1 cells
-    h3_lvl1_children = {}
-    for h3_0 in h3_lvl0: # Identify all lvl 0 cells
-        h3_children = list(h3.h3_to_children(h3_0, 1))
-        for h3_1 in h3_children: # For current lvl 0 cell, loop through all level 1 children
-            h3_children_1 = list(h3.h3_to_children(h3_1, h3_lvl))
-            if return_gdf:
-                hex_poly = lambda hex_id: Polygon(h3.h3_to_geo_boundary(hex_id, geo_json=True))
-                all_polys = gpd.GeoSeries(list(map(hex_poly, h3_children_1)), index=h3_children_1, crs=4326)
-                all_polys = gpd.GeoDataFrame(all_polys, crs=4326, columns=['geometry'])
-                if buffer0:
-                    all_polys['geometry'] = all_polys['geometry'].apply(lambda x: x.buffer(0))
-                all_polys['shape_id'] = list(all_polys.index)
-                
-                h3_lvl1_children[h3_1] = all_polys
-            else:
-                h3_lvl1_children[h3_1] = h3_children_1
-    return h3_lvl1_children
 
 def map_choropleth(sub, map_column, thresh=[], colour_ramp = 'Reds', invert=False, map_epsg=3857, legend_loc='upper right'):
         ''' generate a static map of variables in GeoDataFrame sub
