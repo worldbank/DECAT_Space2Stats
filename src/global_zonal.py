@@ -12,9 +12,9 @@ from urllib.request import urlopen
 from tqdm import tqdm
 
 import h3_helper
-import GOSTRocks.rasterMisc as rMisc
-import GOSTRocks.ntlMisc as ntl
-from GOSTRocks.misc import tPrint
+import GOSTrocks.rasterMisc as rMisc
+import GOSTrocks.ntlMisc as ntl
+from GOSTrocks.misc import tPrint
 
 def get_global_table_from_s3(variable, bucket='wbg-geography01', prefix='Space2Stats/h3_stats_data/GLOBAL/', verbose=False, read_data=True):
     """ Get pandas dataframe of all csv files in S3 bucket that match the variable name
