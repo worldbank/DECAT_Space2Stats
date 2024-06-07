@@ -1,6 +1,7 @@
 # repo-specific to ignore
 data/config/LOCAL_FILES/
 *.pickle
+wb_aws.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
