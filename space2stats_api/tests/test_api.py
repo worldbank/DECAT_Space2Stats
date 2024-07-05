@@ -18,4 +18,8 @@ def test_get_summary():
         "fields": ["field1", "field2"]
     })
     assert response.status_code == 200
-    assert "summaries" in response.json()
+    summaries = response.json()
+    assert "hex_id" in summaries[0]
+    assert "fields" in summaries[0]
+    assert "field1" in summaries[0]["fields"]
+    assert "field2" in summaries[0]["fields"]

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, field_validator, ValidationInfo
 from typing import List, Dict, Any, Literal
+import geojson
 from shapely.geometry import shape
 
 router = APIRouter()
@@ -32,9 +33,10 @@ class SummaryRequest(BaseModel):
     fields: List[str]
 
 class SummaryResponse(BaseModel):
-    summaries: List[Dict[str, Any]]
+    hex_id: str
+    fields: Dict[str, Any]
 
-@router.post("/summary", response_model=SummaryResponse)
+@router.post("/summary", response_model=List[SummaryResponse])
 def get_summary(request: SummaryRequest):
     try:
         # validate aoi as a valid shapely geometry
@@ -44,5 +46,17 @@ def get_summary(request: SummaryRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
-    # placeholder for the actual logic
-    return {"summaries": [{"example_field": "example_value"}]}
+    # mock data retrieval process
+    mock_data = [
+        {"hex_id": "hex_1", "field1": "value1", "field2": "value2"},
+        {"hex_id": "hex_2", "field1": "value3", "field2": "value4"},
+        {"hex_id": "hex_3", "field1": "value5", "field2": "value6"}
+    ]
+    
+    # filter data based on requested fields
+    summaries = []
+    for item in mock_data:
+        summary = {"hex_id": item["hex_id"], "fields": {field: item[field] for field in request.fields if field in item}}
+        summaries.append(summary)
+    
+    return summaries
