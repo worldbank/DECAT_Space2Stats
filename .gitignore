@@ -94,3 +94,4 @@ _build/
 
 # python-dotenv
 .env
+wb_aws.env
