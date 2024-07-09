@@ -1,4 +1,12 @@
 fastapi
-pydantic
 uvicorn
+pandas
+pyarrow
+s3fs
+boto3
+python-dotenv
 shapely
+h3
+duckdb
+pytest
+httpx
