@@ -56,6 +56,7 @@ def get_summary(request: SummaryRequest):
     resolution = 6
     aoi_geojson = mapping(geom)
     h3_ids = generate_h3_ids(aoi_geojson, resolution, request.spatial_join_method)
+    print(h3_ids)
 
     if not h3_ids:
         return []
