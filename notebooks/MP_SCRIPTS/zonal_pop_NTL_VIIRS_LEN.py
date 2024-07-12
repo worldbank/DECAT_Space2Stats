@@ -1,7 +1,7 @@
 import sys, os, multiprocessing
 
 import pandas as pd
-#import geopandas as gpd
+import geopandas as gpd
 #import numpy as np
 
 from h3 import h3
@@ -26,7 +26,7 @@ def run_zonal(gdf, cur_raster_file, out_file, buffer0=False, verbose=False):
         gdf['geometry'] = gdf['geometry'].buffer(0)        
     res = rMisc.zonalStats(gdf, cur_raster_file, minVal=0, verbose=False)
     res = pd.DataFrame(res, columns=['SUM', 'MIN', 'MAX', 'MEAN'])
-    res['id'] = gdf['shape_id'].values
+    res['id'] = gdf['id'].values
     if verbose:
         tPrint(f'**** finished {cName}')
     return({out_file:res})
@@ -40,8 +40,16 @@ if __name__ == "__main__":
     
     # Get list of nighttime lights VIIRS data
     ntl_files = ntl.aws_search_ntl()
-
-    h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False)
+    
+    # h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False)
+    admin_bounds = "/home/wb411133/data/Global/ADMIN/Admin2_Polys.shp"
+    # Generate a list from the global admin boundaries
+    inA = gpd.read_file(admin_bounds)
+    inA['id'] = list(inA.index)
+    h3_0_list = {}
+    for region, countries in inA.groupby("WB_REGION"):
+        h3_0_list[region] = countries
+    
     if verbose:
         tPrint("H3_0 list generated")
     # set up mp arguments
@@ -52,6 +60,7 @@ if __name__ == "__main__":
         for pop_file in ntl_files:
             filename = os.path.basename(f'{pop_file.replace(".tif", "")}_zonal.csv')
             out_s3_key = f'Space2Stats/h3_stats_data/GLOBAL/{data_prefix}/{h3_0_key}/{filename}'
+            out_s3_key = f'Space2Stats/h3_stats_data/ADM_GLOBAL/{data_prefix}/{h3_0_key}/{filename}'            
             full_path = os.path.join("s3://", AWS_S3_BUCKET, out_s3_key)        
             try:
                 tempPD = pd.read_csv(full_path)

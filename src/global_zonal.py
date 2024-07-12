@@ -246,7 +246,7 @@ def zonal_stats_numerical(gdf, gdf_id, raster_file, out_file,
         tPrint(f'Starting zonal stats on {raster_file}')
     if buffer0:
         gdf['geometry'] = gdf['geometry'].buffer(0)        
-    res = rMisc.zonalStats(gdf, raster_file, minVal=minVal, maxVal=maxVal, verbose=verbose)
+    res = rMisc.zonalStats(gdf, raster_file, minVal=minVal, maxVal=maxVal, verbose=verbose, reProj=True)
     res = pd.DataFrame(res, columns=['SUM', 'MIN', 'MAX', 'MEAN'])
     res['id'] = gdf[gdf_id].values
     if verbose:
@@ -262,7 +262,7 @@ def zonal_stats_categories(gdf, gdf_id, raster_file, categories, out_file,
         tPrint(f'Starting zonal stats on {raster_file}')
     if buffer0:
         gdf['geometry'] = gdf['geometry'].buffer(0)        
-    res = rMisc.zonalStats(gdf, raster_file, rastType="C", unqVals=categories, verbose=verbose)
+    res = rMisc.zonalStats(gdf, raster_file, rastType="C", unqVals=categories, verbose=verbose, reProj=True)
     res = pd.DataFrame(res, columns=[f'c_{x}' for x in categories])
     res['id'] = gdf[gdf_id].values
     if verbose:
@@ -302,7 +302,7 @@ def zonal_stats_categorical(gdf, gdf_id, raster_file, category_raster_file, out_
                 cur_cat_d = (cat_d == cur_cat) * 1
                 cur_rast_d = rast_d * cur_cat_d
                 with rMisc.create_rasterio_inmemory(rast_profile, cur_rast_d) as cur_rast_src:
-                    res = rMisc.zonalStats(gdf, cur_rast_src, minVal=minVal, maxVal=maxVal, verbose=verbose)
+                    res = rMisc.zonalStats(gdf, cur_rast_src, minVal=minVal, maxVal=maxVal, verbose=verbose, reProj=True)
                     res = pd.DataFrame(res, columns=[f'{cur_cat}_SUM', f'{cur_cat}_MIN', f'{cur_cat}_MAX', f'{cur_cat}_MEAN'])
                     res['id'] = gdf[gdf_id].values
                     res.set_index('id', inplace=True)
