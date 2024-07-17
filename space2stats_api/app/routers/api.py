@@ -1,23 +1,12 @@
-import os
-import psycopg2
+from typing import List, Dict, Any, Literal
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, field_validator
-from typing import List, Dict, Any, Literal
 from shapely.geometry import shape, mapping
-from dotenv import load_dotenv
-import s3fs
+
 from app.utils.h3_utils import generate_h3_ids
+from app.utils.db_utils import get_available_fields, get_summaries
 
-load_dotenv("../db.env")
-s3 = s3fs.S3FileSystem()
-
-# Load PostgreSQL connection details from environment variables
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_TABLE_NAME = os.getenv("DB_TABLE_NAME")
 
 router = APIRouter()
 
@@ -66,33 +55,12 @@ def get_summary(request: SummaryRequest):
     if not h3_ids:
         return []
 
-    h3_ids_str = ', '.join(f"'{h3_id}'" for h3_id in h3_ids)
-    sql_query = f"""
-    SELECT hex_id, {', '.join(request.fields)}
-    FROM {DB_TABLE_NAME}
-    WHERE hex_id IN ({h3_ids_str})
-    """
-
-    # Connect to PostgreSQL
     try:
-        conn = psycopg2.connect(
-            host=DB_HOST,
-            port=DB_PORT,
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD
-        )
-        cur = conn.cursor()
-        cur.execute(sql_query)
-        rows = cur.fetchall()
-        colnames = [desc[0] for desc in cur.description]
-        cur.close()
-        conn.close()
+        rows, colnames = get_summaries(request.fields, h3_ids)
+        if not rows:
+            return []
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-    if not rows:
-        return []
+        HTTPException(status_code=500, detail=str(e))
 
     summaries = []
     for row in rows:
@@ -100,3 +68,12 @@ def get_summary(request: SummaryRequest):
         summaries.append(summary)
 
     return summaries
+
+@router.get("/fields", response_model=List[str])
+def fields():
+    try:
+        fields = get_available_fields()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return fields
