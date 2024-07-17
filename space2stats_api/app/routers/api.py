@@ -1,4 +1,5 @@
-import duckdb
+import os
+import psycopg2
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, field_validator
 from typing import List, Dict, Any, Literal
@@ -7,11 +8,15 @@ from dotenv import load_dotenv
 import s3fs
 from app.utils.h3_utils import generate_h3_ids
 
-load_dotenv("../wb_aws.env")
+load_dotenv("../db.env")
 s3 = s3fs.S3FileSystem()
 
-duckdb_file = '../combined_population.duckdb'
-con = duckdb.connect(duckdb_file)
+# Load PostgreSQL connection details from environment variables
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 router = APIRouter()
 
@@ -56,7 +61,6 @@ def get_summary(request: SummaryRequest):
     resolution = 6
     aoi_geojson = mapping(geom)
     h3_ids = generate_h3_ids(aoi_geojson, resolution, request.spatial_join_method)
-    print(h3_ids)
 
     if not h3_ids:
         return []
@@ -64,18 +68,34 @@ def get_summary(request: SummaryRequest):
     h3_ids_str = ', '.join(f"'{h3_id}'" for h3_id in h3_ids)
     sql_query = f"""
     SELECT hex_id, {', '.join(request.fields)}
-    FROM combined_population
+    FROM space2stats_nyc_sample
     WHERE hex_id IN ({h3_ids_str})
     """
 
-    result = con.execute(sql_query).fetchdf()
+    # Connect to PostgreSQL
+    try:
+        conn = psycopg2.connect(
+            host=DB_HOST,
+            port=DB_PORT,
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD
+        )
+        cur = conn.cursor()
+        cur.execute(sql_query)
+        rows = cur.fetchall()
+        colnames = [desc[0] for desc in cur.description]
+        cur.close()
+        conn.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    if result.empty:
+    if not rows:
         return []
 
     summaries = []
-    for _, row in result.iterrows():
-        summary = {"hex_id": row["hex_id"], "fields": {field: row[field] for field in request.fields if field in row}}
+    for row in rows:
+        summary = {"hex_id": row[0], "fields": {col: row[idx] for idx, col in enumerate(colnames[1:], start=1) if col in request.fields}}
         summaries.append(summary)
 
     return summaries

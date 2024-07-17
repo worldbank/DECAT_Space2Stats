@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  database:
+    image: ghcr.io/stac-utils/pgstac:v0.8.5
+    environment:
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgis
+      - PGUSER=username
+      - PGPASSWORD=password
+      - PGDATABASE=postgis
+    ports:
+      - "${MY_DOCKER_IP:-127.0.0.1}:5439:5432"
+    command: postgres -N 500
+    volumes:
+      - ./.pgdata:/var/lib/postgresql/data
