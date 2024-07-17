@@ -3,6 +3,8 @@ import psycopg2
 from dotenv import load_dotenv
 
 
+load_dotenv("../db.env")
+
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
@@ -10,7 +12,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_TABLE_NAME = os.getenv("DB_TABLE_NAME")
 
-load_dotenv("../db.env")
+print(DB_TABLE_NAME)
 
 def get_summaries(fields, h3_ids):
     h3_ids_str = ', '.join(f"'{h3_id}'" for h3_id in h3_ids)
@@ -57,9 +59,12 @@ def get_available_fields():
         cur = conn.cursor()
         cur.execute(sql_query)
         columns = [row[0] for row in cur.fetchall() if row[0]!='hex_id']
+        print(columns)
         cur.close()
         conn.close()
     except Exception as e:
         raise e
+    
+    
 
     return columns

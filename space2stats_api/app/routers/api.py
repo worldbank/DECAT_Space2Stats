@@ -73,6 +73,7 @@ def get_summary(request: SummaryRequest):
 def fields():
     try:
         fields = get_available_fields()
+        print(fields)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
