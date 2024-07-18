@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -9,8 +9,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_TABLE_NAME: str
 
-    class Config:
-        env_file = "../db.env"
+    model_config = SettingsConfigDict(env_file="../db.env")
 
 
 settings = Settings()

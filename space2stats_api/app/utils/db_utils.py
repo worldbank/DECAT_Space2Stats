@@ -1,14 +1,12 @@
 import psycopg as pg
-
 from ..settings import settings
-
 
 DB_HOST = settings.DB_HOST
 DB_PORT = settings.DB_PORT
 DB_NAME = settings.DB_NAME
 DB_USER = settings.DB_USER
 DB_PASSWORD = settings.DB_PASSWORD
-DB_TABLE_NAME = settings.DB_TABLE_NAME
+DB_TABLE_NAME = settings.DB_TABLE_NAME or "space2stats"
 
 
 def get_summaries(fields, h3_ids):
@@ -44,7 +42,6 @@ def get_available_fields():
     FROM information_schema.columns
     WHERE table_name = '{DB_TABLE_NAME}'
     """
-
     try:
         conn = pg.connect(
             host=DB_HOST,

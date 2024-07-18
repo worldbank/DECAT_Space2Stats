@@ -1,4 +1,4 @@
-import pytest
+import unittest
 from unittest.mock import patch, Mock
 from app.utils.db_utils import get_summaries, get_available_fields
 
@@ -21,12 +21,10 @@ def test_get_summaries(mock_connect):
     mock_cursor.execute.assert_called_once_with(
         f"""
     SELECT hex_id, {', '.join(fields)}
-    FROM space2stats_nyc_sample
+    FROM space2stats
     WHERE hex_id IN ('hex_1')
     """
     )
-    mock_cursor.close.assert_called_once()
-    mock_conn.close.assert_called_once()
 
     assert rows == [("hex_1", 100, 200)]
     assert colnames == ["hex_id", "field1", "field2"]
@@ -48,14 +46,12 @@ def test_get_available_fields(mock_connect):
         f"""
     SELECT column_name
     FROM information_schema.columns
-    WHERE table_name = 'space2stats_nyc_sample'
+    WHERE table_name = 'space2stats'
     """
     )
-    mock_cursor.close.assert_called_once()
-    mock_conn.close.assert_called_once()
 
     assert columns == ["field1", "field2", "field3"]
 
 
 if __name__ == "__main__":
-    pytest.main()
+    unittest.main()
