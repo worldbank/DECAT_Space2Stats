@@ -1,6 +1,7 @@
 import os
-import psycopg as pg
+
 from dotenv import load_dotenv
+import psycopg as pg
 
 
 load_dotenv("../db.env")
@@ -12,24 +13,22 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_TABLE_NAME = os.getenv("DB_TABLE_NAME")
 
-print(DB_TABLE_NAME)
 
 def get_summaries(fields, h3_ids):
     print(h3_ids)
-    h3_ids_str = ', '.join(f"'{h3_id}'" for h3_id in h3_ids)
+    h3_ids_str = ", ".join(f"'{h3_id}'" for h3_id in h3_ids)
     sql_query = f"""
     SELECT hex_id, {', '.join(fields)}
     FROM {DB_TABLE_NAME}
     WHERE hex_id IN ({h3_ids_str})
     """
-    print(sql_query)
     try:
         conn = pg.connect(
             host=DB_HOST,
             port=DB_PORT,
             dbname=DB_NAME,
             user=DB_USER,
-            password=DB_PASSWORD
+            password=DB_PASSWORD,
         )
         cur = conn.cursor()
         cur.execute(sql_query)
@@ -39,8 +38,9 @@ def get_summaries(fields, h3_ids):
         conn.close()
     except Exception as e:
         raise e
-    
+
     return rows, colnames
+
 
 def get_available_fields():
     sql_query = f"""
@@ -55,17 +55,14 @@ def get_available_fields():
             port=DB_PORT,
             dbname=DB_NAME,
             user=DB_USER,
-            password=DB_PASSWORD
+            password=DB_PASSWORD,
         )
         cur = conn.cursor()
         cur.execute(sql_query)
-        columns = [row[0] for row in cur.fetchall() if row[0]!='hex_id']
-        print(columns)
+        columns = [row[0] for row in cur.fetchall() if row[0] != "hex_id"]
         cur.close()
         conn.close()
     except Exception as e:
         raise e
-    
-    
 
     return columns

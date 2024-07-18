@@ -1,8 +1,12 @@
 from typing import Dict, Any, List
-from shapely.geometry import shape, Polygon
-import h3
 
-def generate_h3_ids(aoi_geojson: Dict[str, Any], resolution: int, spatial_join_method: str) -> List[str]:
+import h3
+from shapely.geometry import shape, Polygon
+
+
+def generate_h3_ids(
+    aoi_geojson: Dict[str, Any], resolution: int, spatial_join_method: str
+) -> List[str]:
     """
     Generate H3 hexagon IDs for a given AOI GeoJSON object.
 
@@ -26,8 +30,18 @@ def generate_h3_ids(aoi_geojson: Dict[str, Any], resolution: int, spatial_join_m
     # Filter hexagons based on spatial join method
     # Touches method returns plain h3_ids
     if spatial_join_method == "within":
-        h3_ids = [h3_id for h3_id in h3_ids if aoi_shape.contains(Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)))]
+        h3_ids = [
+            h3_id
+            for h3_id in h3_ids
+            if aoi_shape.contains(Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)))
+        ]
     elif spatial_join_method == "centroid":
-        h3_ids = [h3_id for h3_id in h3_ids if aoi_shape.contains(Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)).centroid)]
+        h3_ids = [
+            h3_id
+            for h3_id in h3_ids
+            if aoi_shape.contains(
+                Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)).centroid
+            )
+        ]
 
     return h3_ids
