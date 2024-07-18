@@ -1,21 +1,17 @@
-import os
-
-from dotenv import load_dotenv
 import psycopg as pg
 
+from ..settings import settings
 
-load_dotenv("../db.env")
 
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_TABLE_NAME = os.getenv("DB_TABLE_NAME")
+DB_HOST = settings.DB_HOST
+DB_PORT = settings.DB_PORT
+DB_NAME = settings.DB_NAME
+DB_USER = settings.DB_USER
+DB_PASSWORD = settings.DB_PASSWORD
+DB_TABLE_NAME = settings.DB_TABLE_NAME
 
 
 def get_summaries(fields, h3_ids):
-    print(h3_ids)
     h3_ids_str = ", ".join(f"'{h3_id}'" for h3_id in h3_ids)
     sql_query = f"""
     SELECT hex_id, {', '.join(fields)}
