@@ -23,17 +23,14 @@ def create_response_model(fields: List[str]):
 def get_summary(request: SummaryRequest):
     resolution = 6
     h3_ids = generate_h3_ids(dict(request.aoi.geometry), resolution, request.spatial_join_method)
-    print(h3_ids)
+
     if not h3_ids:
         return []
 
-    try:
-        rows, colnames = get_summaries(request.fields, h3_ids)
-        print(rows)
-        if not rows:
-            return []
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    rows, colnames = get_summaries(request.fields, h3_ids)
+    if not rows:
+        return []
+
 
     summaries = []
     for row in rows:
@@ -44,10 +41,5 @@ def get_summary(request: SummaryRequest):
     return summaries
 
 @router.get("/fields", response_model=List[str])
-def fields():
-    try:
-        fields = get_available_fields()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-    return fields
+def fields():    
+    return get_available_fields()
