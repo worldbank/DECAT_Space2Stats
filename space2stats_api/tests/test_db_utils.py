@@ -18,7 +18,13 @@ def test_get_summaries(mock_connect):
     rows, colnames = get_summaries(fields, h3_ids)
 
     mock_connect.assert_called_once()
-    mock_cursor.execute.assert_called_once()
+    mock_cursor.execute.assert_called_once_with(
+        f"""
+    SELECT hex_id, {', '.join(fields)}
+    FROM space2stats_nyc_sample
+    WHERE hex_id IN ('hex_1')
+    """
+    )
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
 
@@ -38,7 +44,13 @@ def test_get_available_fields(mock_connect):
     columns = get_available_fields()
 
     mock_connect.assert_called_once()
-    mock_cursor.execute.assert_called_once()
+    mock_cursor.execute.assert_called_once_with(
+        f"""
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_name = 'space2stats_nyc_sample'
+    """
+    )
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
 
