@@ -10,23 +10,27 @@ def test_read_root():
     assert response.status_code == 200
     assert response.json() == {"message": "Welcome to Space2Stats!"}
 
-@patch('psycopg2.connect')
+@patch('psycopg.connect')
 def test_get_summary(mock_connect):
     mock_cursor = mock_connect.return_value.cursor.return_value
     mock_cursor.description = [('hex_id',), ('field1',), ('field2',)]
     mock_cursor.fetchall.return_value = [('hex_1', 100, 200)]
     
     aoi = {
-        "type": "Polygon",
-        "coordinates": [
-            [
-                [-74.1, 40.6],
-                [-73.9, 40.6],
-                [-73.9, 40.8],
-                [-74.1, 40.8],
-                [-74.1, 40.6]
+        "type": "Feature",
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [-74.1, 40.6],
+                    [-73.9, 40.6],
+                    [-73.9, 40.8],
+                    [-74.1, 40.8],
+                    [-74.1, 40.6]
+                ]
             ]
-        ]
+        },
+        "properties": {}
     }
     
     request_payload = {
@@ -44,12 +48,11 @@ def test_get_summary(mock_connect):
 
     for summary in response_json:
         assert "hex_id" in summary
-        assert "fields" in summary
         for field in request_payload["fields"]:
-            assert field in summary["fields"]
-        assert len(summary["fields"]) == len(request_payload["fields"])
+            assert field in summary
+        assert len(summary) == len(request_payload["fields"]) + 1  # +1 for the 'hex_id'
 
-@patch('psycopg2.connect')
+@patch('psycopg.connect')
 def test_get_fields(mock_connect):
     mock_cursor = mock_connect.return_value.cursor.return_value
     mock_cursor.fetchall.return_value = [("hex_id",), ("field1",), ("field2",), ("field3",)]

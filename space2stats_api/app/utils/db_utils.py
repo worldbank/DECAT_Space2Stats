@@ -1,5 +1,5 @@
 import os
-import psycopg2
+import psycopg as pg
 from dotenv import load_dotenv
 
 
@@ -15,15 +15,16 @@ DB_TABLE_NAME = os.getenv("DB_TABLE_NAME")
 print(DB_TABLE_NAME)
 
 def get_summaries(fields, h3_ids):
+    print(h3_ids)
     h3_ids_str = ', '.join(f"'{h3_id}'" for h3_id in h3_ids)
     sql_query = f"""
     SELECT hex_id, {', '.join(fields)}
     FROM {DB_TABLE_NAME}
     WHERE hex_id IN ({h3_ids_str})
     """
-
+    print(sql_query)
     try:
-        conn = psycopg2.connect(
+        conn = pg.connect(
             host=DB_HOST,
             port=DB_PORT,
             dbname=DB_NAME,
@@ -49,7 +50,7 @@ def get_available_fields():
     """
 
     try:
-        conn = psycopg2.connect(
+        conn = pg.connect(
             host=DB_HOST,
             port=DB_PORT,
             dbname=DB_NAME,

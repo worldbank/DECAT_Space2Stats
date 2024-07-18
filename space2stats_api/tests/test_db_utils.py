@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, Mock
 from app.utils.db_utils import get_summaries, get_available_fields
 
-@patch('psycopg2.connect')
+@patch('psycopg.connect')
 def test_get_summaries(mock_connect):
     mock_conn = Mock()
     mock_cursor = Mock()
@@ -24,7 +24,7 @@ def test_get_summaries(mock_connect):
     assert rows == [('hex_1', 100, 200)]
     assert colnames == ['hex_id', 'field1', 'field2']
 
-@patch('psycopg2.connect')
+@patch('psycopg.connect')
 def test_get_available_fields(mock_connect):
     mock_conn = Mock()
     mock_cursor = Mock()
