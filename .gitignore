@@ -95,3 +95,8 @@ _build/
 
 # python-dotenv
 .env
+
+*.parquet
+.pgdata
+db.env
+*.duckdb

@@ -55,6 +55,14 @@ for file in files:
             else:
                 combined_df = combined_df.merge(df, on='id', how='outer')
 
+# Calculate the sum of male and female populations separately and combined
+male_columns = [col for col in combined_df.columns if col.startswith('sum_pop_m_')]
+female_columns = [col for col in combined_df.columns if col.startswith('sum_pop_f_')]
+
+combined_df['sum_pop_m_2020'] = combined_df[male_columns].sum(axis=1)
+combined_df['sum_pop_f_2020'] = combined_df[female_columns].sum(axis=1)
+combined_df['sum_pop_2020'] = combined_df['sum_pop_m_2020'] + combined_df['sum_pop_f_2020']
+
 combined_df = combined_df.rename(columns={'id': 'hex_id'})
 
 table = pa.Table.from_pandas(combined_df)
