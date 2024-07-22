@@ -12,9 +12,9 @@ from urllib.request import urlopen
 from tqdm import tqdm
 
 import h3_helper
-import GOSTRocks.rasterMisc as rMisc
-import GOSTRocks.ntlMisc as ntl
-from GOSTRocks.misc import tPrint
+import GOSTrocks.rasterMisc as rMisc
+import GOSTrocks.ntlMisc as ntl
+from GOSTrocks.misc import tPrint
 
 def get_global_table_from_s3(variable, bucket='wbg-geography01', prefix='Space2Stats/h3_stats_data/GLOBAL/', verbose=False, read_data=True):
     """ Get pandas dataframe of all csv files in S3 bucket that match the variable name
@@ -237,3 +237,77 @@ def calculate_zonal_h3_list(h3_list, raster_data, output_file=""):
         res.to_csv(output_file)
     
     return(res)
+
+def zonal_stats_numerical(gdf, gdf_id, raster_file, out_file,
+                          buffer0=False, minVal=None, maxVal=None, verbose=False):
+    ''' Run zonal stats on a continuous raster file using a list of h3 cells
+    '''
+    if verbose:
+        tPrint(f'Starting zonal stats on {raster_file}')
+    if buffer0:
+        gdf['geometry'] = gdf['geometry'].buffer(0)        
+    res = rMisc.zonalStats(gdf, raster_file, minVal=minVal, maxVal=maxVal, verbose=verbose, reProj=True)
+    res = pd.DataFrame(res, columns=['SUM', 'MIN', 'MAX', 'MEAN'])
+    res['id'] = gdf[gdf_id].values
+    if verbose:
+        tPrint(f'**** finished {cName}')
+    return({out_file:res})
+
+
+def zonal_stats_categories(gdf, gdf_id, raster_file, categories, out_file,
+                          buffer0=False, verbose=False):
+    ''' Run zonal stats on a categorical raster file using a list of h3 cells
+    '''
+    if verbose:
+        tPrint(f'Starting zonal stats on {raster_file}')
+    if buffer0:
+        gdf['geometry'] = gdf['geometry'].buffer(0)        
+    res = rMisc.zonalStats(gdf, raster_file, rastType="C", unqVals=categories, verbose=verbose, reProj=True)
+    res = pd.DataFrame(res, columns=[f'c_{x}' for x in categories])
+    res['id'] = gdf[gdf_id].values
+    if verbose:
+        tPrint(f'**** finished {cName}')
+    return({out_file:res})
+
+
+def zonal_stats_categorical(gdf, gdf_id, raster_file, category_raster_file, out_file, categories=None, reclass_dict=None,
+                          buffer0=False, minVal=None, maxVal=None, verbose=False):
+    ''' Run zonal stats on a continuous raster file using a matching categorical raster 
+        file and a list of h3 cells. For each defined category in the categorical 
+        raster file, calculate the sum, min, max, mean for that category.
+    '''
+    
+    tPrint(f'Starting zonal stats on {out_file}')
+    if buffer0:
+        gdf['geometry'] = gdf['geometry'].buffer(0)        
+    
+    #extract category raster to gdf extent
+    cat_d, cat_profile = rMisc.clipRaster(category_raster_file, gdf)
+    # reclasify if necessary
+    if not reclass_dict is None:
+        categories = []
+        for key, range in reclass_dict.items():
+            cat_d[(cat_d >= range[0]) & (cat_d <= range[1])] = key
+            categories.append(key)
+    # extract raster to gdf extent
+    rast_d, rast_profile = rMisc.clipRaster(raster_file, gdf)
+        
+    # standardize categorical raster to zonal raster
+    final_zonal_res = []
+    with rMisc.create_rasterio_inmemory(rast_profile, rast_d) as rast_src:
+        with rMisc.create_rasterio_inmemory(cat_profile, cat_d) as cat_src:
+            cat_d, cat_profile = rMisc.standardizeInputRasters(cat_src, rast_src, resampling_type='nearest')
+            # Loop through each category
+            for cur_cat in categories:
+                cur_cat_d = (cat_d == cur_cat) * 1
+                cur_rast_d = rast_d * cur_cat_d
+                with rMisc.create_rasterio_inmemory(rast_profile, cur_rast_d) as cur_rast_src:
+                    res = rMisc.zonalStats(gdf, cur_rast_src, minVal=minVal, maxVal=maxVal, verbose=verbose, reProj=True)
+                    res = pd.DataFrame(res, columns=[f'{cur_cat}_SUM', f'{cur_cat}_MIN', f'{cur_cat}_MAX', f'{cur_cat}_MEAN'])
+                    res['id'] = gdf[gdf_id].values
+                    res.set_index('id', inplace=True)
+                    final_zonal_res.append(res)
+    ret = pd.concat(final_zonal_res, axis=1)
+    if verbose:
+        tPrint(f'**** finished')
+    return({out_file:ret})

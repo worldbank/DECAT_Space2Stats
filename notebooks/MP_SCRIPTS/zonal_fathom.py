@@ -6,7 +6,7 @@ import pandas as pd
 
 from h3 import h3
 
-sys.path.insert(0, "c:\\WBG\\Work\\Code\\GOSTrocks\\src")
+sys.path.insert(0, "/home/wb411133/Code/GOSTrocks/src")
 import GOSTrocks.rasterMisc as rMisc
 import GOSTrocks.ntlMisc as ntl
 import GOSTrocks.dataMisc as dMisc
@@ -34,7 +34,7 @@ if __name__ == "__main__":
                 3: [50, 100000.0],}
     
     # Define input layers
-    pop_layer = r"C:\WBG\Work\data\POP\ppp_2020_1km_Aggregated.tif"
+    pop_layer = r"/home/public/Data/GLOBAL/Population/WorldPop_PPP_2020ppp_2020_1km_Aggregated.tif"
     # Select layer to downlaod
     flood_type = ["PLUVIAL","FLUVIAL","COASTAL"]
     defence = ["DEFENDED"]

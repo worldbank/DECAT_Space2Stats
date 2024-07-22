@@ -22,6 +22,9 @@ AWS_SESSION_TOKEN = os.getenv("AWS_SESSION_TOKEN")
 if __name__ == "__main__":
     multiprocess=True
     verbose = True
+    run_urban = True
+    run_urban_pop = False
+    
     tPrint("Starting")
     h3_level = 6
     data_prefix = "Urbanization"
@@ -33,40 +36,71 @@ if __name__ == "__main__":
     ghs_smod = os.path.join(ghsl_folder, "SMOD", "GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_V1_0.tif")
     ghs_pop = os.path.join(ghsl_folder, "POP", "GHS_POP_E2020_GLOBE_R2023A_54009_100_V1_0.tif")
     
-    h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False)
-    if verbose:
-        tPrint("H3_0 list generated")
+    #h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False)
+    #if verbose:
+    #    tPrint("H3_0 list generated")
     
-    # Set up mp arguments for urban population
-    h3_1_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False, read_pickle=False)
+    h3_1_list = h3_helper.generate_lvl1_lists(h3_level, return_gdf=True, buffer0=True, read_pickle=True, write_pickle=False)
+    if verbose:
+        tPrint("H3_1 list generated")
+    
     urban_pop_args = []
-    processed_pop_list = []
+    urban_args = []
     for h3_1_key, cur_gdf in h3_1_list.items():
-        filename = 'GHS_POP_2020_Urban_Breakdown.csv'
-        out_s3_key = f'Space2Stats/h3_stats_data/GLOBAL/{data_prefix_pop}/{h3_1_key}/{filename}'
-        full_path = os.path.join("s3://", AWS_S3_BUCKET, out_s3_key)
+        # Set up mp arguments for urban population        
+        pop_filename = 'GHS_POP_2020_Urban_Breakdown.csv'
+        pop_out_s3_key = f'Space2Stats/h3_stats_data/GLOBAL/{data_prefix_pop}/{h3_1_key}/{pop_filename}'
+        pop_full_path = os.path.join("s3://", AWS_S3_BUCKET, pop_out_s3_key)
         try:
-            tempPD = pd.read_csv(full_path)
-            processed_pop_list.append(filename)
+            tempPD = pd.read_csv(pop_full_path)
         except:
-            urban_pop_args.append([cur_gdf, ghs_pop, out_s3_key, unq_urban, True, verbose])
+            urban_pop_args.append([cur_gdf, "shape_id", ghs_pop, ghs_smod, pop_full_path, unq_urban])
+            
+        # set up mp arguments for urban summary
+        urban_filename = 'GHS_SMOD_2020.csv'
+        urban_out_s3_key = f'Space2Stats/h3_stats_data/GLOBAL/{data_prefix}/{h3_1_key}/{urban_filename}'
+        urban_full_path = os.path.join("s3://", AWS_S3_BUCKET, urban_out_s3_key)
+        urban_args.append([cur_gdf, "shape_id", ghs_smod, unq_urban, urban_full_path])
+        
+    if run_urban:
+        tPrint(f"Running calculations on urban: {len(urban_args)} processes")
+        # Run multi processing on urban
+        if multiprocess:
+            with multiprocessing.Pool(processes=min([70,len(urban_args)])) as pool:
+                results = pool.starmap(global_zonal.zonal_stats_categories, urban_args)    
+        else:
+            for a in arg_list:
+                results = run_zonal(*a)
+        for combo in results:
+            out_file = list(combo.keys())[0]
+            res = combo[out_file]
+            res.to_csv(
+                f"s3://{AWS_S3_BUCKET}/{out_file}",
+                index=False,
+                storage_options={
+                    "key": AWS_ACCESS_KEY_ID,
+                    "secret": AWS_SECRET_ACCESS_KEY,
+                    "token": AWS_SESSION_TOKEN,
+                },
+            )
 
-    if multiprocess:
-        with multiprocessing.Pool(processes=min([70,len(arg_list)])) as pool:
-            results = pool.starmap(run_zonal_cat, arg_list)    
-    else:
-        for a in arg_list:
-            results = run_zonal(*a)
-
-    for combo in results:
-        out_file = list(combo.keys())[0]
-        res = combo[out_file]
-        res.to_csv(
-            f"s3://{AWS_S3_BUCKET}/{out_file}",
-            index=False,
-            storage_options={
-                "key": AWS_ACCESS_KEY_ID,
-                "secret": AWS_SECRET_ACCESS_KEY,
-                "token": AWS_SESSION_TOKEN,
-            },
-        )
+    if run_urban_pop:
+        # Run multi processing on urban_pop_calculations
+        if multiprocess:
+            with multiprocessing.Pool(processes=min([70,len(urban_pop_args)])) as pool:
+                results = pool.starmap(global_zonal.zonal_stats_categorical, urban_pop_args)    
+        else:
+            for a in arg_list:
+                results = run_zonal(*a)
+        for combo in results:
+            out_file = list(combo.keys())[0]
+            res = combo[out_file]
+            res.to_csv(
+                f"s3://{AWS_S3_BUCKET}/{out_file}",
+                index=False,
+                storage_options={
+                    "key": AWS_ACCESS_KEY_ID,
+                    "secret": AWS_SECRET_ACCESS_KEY,
+                    "token": AWS_SESSION_TOKEN,
+                },
+            )

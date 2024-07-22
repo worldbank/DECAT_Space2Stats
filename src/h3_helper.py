@@ -102,7 +102,7 @@ def generate_lvl0_lists(h3_lvl, return_gdf=False, buffer0=False,
     return h3_lvl0_children
 
 def generate_lvl1_lists(h3_lvl, return_gdf=False, buffer0=False, 
-                        read_pickle=True, pickle_file = "h1_dictionary_of_h{lvl}_geodata_frames.pickle"):
+                        read_pickle=True, pickle_file = "h1_dictionary_of_h{lvl}_geodata_frames.pickle", write_pickle=False):
     """ generate a dictionary with keys as lvl1 codes with all children at h3_lvl level as values
 
     Parameters
@@ -124,15 +124,17 @@ def generate_lvl1_lists(h3_lvl, return_gdf=False, buffer0=False,
     dict
         dictionary with keys as lvl0 codes with all children at h3_lvl level as values; returns a GeoDataFrame if return_gdf is True
     """
+    pickle_file = pickle_file.format(lvl=h3_lvl)
+    pickle_path = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))), pickle_file)            
     if read_pickle:
         try:
-            pickle_file = pickle_file.format(lvl=h3_lvl)
-            pickle_path = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))), pickle_file)
+            print(f"Loading pickle file {pickle_file}: it exists {os.path.exists(pickle_path)}")
             with open(pickle_path, 'rb') as handle:
                 xx = pickle.load(handle)
             return(xx)
         except:
-            print("Could not load pickle file, continuing to process h1 manually")            
+            print("Could not load pickle file, continuing to process h1 manually")
+            raise(ValueError("Could not load pickle file, exiting. Set read_pickle to False to generate list"))
     
     # Get list of all h3 lvl 0 cells
     h3_lvl0 = list(h3.get_res0_indexes())
@@ -154,6 +156,12 @@ def generate_lvl1_lists(h3_lvl, return_gdf=False, buffer0=False,
                 h3_lvl1_children[h3_1] = all_polys
             else:
                 h3_lvl1_children[h3_1] = h3_children_1
+    
+    if write_pickle:
+        if not os.path.exists(pickle_path):
+            with open(pickle_path, 'wb') as handle:
+                pickle.dump(h3_lvl1_children, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        
     return h3_lvl1_children
 
 def map_choropleth(sub, map_column, thresh=[], colour_ramp = 'Reds', invert=False, map_epsg=3857, legend_loc='upper right'):
