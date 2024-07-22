@@ -17,9 +17,9 @@ from urllib.request import urlopen
 from tqdm import tqdm
 
 import h3_helper
-import GOSTRocks.rasterMisc as rMisc
-import GOSTRocks.ntlMisc as ntl
-from GOSTRocks.misc import tPrint
+import GOSTrocks.rasterMisc as rMisc
+import GOSTrocks.ntlMisc as ntl
+from GOSTrocks.misc import tPrint
 
 def calculate_value(in_shp, zonal_res, h3_level, feat_id, fractional_res=True, 
                     zonal_res_id='shape_id', default_sum='SUM'):
