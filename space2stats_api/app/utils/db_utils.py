@@ -10,12 +10,18 @@ DB_TABLE_NAME = settings.DB_TABLE_NAME or "space2stats"
 
 
 def get_summaries(fields, h3_ids):
-    h3_ids_str = ", ".join(f"'{h3_id}'" for h3_id in h3_ids)
-    sql_query = f"""
-    SELECT hex_id, {', '.join(fields)}
-    FROM {DB_TABLE_NAME}
-    WHERE hex_id IN ({h3_ids_str})
-    """
+    colnames = ['hex_id'] + fields
+    cols = [pg.sql.Identifier(c) for c in colnames]
+    sql_query = pg.sql.SQL(
+        """
+            SELECT {0}
+            FROM {1}
+            WHERE hex_id = ANY (%s)
+        """
+        ).format(
+            pg.sql.SQL(', ').join(cols),
+            pg.sql.Identifier(DB_TABLE_NAME)
+        )
     try:
         conn = pg.connect(
             host=DB_HOST,
@@ -25,7 +31,7 @@ def get_summaries(fields, h3_ids):
             password=DB_PASSWORD,
         )
         cur = conn.cursor()
-        cur.execute(sql_query)
+        cur.execute(sql_query, [h3_ids,])
         rows = cur.fetchall()
         colnames = [desc[0] for desc in cur.description]
         cur.close()
@@ -37,10 +43,10 @@ def get_summaries(fields, h3_ids):
 
 
 def get_available_fields():
-    sql_query = f"""
+    sql_query = """
     SELECT column_name
     FROM information_schema.columns
-    WHERE table_name = '{DB_TABLE_NAME}'
+    WHERE table_name = %s
     """
     try:
         conn = pg.connect(
@@ -51,7 +57,7 @@ def get_available_fields():
             password=DB_PASSWORD,
         )
         cur = conn.cursor()
-        cur.execute(sql_query)
+        cur.execute(sql_query, [DB_TABLE_NAME,])
         columns = [row[0] for row in cur.fetchall() if row[0] != "hex_id"]
         cur.close()
         conn.close()
