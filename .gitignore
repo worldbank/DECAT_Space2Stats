@@ -1,6 +1,7 @@
 # repo-specific to ignore
 data/config/LOCAL_FILES/
 *.pickle
+wb_aws.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -94,3 +95,8 @@ _build/
 
 # python-dotenv
 .env
+
+*.parquet
+.pgdata
+db.env
+*.duckdb
