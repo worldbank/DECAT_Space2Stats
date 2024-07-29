@@ -228,6 +228,10 @@ const thebe_selector_output = ".output, .cell_output"
   
 
   
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
 
 </div>
   </nav>
@@ -540,7 +544,9 @@ title="Print to PDF"
       
   </ul>
 </div>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
 </div>
             </div>
@@ -553,6 +559,19 @@ title="Print to PDF"
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started-locally">
+   Getting Started Locally
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -562,6 +581,40 @@ title="Print to PDF"
   <section class="tex2jax_ignore mathjax_ignore" id="space2stats">
 <h1>Space2Stats<a class="headerlink" href="#space2stats" title="Permalink to this heading">#</a></h1>
 <p>Consistent, comparable, authoritative data describing sub-national variation is a constant point of complication for World Bank teams, our development partners, and client countries when assessing and investigating economic issues and national policy. This project will focus on creating and disseminating such data through aggregation of geospatial information at standard administrative divisions, and through the attribution of household survey data with foundational geospatial variables.</p>
+<section id="getting-started-locally">
+<h2>Getting Started Locally<a class="headerlink" href="#getting-started-locally" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Setup the database:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="o">-</span><span class="n">d</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">db.env</span></code> file:</p></li>
+</ul>
+<div class="highlight-.env notranslate"><div class="highlight"><pre><span></span>DB_HOST=localhost
+DB_PORT=5439
+DB_NAME=postgis
+DB_USER=username
+DB_PASSWORD=password
+DB_TABLE_NAME=space2stats
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Load our dataset into the database</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">postgres</span><span class="o">/</span><span class="n">download_parquet</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">python</span> <span class="n">postgres</span><span class="o">/</span><span class="n">chunk_parquet</span><span class="o">.</span><span class="n">py</span>
+<span class="o">./</span><span class="n">postgres</span><span class="o">/</span><span class="n">load_parquet_chunks</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>You can get started with a subset of data for NYC with <code class="docutils literal notranslate"><span class="pre">./load_nyc_sample.sh</span></code> which requires changing your <code class="docutils literal notranslate"><span class="pre">db.env</span></code> value for <code class="docutils literal notranslate"><span class="pre">DB_TABLE_NAME</span></code> to <code class="docutils literal notranslate"><span class="pre">space2stats_nyc_sample</span></code>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Access your data using the Space2statS API! See the <span class="xref myst">example notebook</span>.</p></li>
+</ul>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -614,6 +667,27 @@ title="Print to PDF"
           
           
           
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started-locally">
+   Getting Started Locally
+  </a>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+            </div>
+          
           
         </div>
         <footer class="bd-footer-content">
@@ -635,7 +709,7 @@ By World Bank
   
   <div class="footer-item">
     <p class="last-updated">
-Last updated on Jul 22, 2024.<br>
+Last updated on Jul 29, 2024.<br>
 </p>
   </div>
   
