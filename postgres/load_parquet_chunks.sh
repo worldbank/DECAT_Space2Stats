@@ -33,7 +33,8 @@ do
         ogr2ogr -f "PostgreSQL" \
             PG:"host=$DB_HOST port=$DB_PORT dbname=$DB_NAME user=$DB_USER password=$DB_PASSWORD" \
             "$PARQUET_FILE" \
-            -nln $TABLE_NAME 
+            -nln $TABLE_NAME \
+            -lco SPATIAL_INDEX=NONE
         
         TABLE_EXISTS="t"
     fi
