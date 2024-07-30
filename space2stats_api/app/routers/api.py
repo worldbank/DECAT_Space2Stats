@@ -1,10 +1,10 @@
-from typing import List, Dict, Any, Literal
+from typing import List, Dict, Any, Literal, Optional
 from fastapi import APIRouter
 
 from pydantic import BaseModel, create_model
 from geojson_pydantic import Feature, Polygon
 
-from app.utils.h3_utils import generate_h3_ids
+from app.utils.h3_utils import generate_h3_ids, generate_h3_geometries
 from app.utils.db_utils import get_available_fields, get_summaries
 
 
@@ -17,11 +17,14 @@ class SummaryRequest(BaseModel):
     aoi: AOIModel
     spatial_join_method: Literal["touches", "centroid", "within"]
     fields: List[str]
+    geometry: Optional[Literal["polygon", "point"]] = False
 
 
 def create_response_model(fields: List[str]):
     field_definitions = {field: (Any, ...) for field in fields}
     field_definitions["hex_id"] = (str, ...)
+    if "geometry" in fields:
+        field_definitions["geometry"] = (Dict[str, Any], ...)
     return create_model("DynamicSummaryResponse", **field_definitions)
 
 
@@ -40,8 +43,14 @@ def get_summary(request: SummaryRequest):
         return []
 
     summaries = []
-    for row in rows:
+    geometries = (
+        generate_h3_geometries(h3_ids, request.geometry) if request.geometry else None
+    )
+
+    for idx, row in enumerate(rows):
         summary = {"hex_id": row[0]}
+        if request.geometry and geometries:
+            summary["geometry"] = geometries[idx]
         summary.update(
             {
                 col: row[idx]

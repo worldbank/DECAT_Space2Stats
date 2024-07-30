@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_TABLE_NAME: str
 
-    model_config = SettingsConfigDict(env_file="../db.env")
+    model_config = SettingsConfigDict(env_file="../local_db.env")
 
 
 settings = Settings()
