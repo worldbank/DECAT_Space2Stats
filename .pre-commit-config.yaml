@@ -13,3 +13,12 @@ repos:
         args: [--ignore-missing-imports]
         files: ^space2stats_api/
         exclude: ^space2stats/env/
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: Run pytest
+        entry: bash -c 'PYTHONPATH=space2stats_api python -m pytest space2stats_api'
+        language: system
+        pass_filenames: false
+        always_run: true
