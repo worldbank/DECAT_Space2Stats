@@ -7,7 +7,7 @@ current_directory = os.getcwd()
 env_file_name = 'local_db.env'
 
 if os.path.basename(current_directory) == "space2stats_api":
-    env_path = os.path.join(current_directory, env_file_name)
+    env_path = os.path.join(current_directory, '..', env_file_name)
 else:
     env_path = os.path.join(current_directory, env_file_name)
 
