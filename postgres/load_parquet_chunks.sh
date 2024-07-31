@@ -1,11 +1,16 @@
 #!/bin/bash
 
-# Database connection details
-DB_HOST="localhost"
-DB_PORT="5439"
-DB_NAME="postgis"
-DB_USER="username"
-DB_PASSWORD="password"
+
+# Load environment variables from db.env file
+if [ -f db.env ]; then
+  export $(cat db.env | grep -v '#' | awk '/=/ {print $1}')
+fi
+
+# Check if required environment variables are set
+if [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_PASSWORD" ]; then
+  echo "One or more required environment variables are missing."
+  exit 1
+fi
 
 # Directory containing the Parquet chunks
 CHUNKS_DIR="parquet_chunks"

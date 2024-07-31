@@ -101,3 +101,4 @@ db.env
 *.parquet
 *.duckdb
 .pgdata
+space2stats_api/space2stats_env
