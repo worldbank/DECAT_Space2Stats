@@ -1,7 +1,7 @@
-from typing import List, Dict, Any, Literal, Optional
+from typing import List, Dict, Any, Literal, Optional, TypeAlias
 from fastapi import APIRouter
 
-from pydantic import BaseModel, create_model
+from pydantic import BaseModel
 from geojson_pydantic import Feature, Polygon
 
 from app.utils.h3_utils import generate_h3_ids, generate_h3_geometries
@@ -10,22 +10,14 @@ from app.utils.db_utils import get_available_fields, get_summaries
 
 router = APIRouter()
 
-AOIModel = Feature[Polygon, Dict]
+AOIModel: TypeAlias = Feature[Polygon, Dict]
 
 
 class SummaryRequest(BaseModel):
     aoi: AOIModel
     spatial_join_method: Literal["touches", "centroid", "within"]
     fields: List[str]
-    geometry: Optional[Literal["polygon", "point"]] = False
-
-
-def create_response_model(fields: List[str]):
-    field_definitions = {field: (Any, ...) for field in fields}
-    field_definitions["hex_id"] = (str, ...)
-    if "geometry" in fields:
-        field_definitions["geometry"] = (Dict[str, Any], ...)
-    return create_model("DynamicSummaryResponse", **field_definitions)
+    geometry: Optional[Literal["polygon", "point"]] = None
 
 
 @router.post("/summary", response_model=List[Dict[str, Any]])

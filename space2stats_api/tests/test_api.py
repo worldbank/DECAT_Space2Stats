@@ -3,7 +3,6 @@ import pytest
 from unittest.mock import patch
 
 from app.main import app
-from app.utils.h3_utils import generate_h3_geometries
 
 client = TestClient(app)
 
