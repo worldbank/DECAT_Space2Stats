@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
     DB_TABLE_NAME: str
-
-    model_config = SettingsConfigDict(env_file="../local_db.env")
+        
+    model_config = SettingsConfigDict(env_file='db.env')
 
 
 settings = Settings()

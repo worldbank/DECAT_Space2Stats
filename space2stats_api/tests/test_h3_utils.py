@@ -1,5 +1,5 @@
 import pytest
-from shapely.geometry import Polygon, mapping, Point
+from shapely.geometry import Polygon, mapping
 from app.utils.h3_utils import generate_h3_ids, generate_h3_geometries
 
 polygon_coords = [
