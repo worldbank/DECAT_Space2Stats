@@ -1,10 +1,10 @@
 fastapi
 uvicorn
+mangum
 pandas
 python-dotenv
 shapely
 h3
-pytest
 psycopg[binary]
 httpx
 geojson-pydantic   
