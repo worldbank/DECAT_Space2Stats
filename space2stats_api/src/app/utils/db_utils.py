@@ -1,5 +1,5 @@
 import psycopg as pg
-from app.settings import Settings
+from ..settings import Settings
 
 settings = Settings()
 

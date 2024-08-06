@@ -14,12 +14,12 @@ class Space2StatsStack(Stack):
         settings = Settings(_env_file="./aws.env")
 
         lambda_function = PythonFunction(
-            self, "Space2StatsLambda",
+            self, "Space2StatsFunction",
             entry="../src", 
             runtime=_lambda.Runtime.PYTHON_3_11,
             index="app/main.py", 
             handler="handler",
-            environment=settings.model_dump()
+            environment=settings.model_dum
         )
 
         apigateway.LambdaRestApi(
