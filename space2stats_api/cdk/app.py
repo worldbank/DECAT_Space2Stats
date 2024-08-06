@@ -1,9 +1,9 @@
 from aws_cdk import App, Environment
 from aws_stack import Space2StatsStack
-from settings import Settings
+from settings import DeploymentSettings
 
 
-settings = Settings(_env_file="./aws.env")
+settings = DeploymentSettings(_env_file="aws_deployment.env")
 
 env = Environment(
     account=settings.CDK_DEFAULT_ACCOUNT,
