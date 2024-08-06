@@ -4,6 +4,7 @@ from aws_cdk import (
     aws_lambda as _lambda
 )
 from aws_cdk.aws_lambda_python_alpha import PythonFunction
+from aws_cdk import Duration
 from constructs import Construct
 from settings import Settings
 
@@ -18,8 +19,9 @@ class Space2StatsStack(Stack):
             entry="../src", 
             runtime=_lambda.Runtime.PYTHON_3_11,
             index="app/main.py", 
+            timeout=Duration.seconds(120),
             handler="handler",
-            environment=settings.model_dum
+            environment=settings.model_dump()
         )
 
         apigateway.LambdaRestApi(
