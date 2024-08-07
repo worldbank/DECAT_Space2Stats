@@ -24,7 +24,8 @@ class Space2StatsStack(Stack):
             index="app/main.py",
             timeout=Duration.seconds(120),
             handler="handler",
-            environment=app_settings.model_dump()
+            environment=app_settings.model_dump(),
+            memory_size=1024
         )
 
         certificate = acm.Certificate.from_certificate_arn(self, "Certificate", deployment_settings.CDK_CERTIFICATE_ARN)
