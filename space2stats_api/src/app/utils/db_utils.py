@@ -1,5 +1,7 @@
 import psycopg as pg
-from ..settings import settings
+from ..settings import Settings
+
+settings = Settings()
 
 DB_HOST = settings.DB_HOST
 DB_PORT = settings.DB_PORT

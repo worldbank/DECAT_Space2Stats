@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, Mock
-from app.utils.db_utils import get_summaries, get_available_fields
+from src.app.utils.db_utils import get_summaries, get_available_fields
 from psycopg.sql import SQL, Identifier
 
 

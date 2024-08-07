@@ -1,0 +1,4 @@
+{
+  "app": "python app.py",
+  "watch": { "include": ["../src/**", "."], "exclude": ["**/*.pyc"] }
+}
