@@ -4,14 +4,7 @@ from ..settings import Settings
 
 settings = Settings()
 
-DB_HOST = settings.DB_HOST
-DB_PORT = settings.DB_PORT
-DB_NAME = settings.DB_NAME
-DB_USER = settings.DB_USER
-DB_PASSWORD = settings.DB_PASSWORD
-DB_TABLE_NAME = settings.DB_TABLE_NAME or "space2stats"
-
-conninfo = f"host={DB_HOST} port={DB_PORT} dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD}"
+conninfo = settings.DB_CONNECTION_STRING
 pool = ConnectionPool(conninfo=conninfo, min_size=1, max_size=10, open=True)
 
 
@@ -24,7 +17,7 @@ def get_summaries(fields, h3_ids):
             FROM {1}
             WHERE hex_id = ANY (%s)
         """
-    ).format(pg.sql.SQL(", ").join(cols), pg.sql.Identifier(DB_TABLE_NAME))
+    ).format(pg.sql.SQL(", ").join(cols), pg.sql.Identifier(settings.DB_TABLE_NAME))
     try:
         # Convert h3_ids to a list to ensure compatibility with psycopg
         h3_ids = list(h3_ids)
@@ -56,7 +49,7 @@ def get_available_fields():
                 cur.execute(
                     sql_query,
                     [
-                        DB_TABLE_NAME,
+                        settings.DB_TABLE_NAME,
                     ],
                 )
                 columns = [row[0] for row in cur.fetchall() if row[0] != "hex_id"]
