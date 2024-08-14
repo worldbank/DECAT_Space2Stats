@@ -6,6 +6,7 @@ python-dotenv
 shapely
 h3
 psycopg[binary]
+psycopg[pool]
 httpx
 geojson-pydantic   
 shapely
