@@ -30,23 +30,20 @@ def test_read_root():
     assert response.json() == {"message": "Welcome to Space2Stats!"}
 
 
-@patch("psycopg.connect")
-def test_get_summary(mock_connect):
-    mock_cursor = mock_connect.return_value.cursor.return_value
-    mock_cursor.description = [("hex_id",), ("field1",), ("field2",)]
-    mock_cursor.fetchall.return_value = [("hex_1", 100, 200)]
+@patch("src.app.routers.api.get_summaries")
+def test_get_summary(mock_get_summaries):
+    mock_get_summaries.return_value = [("hex_1", 100, 200)], ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
 
     request_payload = {
         "aoi": aoi,
         "spatial_join_method": "touches",
-        "fields": ["field1", "field2"],
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
     }
 
     response = client.post("/summary", json=request_payload)
 
     assert response.status_code == 200
     response_json = response.json()
-    print(response_json)
     assert isinstance(response_json, list)
 
     for summary in response_json:
@@ -56,16 +53,14 @@ def test_get_summary(mock_connect):
         assert len(summary) == len(request_payload["fields"]) + 1  # +1 for the 'hex_id'
 
 
-@patch("psycopg.connect")
-def test_get_summary_with_geometry_polygon(mock_connect):
-    mock_cursor = mock_connect.return_value.cursor.return_value
-    mock_cursor.description = [("hex_id",), ("field1",), ("field2",)]
-    mock_cursor.fetchall.return_value = [("hex_1", 100, 200)]
+@patch("src.app.routers.api.get_summaries")
+def test_get_summary_with_geometry_polygon(mock_get_summaries):
+    mock_get_summaries.return_value = [("hex_1", 100, 200)], ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
 
     request_payload = {
         "aoi": aoi,
         "spatial_join_method": "touches",
-        "fields": ["field1", "field2"],
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
         "geometry": "polygon",
     }
 
@@ -73,7 +68,6 @@ def test_get_summary_with_geometry_polygon(mock_connect):
 
     assert response.status_code == 200
     response_json = response.json()
-    print(response_json)
     assert isinstance(response_json, list)
 
     for summary in response_json:
@@ -82,21 +76,17 @@ def test_get_summary_with_geometry_polygon(mock_connect):
         assert summary["geometry"]["type"] == "Polygon"
         for field in request_payload["fields"]:
             assert field in summary
-        assert (
-            len(summary) == len(request_payload["fields"]) + 2
-        )  # +1 for the 'hex_id' and +1 for 'geometry'
+        assert len(summary) == len(request_payload["fields"]) + 2  # +1 for the 'hex_id' and +1 for 'geometry'
 
 
-@patch("psycopg.connect")
-def test_get_summary_with_geometry_point(mock_connect):
-    mock_cursor = mock_connect.return_value.cursor.return_value
-    mock_cursor.description = [("hex_id",), ("field1",), ("field2",)]
-    mock_cursor.fetchall.return_value = [("hex_1", 100, 200)]
+@patch("src.app.routers.api.get_summaries")
+def test_get_summary_with_geometry_point(mock_get_summaries):
+    mock_get_summaries.return_value = [("hex_1", 100, 200)], ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
 
     request_payload = {
         "aoi": aoi,
         "spatial_join_method": "touches",
-        "fields": ["field1", "field2"],
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
         "geometry": "point",
     }
 
@@ -104,7 +94,6 @@ def test_get_summary_with_geometry_point(mock_connect):
 
     assert response.status_code == 200
     response_json = response.json()
-    print(response_json)
     assert isinstance(response_json, list)
 
     for summary in response_json:
@@ -113,25 +102,21 @@ def test_get_summary_with_geometry_point(mock_connect):
         assert summary["geometry"]["type"] == "Point"
         for field in request_payload["fields"]:
             assert field in summary
-        assert (
-            len(summary) == len(request_payload["fields"]) + 2
-        )  # +1 for the 'hex_id' and +1 for 'geometry'
+        assert len(summary) == len(request_payload["fields"]) + 2  # +1 for the 'hex_id' and +1 for 'geometry'
 
 
-@patch("psycopg.connect")
-def test_get_fields(mock_connect):
-    mock_cursor = mock_connect.return_value.cursor.return_value
-    mock_cursor.fetchall.return_value = [
-        ("hex_id",),
-        ("field1",),
-        ("field2",),
-        ("field3",),
-    ]
+@patch("src.app.routers.api.get_available_fields")
+def test_get_fields(mock_get_available_fields):
+    mock_get_available_fields.return_value = ["sum_pop_2020", "sum_pop_f_10_2020", "field3"]
 
     response = client.get("/fields")
 
     assert response.status_code == 200
-    assert response.json() == ["field1", "field2", "field3"]
+    response_json = response.json()
+    
+    expected_fields = ["sum_pop_2020", "sum_pop_f_10_2020", "field3"]
+    for field in expected_fields:
+        assert field in response_json
 
 
 if __name__ == "__main__":

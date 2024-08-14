@@ -8,3 +8,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
     DB_TABLE_NAME: str
+
+    @property
+    def DB_CONNECTION_STRING(self) -> str:
+        return f"host={self.DB_HOST} port={self.DB_PORT} dbname={self.DB_NAME} user={self.DB_USER} password={self.DB_PASSWORD}"
