@@ -102,6 +102,6 @@ db.env
 *.duckdb
 .pgdata
 space2stats_api/space2stats_env
-aws*.env
+*.env
 cdk.out
 lambda_layer
