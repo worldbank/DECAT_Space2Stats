@@ -11,4 +11,6 @@ class Settings(BaseSettings):
 
     @property
     def DB_CONNECTION_STRING(self) -> str:
-        return f"host={self.DB_HOST} port={self.DB_PORT} dbname={self.DB_NAME} user={self.DB_USER} password={self.DB_PASSWORD}"
+        host_port = f"host={self.DB_HOST} port={self.DB_PORT}"
+        db_user = f"dbname={self.DB_NAME} user={self.DB_USER}"
+        return f"{host_port} {db_user} password={self.DB_PASSWORD}"

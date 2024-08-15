@@ -1,14 +1,12 @@
-from aws_cdk import (
-    Stack,
-    aws_apigatewayv2 as apigatewayv2,
-    aws_apigatewayv2_integrations as integrations,
-    aws_lambda as _lambda,
-    aws_certificatemanager as acm,
-    Duration
-)
+from aws_cdk import Duration, Stack
+from aws_cdk import aws_apigatewayv2 as apigatewayv2
+from aws_cdk import aws_apigatewayv2_integrations as integrations
+from aws_cdk import aws_certificatemanager as acm
+from aws_cdk import aws_lambda as _lambda
 from aws_cdk.aws_lambda_python_alpha import PythonFunction
 from constructs import Construct
 from settings import AppSettings, DeploymentSettings
+
 
 class Space2StatsStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
@@ -28,7 +26,10 @@ class Space2StatsStack(Stack):
             memory_size=1024
         )
 
-        certificate = acm.Certificate.from_certificate_arn(self, "Certificate", deployment_settings.CDK_CERTIFICATE_ARN)
+        certificate = acm.Certificate.from_certificate_arn(
+            self, "Certificate",
+            deployment_settings.CDK_CERTIFICATE_ARN
+        )
 
         domain_name = apigatewayv2.DomainName(
             self, "DomainName",
