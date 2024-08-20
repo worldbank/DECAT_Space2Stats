@@ -1,7 +1,7 @@
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import h3
-from shapely.geometry import shape, Polygon, Point, mapping
+from shapely.geometry import Point, Polygon, mapping, shape
 
 
 def generate_h3_ids(
@@ -55,7 +55,8 @@ def generate_h3_geometries(
 
     Parameters:
         h3_ids (List[str]): A list of H3 hexagon IDs.
-        geometry_type (Optional[str]): The type of geometry to generate ('polygon' or 'point').
+        geometry_type (Optional[str]):
+            The type of geometry to generate ('polygon' or 'point').
 
     Returns:
         List[Dict[str, Any]]: A list of geometries in GeoJSON format.

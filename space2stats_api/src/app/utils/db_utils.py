@@ -1,5 +1,6 @@
 import psycopg as pg
 from psycopg_pool import ConnectionPool
+
 from ..settings import Settings
 
 settings = Settings()

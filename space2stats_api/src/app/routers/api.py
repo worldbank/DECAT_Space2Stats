@@ -1,12 +1,11 @@
-from typing import List, Dict, Any, Literal, Optional, TypeAlias
+from typing import Any, Dict, List, Literal, Optional, TypeAlias
+
 from fastapi import APIRouter
-
-from pydantic import BaseModel
 from geojson_pydantic import Feature, Polygon
+from pydantic import BaseModel
 
-from ..utils.h3_utils import generate_h3_ids, generate_h3_geometries
 from ..utils.db_utils import get_available_fields, get_summaries
-
+from ..utils.h3_utils import generate_h3_geometries, generate_h3_ids
 
 router = APIRouter()
 

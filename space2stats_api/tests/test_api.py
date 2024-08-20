@@ -1,6 +1,7 @@
-from fastapi.testclient import TestClient
-import pytest
 from unittest.mock import patch
+
+import pytest
+from fastapi.testclient import TestClient
 
 from src.app.main import app
 
@@ -32,7 +33,10 @@ def test_read_root():
 
 @patch("src.app.routers.api.get_summaries")
 def test_get_summary(mock_get_summaries):
-    mock_get_summaries.return_value = [("hex_1", 100, 200)], ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+    mock_get_summaries.return_value = (
+        [("hex_1", 100, 200)],
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+    )
 
     request_payload = {
         "aoi": aoi,
@@ -50,12 +54,16 @@ def test_get_summary(mock_get_summaries):
         assert "hex_id" in summary
         for field in request_payload["fields"]:
             assert field in summary
-        assert len(summary) == len(request_payload["fields"]) + 1  # +1 for the 'hex_id'
+        # +1 for the 'hex_id'
+        assert len(summary) == len(request_payload["fields"]) + 1
 
 
 @patch("src.app.routers.api.get_summaries")
 def test_get_summary_with_geometry_polygon(mock_get_summaries):
-    mock_get_summaries.return_value = [("hex_1", 100, 200)], ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+    mock_get_summaries.return_value = (
+        [("hex_1", 100, 200)],
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+    )
 
     request_payload = {
         "aoi": aoi,
@@ -76,12 +84,16 @@ def test_get_summary_with_geometry_polygon(mock_get_summaries):
         assert summary["geometry"]["type"] == "Polygon"
         for field in request_payload["fields"]:
             assert field in summary
-        assert len(summary) == len(request_payload["fields"]) + 2  # +1 for the 'hex_id' and +1 for 'geometry'
+        # +1 for the 'hex_id' and +1 for 'geometry'
+        assert len(summary) == len(request_payload["fields"]) + 2
 
 
 @patch("src.app.routers.api.get_summaries")
 def test_get_summary_with_geometry_point(mock_get_summaries):
-    mock_get_summaries.return_value = [("hex_1", 100, 200)], ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+    mock_get_summaries.return_value = (
+        [("hex_1", 100, 200)],
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+    )
 
     request_payload = {
         "aoi": aoi,
@@ -102,18 +114,21 @@ def test_get_summary_with_geometry_point(mock_get_summaries):
         assert summary["geometry"]["type"] == "Point"
         for field in request_payload["fields"]:
             assert field in summary
-        assert len(summary) == len(request_payload["fields"]) + 2  # +1 for the 'hex_id' and +1 for 'geometry'
+        # +1 for the 'hex_id' and +1 for 'geometry'
+        assert len(summary) == len(request_payload["fields"]) + 2
 
 
 @patch("src.app.routers.api.get_available_fields")
 def test_get_fields(mock_get_available_fields):
-    mock_get_available_fields.return_value = ["sum_pop_2020", "sum_pop_f_10_2020", "field3"]
+    mock_get_available_fields.return_value = ["sum_pop_2020",
+                                              "sum_pop_f_10_2020",
+                                              "field3"]
 
     response = client.get("/fields")
 
     assert response.status_code == 200
     response_json = response.json()
-    
+
     expected_fields = ["sum_pop_2020", "sum_pop_f_10_2020", "field3"]
     for field in expected_fields:
         assert field in response_json
