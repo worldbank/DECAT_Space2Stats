@@ -1,0 +1,125 @@
+---
+title: "Space2Stats API Demo in R"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(httr)
+library(jsonlite)
+library(sf)
+library(dplyr)
+library(leaflet)
+library(viridis)
+```
+
+## Set Up API Endpoints
+
+```{r}
+base_url <- "https://space2stats.ds.io"
+fields_endpoint <- paste0(base_url, "/fields")
+summary_endpoint <- paste0(base_url, "/summary")
+```
+
+## Fetch Available Fields
+
+```{r}
+response <- GET(fields_endpoint)
+if (status_code(response) != 200) {
+    stop("Failed to get fields: ", content(response, "text"))
+}
+available_fields <- content(response, "parsed")
+print("Available Fields:")
+print(unlist(available_fields))
+```
+
+## Define Area of Interest (AOI)
+
+```{r}
+# Define Area of Interest (AOI) with NULL for properties to ensure it's treated as a valid dictionary
+aoi <- list(
+  type = "Feature",
+  properties = NULL,  # Empty properties
+  geometry = list(
+    type = "Polygon",
+    coordinates = list(
+      list(
+        c(33.78593974945852, 5.115816884114494),
+        c(33.78593974945852, -4.725410543134203),
+        c(41.94362577283266, -4.725410543134203),
+        c(41.94362577283266, 5.115816884114494),
+        c(33.78593974945852, 5.115816884114494)
+      )
+    )
+  )
+)
+```
+
+## Request Summary Data
+
+```{r}
+request_payload <- list(
+    aoi = aoi,
+    spatial_join_method = "centroid",
+    fields = list("sum_pop_2020"),
+    geometry = "point"
+)
+
+response <- POST(summary_endpoint, body = toJSON(request_payload, auto_unbox = TRUE), encode = "json")
+if (status_code(response) != 200) {
+    stop("Failed to get summary data: ", content(response, "text"))
+}
+summary_data <- content(response, "parsed")
+```
+
+## Convert to Spatial DataFrame
+
+```{r}
+# Assuming summary_data is a list of features
+df_list <- lapply(summary_data, function(x) {
+  # Extract the coordinates and create a POINT geometry
+  geom <- st_point(c(x$geometry$coordinates[[1]], x$geometry$coordinates[[2]]))
+  
+  # Convert the geometry into a simple feature geometry (sfc)
+  geom <- st_sfc(geom, crs = 4326)  # Assuming the coordinates are in WGS 84
+  
+  # Combine the hex_id, properties, and geometry into a data frame
+  data.frame(
+    hex_id = x$hex_id,          # Include hex_id
+    sum_pop_2020 = x$sum_pop_2020,  # Include other properties
+    geometry = geom
+  )
+})
+
+# Combine all the individual data frames into one
+df <- do.call(rbind, df_list)
+
+# Convert to a spatial data frame
+gdf <- st_sf(df)
+```
+
+## 6. Visualization
+
+```{r}
+
+# Replace NA values in sum_pop_2020 with 0 
+gdf$sum_pop_2020[is.na(gdf$sum_pop_2020)] <- 0
+
+# Create a binned color palette with a fixed number of intervals (e.g., 7)
+bin_pal <- colorBin(palette = "viridis", domain = gdf$sum_pop_2020, bins = 7, pretty = TRUE)
+
+# Create the leaflet map with binned coloring
+leaflet(gdf) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addCircleMarkers(
+    radius = 3,  # Adjust size as needed
+    color = ~bin_pal(sum_pop_2020),
+    stroke = FALSE, fillOpacity = 0.7,
+    popup = ~paste("Hex ID:", hex_id, "<br>", "Population 2020:", sum_pop_2020)  # Add a popup with details
+  ) %>%
+  addLegend(
+    pal = bin_pal, values = gdf$sum_pop_2020, title = "Population 2020 (Binned Scale)",
+    opacity = 1
+  ) %>%
+  setView(lng = 37.5, lat = 0, zoom = 6)  
+```
