@@ -5,7 +5,7 @@ output: html_notebook
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(httr)
+library(httr2)
 library(jsonlite)
 library(sf)
 library(dplyr)
@@ -24,11 +24,22 @@ summary_endpoint <- paste0(base_url, "/summary")
 ## Fetch Available Fields
 
 ```{r}
-response <- GET(fields_endpoint)
-if (status_code(response) != 200) {
-    stop("Failed to get fields: ", content(response, "text"))
+# Set up the request to fetch available fields
+req <- request(base_url) |>
+  req_url_path_append("fields")  # Append the correct endpoint
+
+# Perform the request and get the response
+resp <- req |> req_perform()
+
+# Check the status code
+if (resp_status(resp) != 200) {
+    stop("Failed to get fields: ", resp_body_string(resp))
 }
-available_fields <- content(response, "parsed")
+
+# Parse the response body as JSON
+available_fields <- resp |> resp_body_json()
+
+# Print the available fields in a simplified format
 print("Available Fields:")
 print(unlist(available_fields))
 ```
@@ -65,61 +76,51 @@ request_payload <- list(
     geometry = "point"
 )
 
-response <- POST(summary_endpoint, body = toJSON(request_payload, auto_unbox = TRUE), encode = "json")
-if (status_code(response) != 200) {
-    stop("Failed to get summary data: ", content(response, "text"))
-}
-summary_data <- content(response, "parsed")
+# Set up the base URL and create the request
+req <- request(base_url) |>
+  req_url_path_append("summary") |>
+  req_body_json(request_payload)
+
+# Perform the request and get the response
+resp <- req |> req_perform()
+
+# Turn response into a data frame
+summary_data <- resp |> resp_body_string() |> fromJSON(flatten = TRUE)
+
+# Extract coordinates and convert to a spatial data frame (sf object)
+summary_data$x <- sapply(summary_data$geometry.coordinates, function(x) unlist(x)[1])
+summary_data$y <- sapply(summary_data$geometry.coordinates, function(x) unlist(x)[2])
+
+# Convert to sf, drop extra geometry fields
+gdf <- st_as_sf(summary_data, coords = c("x", "y"), crs = 4326)[, c(1, 2, 5)]
 ```
 
-## Convert to Spatial DataFrame
-
-```{r}
-# Assuming summary_data is a list of features
-df_list <- lapply(summary_data, function(x) {
-  # Extract the coordinates and create a POINT geometry
-  geom <- st_point(c(x$geometry$coordinates[[1]], x$geometry$coordinates[[2]]))
-  
-  # Convert the geometry into a simple feature geometry (sfc)
-  geom <- st_sfc(geom, crs = 4326)  # Assuming the coordinates are in WGS 84
-  
-  # Combine the hex_id, properties, and geometry into a data frame
-  data.frame(
-    hex_id = x$hex_id,          # Include hex_id
-    sum_pop_2020 = x$sum_pop_2020,  # Include other properties
-    geometry = geom
-  )
-})
-
-# Combine all the individual data frames into one
-df <- do.call(rbind, df_list)
-
-# Convert to a spatial data frame
-gdf <- st_sf(df)
-```
-
-## 6. Visualization
+## Visualization
 
 ```{r}
 
-# Replace NA values in sum_pop_2020 with 0 
+# Replace NA values in sum_pop_2020 with 0
 gdf$sum_pop_2020[is.na(gdf$sum_pop_2020)] <- 0
 
-# Create a binned color palette with a fixed number of intervals (e.g., 7)
-bin_pal <- colorBin(palette = "viridis", domain = gdf$sum_pop_2020, bins = 7, pretty = TRUE)
+# Create a custom binned color palette with non-uniform breaks
+# For example: 0 (distinct color), 1-200000 (gradient), 200001+ (another color)
+breaks <- c(0, 1, 1000, 10000, 50000, 100000, 200000, max(gdf$sum_pop_2020))
 
-# Create the leaflet map with binned coloring
+custom_pal <- colorBin(palette = c("lightgray", "yellow", "orange", "red", "purple", "blue"),
+                       domain = gdf$sum_pop_2020, bins = breaks)
+
+# Create the leaflet map with custom binned coloring
 leaflet(gdf) %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addCircleMarkers(
     radius = 3,  # Adjust size as needed
-    color = ~bin_pal(sum_pop_2020),
+    color = ~custom_pal(sum_pop_2020),
     stroke = FALSE, fillOpacity = 0.7,
     popup = ~paste("Hex ID:", hex_id, "<br>", "Population 2020:", sum_pop_2020)  # Add a popup with details
   ) %>%
   addLegend(
-    pal = bin_pal, values = gdf$sum_pop_2020, title = "Population 2020 (Binned Scale)",
+    pal = custom_pal, values = gdf$sum_pop_2020, title = "Population 2020 (Custom Binned Scale)",
     opacity = 1
   ) %>%
-  setView(lng = 37.5, lat = 0, zoom = 6)  
+  setView(lng = 37.5, lat = 0, zoom = 6)  # Center the map based on AOI
 ```
