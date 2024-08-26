@@ -105,3 +105,5 @@ space2stats_api/space2stats_env
 *.env
 cdk.out
 lambda_layer
+
+.benchmarks/

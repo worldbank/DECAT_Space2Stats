@@ -1,0 +1,51 @@
+[project]
+name = "space2stats"
+description = "Space 2 Stats"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Zac Deziel", email = "zac@developmentseed.org"},
+]
+dynamic = ["version"]
+dependencies = [
+    "fastapi>=0.112.0",
+    "pandas",
+    "shapely",
+    "h3",
+    "psycopg[binary]",
+    "psycopg[pool]",
+    "httpx",
+    "geojson-pydantic",
+    "shapely",
+    "pydantic-settings>=2.0.0",
+    "typing_extensions",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-postgresql",
+    "httpx",
+]
+lambda = [
+    "mangum",
+]
+server = [
+    "uvicorn",
+]
+
+[tool.hatch.version]
+path = "space2stats/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/tests",
+  ".pytest_cache",
+  ".local_db.env",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
