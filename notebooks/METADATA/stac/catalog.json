@@ -1,0 +1,20 @@
+{
+  "type": "Catalog",
+  "id": "space2stats",
+  "stac_version": "1.0.0",
+  "description": "Global dataset of geospatial variables at the grid level (hexagon H3 level 5).",
+  "links": [
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats"
+    },
+    {
+      "rel": "item",
+      "href": "./space2stats-population/space2stats-population.json",
+      "type": "application/json"
+    }
+  ],
+  "title": "Space2Stats"
+}

@@ -1,0 +1,126 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "space2stats-population",
+  "properties": {
+    "name": "Space2Stats Population",
+    "description": "Testing metadata with population variables",
+    "table:primary_geometry": "geometry",
+    "table:columns": [
+      {
+        "name": "hex_id",
+        "description": "Hexagon unique identifier",
+        "type": "object"
+      },
+      {
+        "name": "geometry",
+        "description": "Geometry (shapely polygon) of hexagon",
+        "type": "geometry"
+      },
+      {
+        "name": "sum_pop_2020",
+        "description": "Total population in 2020",
+        "type": "float64"
+      },
+      {
+        "name": "ogc_fid",
+        "description": "OGC FID",
+        "type": "int64"
+      },
+      {
+        "name": "sum_pop_f_0_2020",
+        "description": "Total female population, age 0-1",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_10_2020",
+        "description": "Total female population, age 10-15",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_15_2020",
+        "description": "Total female population, age 15-20",
+        "type": "float64"
+      }
+    ],
+    "vector:layers": {
+      "test": {
+        "properties": {
+          "hex_id": "str",
+          "sum_pop_2020": "float",
+          "ogc_fid": "int",
+          "sum_pop_f_0_2020": "float",
+          "sum_pop_f_10_2020": "float",
+          "sum_pop_f_15_2020": "float"
+        },
+        "geometry": "Polygon"
+      }
+    },
+    "datetime": "2024-08-27T15:08:37.880172Z"
+  },
+  "geometry": {
+    "coordinates": [
+      [
+        [
+          33.86362617384264,
+          -4.955556645599989
+        ],
+        [
+          41.877619271709094,
+          -4.955556645599989
+        ],
+        [
+          41.877619271709094,
+          4.805751327613126
+        ],
+        [
+          33.86362617384264,
+          4.805751327613126
+        ],
+        [
+          33.86362617384264,
+          -4.955556645599989
+        ]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats"
+    }
+  ],
+  "assets": {
+    "test": {
+      "href": "./test.geojson",
+      "type": "application/geo+json",
+      "roles": []
+    },
+    "metadata": {
+      "href": "https://nada-demo.ihsn.org/index.php/catalog/55",
+      "type": "text/html",
+      "title": "Additional Medata",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "bbox": [
+    33.86362617384264,
+    -4.955556645599989,
+    41.877619271709094,
+    4.805751327613126
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json"
+  ]
+}
