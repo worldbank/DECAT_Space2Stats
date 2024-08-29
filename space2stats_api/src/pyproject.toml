@@ -17,7 +17,6 @@ dependencies = [
     "psycopg[pool]",
     "httpx",
     "geojson-pydantic",
-    "shapely",
     "pydantic-settings>=2.0.0",
     "typing_extensions",
 ]

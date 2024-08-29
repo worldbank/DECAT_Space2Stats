@@ -27,6 +27,7 @@ async def connect_to_db(
         max_idle=settings.DB_MAX_IDLE,
         num_workers=settings.DB_NUM_WORKERS,
         kwargs=pool_kwargs,
+        open=True,
     )
 
     # Make sure the pool is ready
