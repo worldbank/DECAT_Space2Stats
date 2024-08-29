@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import ORJSONResponse
 
 from typing import Any, Dict, List
 
@@ -21,7 +22,10 @@ async def lifespan(app: FastAPI):
     await close_db_connection(app)
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    default_response_class=ORJSONResponse,
+    lifespan=lifespan,
+)
 
 app.add_middleware(
     CORSMiddleware,

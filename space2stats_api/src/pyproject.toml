@@ -9,6 +9,7 @@ authors = [
 ]
 dynamic = ["version"]
 dependencies = [
+    "orjson",
     "fastapi>=0.112.0",
     "pandas",
     "shapely",
