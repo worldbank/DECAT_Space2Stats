@@ -27,6 +27,7 @@ mangum = "*"
 uvicorn = "*"
 
 [tool.poetry.group.test.dependencies]
+pre-commit = "*"
 pytest = "*" 
 pytest-cov = "*" 
 pytest-postgresql = "*"
