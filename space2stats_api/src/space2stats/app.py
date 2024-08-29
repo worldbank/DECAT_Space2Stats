@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Any, Dict, List
 
 from starlette.requests import Request
+from starlette_cramjam.middleware import CompressionMiddleware
 
 from .db import connect_to_db, close_db_connection
 from .main import get_summaries_from_geom, get_available_fields, SummaryRequest
@@ -29,6 +30,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(CompressionMiddleware)
 
 
 @app.post("/summary", response_model=List[Dict[str, Any]])
