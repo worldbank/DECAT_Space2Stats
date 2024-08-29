@@ -1,52 +1,36 @@
-[project]
+[tool.poetry]
 name = "space2stats"
+version = "0.1.0"  # Set your version explicitly here
 description = "Space 2 Stats"
+authors = ["Zac Deziel <zac@developmentseed.org>"]
 readme = "README.md"
-requires-python = ">=3.8"
-license = {file = "LICENSE"}
-authors = [
-    {name = "Zac Deziel", email = "zac@developmentseed.org"},
-]
-dynamic = ["version"]
-dependencies = [
-    "orjson",
-    "fastapi>=0.112.0",
-    "pandas",
-    "shapely",
-    "h3",
-    "psycopg[binary]",
-    "psycopg[pool]",
-    "httpx",
-    "geojson-pydantic",
-    "pydantic-settings>=2.0.0",
-    "typing_extensions",
-    "starlette-cramjam>=0.3,<0.4",
-]
 
-[project.optional-dependencies]
-test = [
-    "pytest",
-    "pytest-cov",
-    "pytest-postgresql",
-    "httpx",
-]
-lambda = [
-    "mangum",
-]
-server = [
-    "uvicorn",
-]
+[tool.poetry.dependencies]
+python = "^3.8"
+orjson = "*"
+fastapi = ">=0.112.0"
+pandas = "*"
+shapely = "*"
+h3 = "*"
+psycopg = { version = "*", extras = ["binary", "pool"] }
+httpx = "*"
+geojson-pydantic = "*"
+pydantic-settings = ">=2.0.0"
+typing_extensions = "*"
+starlette-cramjam = ">=0.3,<0.4"
+mangum = "*"
 
-[tool.hatch.version]
-path = "space2stats/__init__.py"
+[tool.poetry.group.lambda.dependencies]
+mangum = "*"
 
-[tool.hatch.build.targets.sdist]
-exclude = [
-  "/tests",
-  ".pytest_cache",
-  ".local_db.env",
-]
+[tool.poetry.group.server.dependencies]
+uvicorn = "*"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*" 
+pytest-cov = "*" 
+pytest-postgresql = "*"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
