@@ -2,14 +2,15 @@ version: '3'
 
 services:
   database:
-    image: ghcr.io/stac-utils/pgstac:v0.8.5
+    # at time of writing this, ARM64 is not supported so we make sure to use
+    # a supported platform: https://github.com/postgis/docker-postgis/issues/216
+    # Could possibly switch to https://github.com/vincentsarago/containers
+    platform: linux/amd64
+    image: postgis/postgis:15-3.4
     environment:
       - POSTGRES_USER=username
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=postgis
-      - PGUSER=username
-      - PGPASSWORD=password
-      - PGDATABASE=postgis
     ports:
       - "${MY_DOCKER_IP:-127.0.0.1}:5439:5432"
     command: postgres -N 500
