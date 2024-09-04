@@ -9,6 +9,7 @@ class AppSettings(BaseSettings):
     DB_PASSWORD: str
     DB_TABLE_NAME: str
 
+
 class DeploymentSettings(BaseSettings):
     CDK_DEFAULT_ACCOUNT: str
     CDK_DEFAULT_REGION: str

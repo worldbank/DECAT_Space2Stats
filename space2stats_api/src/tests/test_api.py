@@ -1,10 +1,8 @@
 from unittest.mock import patch
 
 import pytest
-from pytest_postgresql.janitor import DatabaseJanitor
-
 from fastapi.testclient import TestClient
-
+from pytest_postgresql.janitor import DatabaseJanitor
 
 aoi = {
     "type": "Feature",
@@ -22,6 +20,7 @@ aoi = {
     },
     "properties": {},
 }
+
 
 @pytest.fixture(scope="session")
 def database(postgresql_proc):
@@ -62,7 +61,7 @@ def test_read_root(client):
 def test_get_summary(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
-        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"],
     )
 
     request_payload = {
@@ -89,7 +88,7 @@ def test_get_summary(mock_get_summaries, client):
 def test_get_summary_with_geometry_polygon(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
-        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"],
     )
 
     request_payload = {
@@ -119,7 +118,7 @@ def test_get_summary_with_geometry_polygon(mock_get_summaries, client):
 def test_get_summary_with_geometry_point(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
-        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"],
     )
 
     request_payload = {
@@ -147,9 +146,11 @@ def test_get_summary_with_geometry_point(mock_get_summaries, client):
 
 @patch("space2stats.app.get_available_fields")
 def test_get_fields(mock_get_available_fields, client):
-    mock_get_available_fields.return_value = ["sum_pop_2020",
-                                              "sum_pop_f_10_2020",
-                                              "field3"]
+    mock_get_available_fields.return_value = [
+        "sum_pop_2020",
+        "sum_pop_f_10_2020",
+        "field3",
+    ]
 
     response = client.get("/fields")
 
