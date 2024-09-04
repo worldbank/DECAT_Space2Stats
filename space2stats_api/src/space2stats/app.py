@@ -9,8 +9,13 @@ from fastapi.responses import ORJSONResponse
 from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 
-from .db import connect_to_db, close_db_connection
-from .main import get_summaries_from_geom, get_available_fields, settings, SummaryRequest
+from .db import close_db_connection, connect_to_db
+from .main import (
+    SummaryRequest,
+    get_available_fields,
+    get_summaries_from_geom,
+    settings,
+)
 
 s3_client = boto3.client("s3")
 

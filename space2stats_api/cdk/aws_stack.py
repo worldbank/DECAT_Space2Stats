@@ -2,8 +2,8 @@ from aws_cdk import Duration, Stack
 from aws_cdk import aws_apigatewayv2 as apigatewayv2
 from aws_cdk import aws_apigatewayv2_integrations as integrations
 from aws_cdk import aws_certificatemanager as acm
-from aws_cdk import aws_s3 as s3
 from aws_cdk import aws_lambda as _lambda
+from aws_cdk import aws_s3 as s3
 from aws_cdk.aws_lambda_python_alpha import PythonFunction
 from constructs import Construct
 from settings import AppSettings, DeploymentSettings
@@ -17,7 +17,8 @@ class Space2StatsStack(Stack):
         deployment_settings = DeploymentSettings(_env_file="./aws_deployment.env")
 
         bucket = s3.Bucket(
-            self, "LargeResponseBucket",
+            self,
+            "LargeResponseBucket",
             lifecycle_rules=[s3.LifecycleRule(expiration=Duration.days(1))],
         )
 

@@ -19,7 +19,7 @@ pydantic-settings = ">=2.0.0"
 typing_extensions = "*"
 starlette-cramjam = ">=0.3,<0.4"
 mangum = "*"
-asgi-s3-response-middleware = "^0.0.1"
+asgi-s3-response-middleware = "^0.0.2"
 boto3 = "^1.35.11"
 
 [tool.poetry.group.lambda.dependencies]
