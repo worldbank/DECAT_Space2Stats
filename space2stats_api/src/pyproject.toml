@@ -20,6 +20,7 @@ typing_extensions = "*"
 starlette-cramjam = ">=0.3,<0.4"
 mangum = "*"
 asgi-s3-response-middleware = "^0.0.1"
+boto3 = "^1.35.11"
 
 [tool.poetry.group.lambda.dependencies]
 mangum = "*"
@@ -32,6 +33,7 @@ pre-commit = "*"
 pytest = "*" 
 pytest-cov = "*" 
 pytest-postgresql = "*"
+moto = "^5.0.13"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

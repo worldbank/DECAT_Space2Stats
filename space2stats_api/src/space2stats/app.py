@@ -42,7 +42,7 @@ app.add_middleware(
 app.add_middleware(CompressionMiddleware)
 app.add_middleware(
     S3ResponseMiddleware,
-    bucket_name=settings.S3_BUCKET_NAME,
+    s3_bucket_name=settings.S3_BUCKET_NAME,
     s3_client=s3_client,
 )
 

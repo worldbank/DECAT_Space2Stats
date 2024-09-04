@@ -41,3 +41,4 @@ jobs:
         DB_USER: myuser
         DB_PASSWORD: mypassword
         DB_TABLE_NAME: space2stats
+        S3_BUCKET_NAME: test-bucket
