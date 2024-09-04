@@ -10,7 +10,7 @@ The acceptance test below provides steps to verify that the deliverable meets ou
 
 The input data is stored in Parquet format on AWS S3 (object storage), specifically in the file `space2stats_updated.parquet`. Any additional fields must be appended to this file. The Parquet file is tabular with the following columns:
 - `hex_id`
-- `{aggregation_method[sum, mean, etc.]}_{variable_name}_{year}`
+- `{variable_name}_{aggregation_method[sum, mean, etc.]}_{year}`
 
 ### Database Setup
 
@@ -20,7 +20,7 @@ You can use a local database for this acceptance test by running the following c
 docker-compose up
 ```
 
-Alternatively, you can connect to a remote database, such as the Tembo database used for production.
+Alternatively, you can connect to a remote database, such as the [Tembo database](reluctantly-simple-spoonbill.data-1.use1.tembo.io) used for production.
 
 ### Data Ingestion
 
