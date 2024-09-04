@@ -9,11 +9,11 @@ PARQUET_FILE="Space2Stats/parquet/GLOBAL/combined_population.parquet"
 LOCAL_PARQUET_FILE="space2stats.parquet"
 
 # PostgreSQL configuration
-DB_HOST="${MY_DOCKER_IP:-127.0.0.1}"
-DB_PORT=5439
-DB_NAME="postgis"
-DB_USER="username"
-DB_PASSWORD="password"
+PGHOST="${MY_DOCKER_IP:-127.0.0.1}"
+PGPORT=5439
+PGNAME="postgis"
+PGUSER="username"
+PGPASSWORD="password"
 
 # Download Parquet file from S3
 echo "Downloading Parquet file from S3..."

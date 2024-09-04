@@ -11,12 +11,12 @@ docker-compose up -d
 
 - Create a `db.env` file:
 ```.env
-DB_HOST=localhost
-DB_PORT=5439
-DB_NAME=postgis
-DB_USER=username
-DB_PASSWORD=password
-DB_TABLE_NAME=space2stats
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=postgis
+PGUSER=username
+PGPASSWORD=password
+PGTABLENAME=space2stats
 ```
 
 - Load our dataset into the database
@@ -26,7 +26,7 @@ python postgres/chunk_parquet.py
 ./postgres/load_parquet_chunks.sh
 ```
 
-> You can get started with a subset of data for NYC with `./load_nyc_sample.sh` which requires changing your `db.env` value for `DB_TABLE_NAME` to `space2stats_nyc_sample`.
+> You can get started with a subset of data for NYC with `./load_nyc_sample.sh` which requires changing your `db.env` value for `PGTABLENAME` to `space2stats_nyc_sample`.
 
 - Access your data using the Space2statS API! See the [example notebook](notebooks/space2stats_api_demo.ipynb).
 

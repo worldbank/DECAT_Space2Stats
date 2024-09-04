@@ -35,9 +35,9 @@ jobs:
       run: |
         poetry run pytest -s -vv
       env:
-        DB_HOST: localhost
-        DB_PORT: 5432
-        DB_NAME: mydatabase
-        DB_USER: myuser
-        DB_PASSWORD: mypassword
-        DB_TABLE_NAME: space2stats
+        PGHOST: localhost
+        PGPORT: 5432
+        PGDATABASE: mydatabase
+        PGUSER: myuser
+        PGPASSWORD: mypassword
+        PGTABLENAME: space2stats

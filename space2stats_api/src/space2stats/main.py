@@ -32,7 +32,7 @@ def _get_summaries(fields: List[str], h3_ids: List[str], conn: Connection):
             FROM {1}
             WHERE hex_id = ANY (%s)
         """
-    ).format(pg.sql.SQL(", ").join(cols), pg.sql.Identifier(settings.DB_TABLE_NAME))
+    ).format(pg.sql.SQL(", ").join(cols), pg.sql.Identifier(settings.PGTABLENAME))
 
     # Convert h3_ids to a list to ensure compatibility with psycopg
     h3_ids = list(h3_ids)
@@ -105,7 +105,7 @@ def get_available_fields(conn: Connection) -> List[str]:
         cur.execute(
             sql_query,
             [
-                settings.DB_TABLE_NAME,
+                settings.PGTABLENAME,
             ],
         )
         columns = [row[0] for row in cur.fetchall() if row[0] != "hex_id"]
