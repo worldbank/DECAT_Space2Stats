@@ -1,20 +1,18 @@
-
-
-
 from typing import Dict, List, Literal, Optional
 
 import psycopg as pg
+from geojson_pydantic import Feature, Polygon
 from psycopg import Connection
 from pydantic import BaseModel
-from geojson_pydantic import Feature, Polygon
 from typing_extensions import TypeAlias
 
-from .h3_utils import generate_h3_ids, generate_h3_geometries
+from .h3_utils import generate_h3_geometries, generate_h3_ids
 from .settings import Settings
 
 settings = Settings()
 
 AoiModel: TypeAlias = Feature[Polygon, Dict]
+
 
 class SummaryRequest(BaseModel):
     aoi: AoiModel
@@ -74,9 +72,7 @@ def get_summaries_from_geom(
 
     # Format Summaries
     summaries: List[Dict] = []
-    geometries = (
-        generate_h3_geometries(h3_ids, geometry) if geometry else None
-    )
+    geometries = generate_h3_geometries(h3_ids, geometry) if geometry else None
 
     for idx, row in enumerate(rows):
         summary = {"hex_id": row[0]}

@@ -1,13 +1,11 @@
 from contextlib import asynccontextmanager
+from typing import Any, Dict, List
 
 import boto3
 from asgi_s3_response_middleware import S3ResponseMiddleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-
-from typing import Any, Dict, List
-
 from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 

@@ -5,8 +5,7 @@ from settings import DeploymentSettings
 settings = DeploymentSettings(_env_file="aws_deployment.env")
 
 env = Environment(
-    account=settings.CDK_DEFAULT_ACCOUNT,
-    region=settings.CDK_DEFAULT_REGION
+    account=settings.CDK_DEFAULT_ACCOUNT, region=settings.CDK_DEFAULT_REGION
 )
 
 app = App()

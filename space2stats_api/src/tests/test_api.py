@@ -1,10 +1,8 @@
 from unittest.mock import patch
 
 import pytest
-from pytest_postgresql.janitor import DatabaseJanitor
-
 from fastapi.testclient import TestClient
-
+from pytest_postgresql.janitor import DatabaseJanitor
 
 aoi = {
     "type": "Feature",
