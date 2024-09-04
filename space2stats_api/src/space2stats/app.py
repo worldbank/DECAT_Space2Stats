@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
 
+import boto3
+from asgi_s3_response_middleware import S3ResponseMiddleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
@@ -10,7 +12,10 @@ from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 
 from .db import connect_to_db, close_db_connection
-from .main import get_summaries_from_geom, get_available_fields, SummaryRequest
+from .main import get_summaries_from_geom, get_available_fields, settings, SummaryRequest
+
+s3_client = boto3.client("s3")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -35,6 +40,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(CompressionMiddleware)
+app.add_middleware(
+    S3ResponseMiddleware,
+    bucket_name=settings.S3_BUCKET_NAME,
+    s3_client=s3_client,
+)
 
 
 @app.post("/summary", response_model=List[Dict[str, Any]])
