@@ -1,4 +1,3 @@
-
 import os
 
 from .app import app
@@ -11,8 +10,9 @@ except ImportError:  # pragma: nocover
 
 
 if __name__ == "__main__":
-
-    assert uvicorn is not None, "uvicorn must be installed: `python -m pip install 'space2stats[server]'`"
+    assert (
+        uvicorn is not None
+    ), "uvicorn must be installed: `python -m pip install 'space2stats[server]'`"
 
     uvicorn.run(
         app=app,

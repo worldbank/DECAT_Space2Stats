@@ -5,8 +5,8 @@ import os
 
 from mangum import Mangum
 
-from .db import connect_to_db
 from .app import app
+from .db import connect_to_db
 
 
 @app.on_event("startup")

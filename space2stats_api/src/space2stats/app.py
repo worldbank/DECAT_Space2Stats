@@ -1,16 +1,15 @@
 from contextlib import asynccontextmanager
+from typing import Any, Dict, List
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-
-from typing import Any, Dict, List
-
 from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 
-from .db import connect_to_db, close_db_connection
-from .main import get_summaries_from_geom, get_available_fields, SummaryRequest
+from .db import close_db_connection, connect_to_db
+from .main import SummaryRequest, get_available_fields, get_summaries_from_geom
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
