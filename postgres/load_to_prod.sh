@@ -17,7 +17,7 @@ CHUNKS_DIR="parquet_chunks"
 
 # Name of the target table
 TABLE_NAME="space2stats"
-PARQUET_FILE=space2stats_updated.parquet
+PARQUET_FILE=space2stats.parquet
 
 echo "Starting"
 
