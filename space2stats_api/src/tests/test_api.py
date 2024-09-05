@@ -38,12 +38,12 @@ def database(postgresql_proc):
 
 @pytest.fixture(autouse=True)
 def client(monkeypatch, database, test_bucket):
-    monkeypatch.setenv("DB_HOST", database.host)
-    monkeypatch.setenv("DB_PORT", str(database.port))
-    monkeypatch.setenv("DB_NAME", database.dbname)
-    monkeypatch.setenv("DB_USER", database.user)
-    monkeypatch.setenv("DB_PASSWORD", database.password)
-    monkeypatch.setenv("DB_TABLE_NAME", "space2stats")
+    monkeypatch.setenv("PGHOST", database.host)
+    monkeypatch.setenv("PGPORT", str(database.port))
+    monkeypatch.setenv("PGDATABASE", database.dbname)
+    monkeypatch.setenv("PGUSER", database.user)
+    monkeypatch.setenv("PGPASSWORD", database.password)
+    monkeypatch.setenv("PGTABLENAME", "space2stats")
 
     from space2stats.app import app
 

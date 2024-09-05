@@ -2,12 +2,12 @@ from pydantic_settings import BaseSettings
 
 
 class AppSettings(BaseSettings):
-    DB_HOST: str
-    DB_PORT: str
-    DB_NAME: str
-    DB_USER: str
-    DB_PASSWORD: str
-    DB_TABLE_NAME: str
+    PGHOST: str
+    PGPORT: str
+    PGDATABASE: str
+    PGUSER: str
+    PGPASSWORD: str
+    PGTABLENAME: str
 
 
 class DeploymentSettings(BaseSettings):

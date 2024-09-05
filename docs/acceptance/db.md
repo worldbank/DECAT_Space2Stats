@@ -27,12 +27,12 @@ Alternatively, you can connect to a remote database, such as the [Tembo database
 Set the database environment variables in `db.env`:
 
 ```bash
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=postgis
-DB_USER=postgres
-DB_PASSWORD=password
-DB_TABLE_NAME=space2stats
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=postgis
+PGUSER=postgres
+PGPASSWORD=password
+PGTABLENAME=space2stats
 ```
 
 > Note: If using the `docker-compose` approach, the above configuration is suitable.
