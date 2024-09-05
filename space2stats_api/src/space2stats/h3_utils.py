@@ -35,6 +35,7 @@ def generate_h3_ids(
             for h3_id in h3_ids
             if aoi_shape.contains(Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)))
         ]
+
     elif spatial_join_method == "centroid":
         h3_ids = [
             h3_id
@@ -73,4 +74,5 @@ def generate_h3_geometries(
             # h3_to_geo does not have geo_json parameter to invert order of coords
             x, y = h3.h3_to_geo(h3_id)
             geometries.append(mapping(Point(y, x)))
+
     return geometries

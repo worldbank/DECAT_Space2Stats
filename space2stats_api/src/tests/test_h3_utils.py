@@ -1,7 +1,6 @@
 import pytest
 from shapely.geometry import Polygon, mapping
-
-from src.app.utils.h3_utils import generate_h3_geometries, generate_h3_ids
+from space2stats.h3_utils import generate_h3_geometries, generate_h3_ids
 
 polygon_coords = [
     [-74.3, 40.5],

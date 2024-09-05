@@ -2,10 +2,7 @@ from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
-
-from src.app.main import app
-
-client = TestClient(app)
+from pytest_postgresql.janitor import DatabaseJanitor
 
 aoi = {
     "type": "Feature",
@@ -25,17 +22,46 @@ aoi = {
 }
 
 
-def test_read_root():
+@pytest.fixture(scope="session")
+def database(postgresql_proc):
+    """Fake Database."""
+    with DatabaseJanitor(
+        user=postgresql_proc.user,
+        host=postgresql_proc.host,
+        port=postgresql_proc.port,
+        dbname="testdb",
+        version=postgresql_proc.version,
+        password="password",
+    ) as jan:
+        yield jan
+
+
+@pytest.fixture(autouse=True)
+def client(monkeypatch, database):
+    monkeypatch.setenv("DB_HOST", database.host)
+    monkeypatch.setenv("DB_PORT", str(database.port))
+    monkeypatch.setenv("DB_NAME", database.dbname)
+    monkeypatch.setenv("DB_USER", database.user)
+    monkeypatch.setenv("DB_PASSWORD", database.password)
+    monkeypatch.setenv("DB_TABLE_NAME", "space2stats")
+
+    from space2stats.app import app
+
+    with TestClient(app) as app:
+        yield app
+
+
+def test_read_root(client):
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "Welcome to Space2Stats!"}
 
 
-@patch("src.app.routers.api.get_summaries")
-def test_get_summary(mock_get_summaries):
+@patch("space2stats.main._get_summaries")
+def test_get_summary(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
-        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"],
     )
 
     request_payload = {
@@ -58,11 +84,11 @@ def test_get_summary(mock_get_summaries):
         assert len(summary) == len(request_payload["fields"]) + 1
 
 
-@patch("src.app.routers.api.get_summaries")
-def test_get_summary_with_geometry_polygon(mock_get_summaries):
+@patch("space2stats.main._get_summaries")
+def test_get_summary_with_geometry_polygon(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
-        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"],
     )
 
     request_payload = {
@@ -88,11 +114,11 @@ def test_get_summary_with_geometry_polygon(mock_get_summaries):
         assert len(summary) == len(request_payload["fields"]) + 2
 
 
-@patch("src.app.routers.api.get_summaries")
-def test_get_summary_with_geometry_point(mock_get_summaries):
+@patch("space2stats.main._get_summaries")
+def test_get_summary_with_geometry_point(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
-        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"]
+        ["hex_id", "sum_pop_2020", "sum_pop_f_10_2020"],
     )
 
     request_payload = {
@@ -118,11 +144,13 @@ def test_get_summary_with_geometry_point(mock_get_summaries):
         assert len(summary) == len(request_payload["fields"]) + 2
 
 
-@patch("src.app.routers.api.get_available_fields")
-def test_get_fields(mock_get_available_fields):
-    mock_get_available_fields.return_value = ["sum_pop_2020",
-                                              "sum_pop_f_10_2020",
-                                              "field3"]
+@patch("space2stats.app.get_available_fields")
+def test_get_fields(mock_get_available_fields, client):
+    mock_get_available_fields.return_value = [
+        "sum_pop_2020",
+        "sum_pop_f_10_2020",
+        "field3",
+    ]
 
     response = client.get("/fields")
 
@@ -132,7 +160,3 @@ def test_get_fields(mock_get_available_fields):
     expected_fields = ["sum_pop_2020", "sum_pop_f_10_2020", "field3"]
     for field in expected_fields:
         assert field in response_json
-
-
-if __name__ == "__main__":
-    pytest.main()

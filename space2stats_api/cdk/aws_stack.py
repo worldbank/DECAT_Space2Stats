@@ -16,38 +16,40 @@ class Space2StatsStack(Stack):
         deployment_settings = DeploymentSettings(_env_file="./aws_deployment.env")
 
         lambda_function = PythonFunction(
-            self, "Space2StatsFunction",
+            self,
+            "Space2StatsFunction",
             entry="../src",
             runtime=_lambda.Runtime.PYTHON_3_11,
-            index="app/main.py",
+            index="space2stats/handler.py",
             timeout=Duration.seconds(120),
             handler="handler",
             environment=app_settings.model_dump(),
-            memory_size=1024
+            memory_size=1024,
         )
 
         certificate = acm.Certificate.from_certificate_arn(
-            self, "Certificate",
-            deployment_settings.CDK_CERTIFICATE_ARN
+            self, "Certificate", deployment_settings.CDK_CERTIFICATE_ARN
         )
 
         domain_name = apigatewayv2.DomainName(
-            self, "DomainName",
+            self,
+            "DomainName",
             domain_name=deployment_settings.CDK_DOMAIN_NAME,
-            certificate=certificate
+            certificate=certificate,
         )
 
         http_api = apigatewayv2.HttpApi(
-            self, "Space2StatsHttpApi",
+            self,
+            "Space2StatsHttpApi",
             default_integration=integrations.HttpLambdaIntegration(
-                "LambdaIntegration",
-                handler=lambda_function
-            )
+                "LambdaIntegration", handler=lambda_function
+            ),
         )
 
         apigatewayv2.ApiMapping(
-            self, "ApiMapping",
+            self,
+            "ApiMapping",
             api=http_api,
             domain_name=domain_name,
-            stage=http_api.default_stage
+            stage=http_api.default_stage,
         )
