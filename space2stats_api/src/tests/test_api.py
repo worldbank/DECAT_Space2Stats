@@ -37,7 +37,7 @@ def database(postgresql_proc):
 
 
 @pytest.fixture(autouse=True)
-def client(monkeypatch, database):
+def client(monkeypatch, database, test_bucket):
     monkeypatch.setenv("DB_HOST", database.host)
     monkeypatch.setenv("DB_PORT", str(database.port))
     monkeypatch.setenv("DB_NAME", database.dbname)
