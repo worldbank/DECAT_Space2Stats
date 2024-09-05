@@ -6,8 +6,24 @@ This document provides a step-by-step guide to deploy the `space2stats` API usin
 
 Before proceeding with the deployment, ensure you have all necessary dependencies installed. Specifically, you’ll need:
 
-- AWS CDK: Follow the installation guide [here](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html).
 - AWS CLI: Ensure that the AWS CLI is installed and configured.
+- AWS CDK: Follow the installation guide [here](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html).
+
+Install python dependencies with:
+
+```bash
+# Create a virtual environment
+python -m pip install --upgrade virtualenv
+virtualenv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-cdk.txt
+```
+
+And node dependencies with:
+
+```bash
+npm install
+```
 
 ### 2. Setting Up the `space2stats` AWS Profile
 
