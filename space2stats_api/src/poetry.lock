@@ -38,13 +38,13 @@ trio = ["trio (>=0.23)"]
 
 [[package]]
 name = "asgi-s3-response-middleware"
-version = "0.0.3"
+version = "0.0.4"
 description = "Middleware to spill large responses over to S3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "asgi-s3-response-middleware-0.0.3.tar.gz", hash = "sha256:f748043bf510f52e2c84cd6a2afc94c0020e8ed00b59ecd255478607ee0b5538"},
-    {file = "asgi_s3_response_middleware-0.0.3-py3-none-any.whl", hash = "sha256:2933626bd869d7e1ce9f073873801240ebb76136bd4fb7c15ba3840398d42fdf"},
+    {file = "asgi-s3-response-middleware-0.0.4.tar.gz", hash = "sha256:3e61af5c13198b5c8ef1649dd64d3d2be03ddaf450c63a421a202615d4c3e6a4"},
+    {file = "asgi_s3_response_middleware-0.0.4-py3-none-any.whl", hash = "sha256:fa80c16347de06e5b16e3596e3807b78f5d77d204b349e9d930364b79ea3eb54"},
 ]
 
 [package.dependencies]
@@ -2021,4 +2021,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "dce63cacfe2b08149bf69833d67fc4f3a0a90f53ffeb0142f2500b095489a75b"
+content-hash = "43367776d2fccf4680aa11790db251cd8be658795ccff650d152b377a6d5ba0d"
