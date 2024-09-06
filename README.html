@@ -592,12 +592,12 @@ title="Print to PDF"
 <ul class="simple">
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">db.env</span></code> file:</p></li>
 </ul>
-<div class="highlight-.env notranslate"><div class="highlight"><pre><span></span>DB_HOST=localhost
-DB_PORT=5439
-DB_NAME=postgis
-DB_USER=username
-DB_PASSWORD=password
-DB_TABLE_NAME=space2stats
+<div class="highlight-.env notranslate"><div class="highlight"><pre><span></span>PGHOST=localhost
+PGPORT=5439
+PGDATABASE=postgis
+PGUSER=username
+PGPASSWORD=password
+PGTABLENAME=space2stats
 </pre></div>
 </div>
 <ul class="simple">
@@ -609,7 +609,7 @@ DB_TABLE_NAME=space2stats
 </pre></div>
 </div>
 <blockquote>
-<div><p>You can get started with a subset of data for NYC with <code class="docutils literal notranslate"><span class="pre">./load_nyc_sample.sh</span></code> which requires changing your <code class="docutils literal notranslate"><span class="pre">db.env</span></code> value for <code class="docutils literal notranslate"><span class="pre">DB_TABLE_NAME</span></code> to <code class="docutils literal notranslate"><span class="pre">space2stats_nyc_sample</span></code>.</p>
+<div><p>You can get started with a subset of data for NYC with <code class="docutils literal notranslate"><span class="pre">./load_nyc_sample.sh</span></code> which requires changing your <code class="docutils literal notranslate"><span class="pre">db.env</span></code> value for <code class="docutils literal notranslate"><span class="pre">PGTABLENAME</span></code> to <code class="docutils literal notranslate"><span class="pre">space2stats_nyc_sample</span></code>.</p>
 </div></blockquote>
 <ul class="simple">
 <li><p>Access your data using the Space2statS API! See the <span class="xref myst">example notebook</span>.</p></li>
@@ -709,7 +709,7 @@ By World Bank
   
   <div class="footer-item">
     <p class="last-updated">
-Last updated on Sep 05, 2024.<br>
+Last updated on Sep 06, 2024.<br>
 </p>
   </div>
   
