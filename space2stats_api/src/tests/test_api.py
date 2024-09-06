@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pytest
 from fastapi.testclient import TestClient
 from pytest_postgresql.janitor import DatabaseJanitor
@@ -51,13 +49,22 @@ def client(monkeypatch, database, test_bucket):
         yield app
 
 
+@pytest.fixture
+def mock_get_summaries(mocker):
+    return mocker.patch("space2stats.main._get_summaries")
+
+
+@pytest.fixture
+def mock_get_available_fields(mocker):
+    return mocker.patch("space2stats.app.get_available_fields")
+
+
 def test_read_root(client):
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "Welcome to Space2Stats!"}
 
 
-@patch("space2stats.main._get_summaries")
 def test_get_summary(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
@@ -80,11 +87,9 @@ def test_get_summary(mock_get_summaries, client):
         assert "hex_id" in summary
         for field in request_payload["fields"]:
             assert field in summary
-        # +1 for the 'hex_id'
         assert len(summary) == len(request_payload["fields"]) + 1
 
 
-@patch("space2stats.main._get_summaries")
 def test_get_summary_with_geometry_polygon(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
@@ -110,11 +115,9 @@ def test_get_summary_with_geometry_polygon(mock_get_summaries, client):
         assert summary["geometry"]["type"] == "Polygon"
         for field in request_payload["fields"]:
             assert field in summary
-        # +1 for the 'hex_id' and +1 for 'geometry'
         assert len(summary) == len(request_payload["fields"]) + 2
 
 
-@patch("space2stats.main._get_summaries")
 def test_get_summary_with_geometry_point(mock_get_summaries, client):
     mock_get_summaries.return_value = (
         [("hex_1", 100, 200)],
@@ -140,11 +143,9 @@ def test_get_summary_with_geometry_point(mock_get_summaries, client):
         assert summary["geometry"]["type"] == "Point"
         for field in request_payload["fields"]:
             assert field in summary
-        # +1 for the 'hex_id' and +1 for 'geometry'
         assert len(summary) == len(request_payload["fields"]) + 2
 
 
-@patch("space2stats.app.get_available_fields")
 def test_get_fields(mock_get_available_fields, client):
     mock_get_available_fields.return_value = [
         "sum_pop_2020",

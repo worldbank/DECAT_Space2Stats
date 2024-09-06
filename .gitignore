@@ -106,3 +106,4 @@ space2stats_api/space2stats_env
 cdk.out
 lambda_layer
 .venv
+.envrc
