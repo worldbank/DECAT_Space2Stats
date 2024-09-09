@@ -32,6 +32,7 @@ uvicorn = "*"
 pre-commit = "*"
 pytest = "*" 
 pytest-cov = "*" 
+pytest-mock = "*"
 pytest-postgresql = "*"
 moto = "^5.0.13"
 
