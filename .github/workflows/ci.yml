@@ -25,6 +25,9 @@ jobs:
       run: |
         poetry install --with test
 
+    - name: install lib postgres
+      uses: nyurik/action-setup-postgis@v2
+
     - name: Run pre-commit
       working-directory: ./space2stats_api/src
       run: |
