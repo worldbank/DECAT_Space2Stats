@@ -1,8 +1,11 @@
 import os
 
 import boto3
+import psycopg
 import pytest
+from fastapi.testclient import TestClient
 from moto import mock_aws
+from pytest_postgresql.janitor import DatabaseJanitor
 
 
 @pytest.fixture()
@@ -28,10 +31,50 @@ def s3_client(aws_credentials):
 def test_bucket(s3_client) -> str:
     bucket_name = "test-bucket"
     s3_client.create_bucket(Bucket=bucket_name)
-
     return bucket_name
 
 
+@pytest.fixture(scope="session")
+def database(postgresql_proc):
+    with DatabaseJanitor(
+        user=postgresql_proc.user,
+        host=postgresql_proc.host,
+        port=postgresql_proc.port,
+        dbname="testdb",
+        version=postgresql_proc.version,
+        password="password",
+    ) as jan:
+        db_url = (
+            f"postgresql://{jan.user}:{jan.password}@{jan.host}:{jan.port}/{jan.dbname}"
+        )
+        with psycopg.connect(db_url) as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS space2stats (
+                        hex_id TEXT PRIMARY KEY,
+                        sum_pop_2020 INT,
+                        sum_pop_f_10_2020 INT
+                    );
+                """)
+                cur.execute("""
+                    INSERT INTO space2stats (hex_id, sum_pop_2020, sum_pop_f_10_2020)
+                    VALUES ('hex_1', 100, 200), ('hex_2', 150, 250);
+                """)
+
+        yield jan
+
+
 @pytest.fixture(autouse=True)
-def set_bucket_name(monkeypatch, test_bucket):
+def client(monkeypatch, database, test_bucket):
+    monkeypatch.setenv("PGHOST", database.host)
+    monkeypatch.setenv("PGPORT", str(database.port))
+    monkeypatch.setenv("PGDATABASE", database.dbname)
+    monkeypatch.setenv("PGUSER", database.user)
+    monkeypatch.setenv("PGPASSWORD", database.password)
+    monkeypatch.setenv("PGTABLENAME", "space2stats")
     monkeypatch.setenv("S3_BUCKET_NAME", test_bucket)
+
+    from space2stats.app import app
+
+    with TestClient(app) as test_client:
+        yield test_client
