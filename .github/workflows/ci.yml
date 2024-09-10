@@ -34,9 +34,9 @@ jobs:
         poetry run pre-commit run --all-files
 
     - name: Run tests
-      working-directory: ./space2stats_api/src
+      working-directory: ./space2stats_api/
       run: |
-        poetry run pytest -s -vv
+        poetry run pytest src/tests -s -vv
       env:
         PGHOST: localhost
         PGPORT: 5432
