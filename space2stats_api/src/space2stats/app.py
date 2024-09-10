@@ -72,6 +72,7 @@ def fields(request: Request):
 def read_root():
     return {"message": "Welcome to Space2Stats!"}
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
