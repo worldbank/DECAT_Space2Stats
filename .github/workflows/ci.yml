@@ -45,3 +45,4 @@ jobs:
         PGPASSWORD: mypassword
         PGTABLENAME: space2stats
         S3_BUCKET_NAME: test-bucket
+        PYTHONPATH: ./space2stats_api/src  # Add this line
