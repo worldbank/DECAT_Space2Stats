@@ -21,7 +21,7 @@ jobs:
         python -m pip install poetry
 
     - name: Install dependencies
-      working-directory: ./space2stats_api/src
+      working-directory: ./space2stats_api/
       run: |
         poetry install --with test
 
@@ -29,7 +29,7 @@ jobs:
       uses: nyurik/action-setup-postgis@v2
 
     - name: Run pre-commit
-      working-directory: ./space2stats_api/src
+      working-directory: ./space2stats_api/
       run: |
         poetry run pre-commit run --all-files
 
