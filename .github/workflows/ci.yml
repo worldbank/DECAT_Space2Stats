@@ -36,7 +36,7 @@ jobs:
     - name: Run tests
       working-directory: ./space2stats_api/
       run: |
-        poetry run pytest src/tests -s -vv
+        poetry run python -m pytest src/tests
       env:
         PGHOST: localhost
         PGPORT: 5432
@@ -45,4 +45,3 @@ jobs:
         PGPASSWORD: mypassword
         PGTABLENAME: space2stats
         S3_BUCKET_NAME: test-bucket
-        PYTHONPATH: ./space2stats_api/src  # Add this line
