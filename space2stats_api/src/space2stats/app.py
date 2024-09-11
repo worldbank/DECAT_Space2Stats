@@ -10,6 +10,7 @@ from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 
 from .db import close_db_connection, connect_to_db
+from .errors import add_exception_handlers
 from .main import (
     SummaryRequest,
     get_available_fields,
@@ -22,11 +23,8 @@ s3_client = boto3.client("s3")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """FastAPI Lifespan."""
-    # Create Connection Pool
     await connect_to_db(app)
     yield
-    # Close the Connection Pool
     await close_db_connection(app)
 
 
@@ -48,6 +46,8 @@ app.add_middleware(
     s3_bucket_name=settings.S3_BUCKET_NAME,
     s3_client=s3_client,
 )
+
+add_exception_handlers(app)
 
 
 @app.post("/summary", response_model=List[Dict[str, Any]])

@@ -36,7 +36,7 @@ jobs:
     - name: Run tests
       working-directory: ./space2stats_api/src
       run: |
-        poetry run pytest -s -vv
+        poetry run python -m pytest tests
       env:
         PGHOST: localhost
         PGPORT: 5432
