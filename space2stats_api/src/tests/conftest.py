@@ -8,6 +8,16 @@ from moto import mock_aws
 from pytest_postgresql.janitor import DatabaseJanitor
 
 
+@pytest.fixture
+def setup_benchmark_env(monkeypatch):
+    # Set environment variables required by the benchmark tests
+    monkeypatch.setenv("BASE_URL", os.environ.get("BASE_URL"))
+    monkeypatch.setenv("FIELDS_ENDPOINT", "/fields")
+    monkeypatch.setenv("SUMMARY_ENDPOINT", "/summary")
+    monkeypatch.setenv("FIELD", "sum_pop_2020")
+    yield
+
+
 @pytest.fixture()
 def aws_credentials():
     """Mocked AWS Credentials for moto."""
