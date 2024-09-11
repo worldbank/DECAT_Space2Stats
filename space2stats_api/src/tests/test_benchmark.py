@@ -73,7 +73,7 @@ def test_benchmark_summary_varying_aoi(benchmark, area):
 
 
 @pytest.mark.parametrize("field_count", field_counts)
-def test_benchmark_summary_varying_fields(benchmark, field_count):
+def test_benchmark_summary_aoi_10_varying_fields(benchmark, field_count):
     # Fetch all available fields from the API once
     response = requests.get(FIELDS_ENDPOINT)
     fields = response.json()
