@@ -6,7 +6,7 @@ authors = ["Zac Deziel <zac@developmentseed.org>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.10,<3.13"
 orjson = "*"
 fastapi = ">=0.112.0"
 pandas = "*"
@@ -21,6 +21,7 @@ starlette-cramjam = ">=0.3,<0.4"
 mangum = "*"
 asgi-s3-response-middleware = "^0.0.4"
 boto3 = "^1.35.11"
+numpy = "^2.1.1"
 
 [tool.poetry.group.lambda.dependencies]
 mangum = "*"
@@ -35,6 +36,9 @@ pytest-cov = "*"
 pytest-mock = "*"
 pytest-postgresql = "*"
 moto = "^5.0.13"
+pytest-benchmark = "^4.0.0"
+requests = "^2.32.3"
+types-requests = "^2.32.0.20240907"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
