@@ -2,7 +2,7 @@
 
 ### Description of Deliverable
 
-This deliverable includes the implementation of an API, providing access to the space2stats database. The API supports querying the space2stats data by location. The API is a FastAPI application that accesses the underlying PostgreSQL database. The API documentation is accessible [here](https://space2stats.ds.io/docs), and example usage can be found in the notebook [here](https://github.com/worldbank/DECAT_Space2Stats/blob/main/notebooks/space2stats_api_demo.ipynb).
+This deliverable includes the implementation of an API, providing access to the space2stats database. The API supports querying the space2stats data by location. The API is a FastAPI application that accesses the underlying PostgreSQL database. The API documentation is accessible [here](https://space2stats.ds.io/docs); a notebook example can be found [here](https://github.com/worldbank/DECAT_Space2Stats/blob/main/notebooks/space2stats_api_demo.ipynb).
 
 The acceptance test outlined below verifies that the API meets agreed-upon specifications.
 
@@ -176,13 +176,13 @@ python -m pytest tests/test_benchmark.py --benchmark-histogram=my_benchmark_resu
 
 ![benchmark](./sept-12-0-benchmark.svg)
 
-The `test_benchmark_varying_aoi[n]` is a benchmark test where `n` is the size of the area in degrees. `test_benchmark_varying_aoi[10]` covers an area that extends beyond then entire country of Kenya. 
+The `test_benchmark_varying_aoi[n]` is a benchmark test where `n` is the size of the area in degrees. `test_benchmark_varying_aoi[10]` covers an area that extends beyond the entire country of Kenya. 
 
-The `test_benchmark_aoi_10_varying_fields[n]` is a benchmark test where `n` is the number of fields returned. The  `aoi_10` refers to the size of 10 degrees used for the AOI for each test. In terms of key differences to observe, when the amount of data transfer exceeds Lambda's 6MB of data to transfert, we redirect the requests to S3. The performance remains very similar considering the extra amount of data transferred. Even the largest requests returns in less than 2 seconds.
+The `test_benchmark_aoi_10_varying_fields[n]` is a benchmark test where `n` is the number of fields returned. The  `aoi_10` refers to the size of 10 degrees used for the AOI for each test. Regarding key differences to observe, when the amount of data transfer exceeds Lambda's 6MB of data to transfer, we redirect the requests to S3. The performance remains very similar, considering the extra amount of data transferred. Even the most significant requests returns in less than 2 seconds.
 
 ### Automated Testing
 
-We’ve implemented unit tests for various API functionalities in the `space2stats_api/src/tests` directory. These tests ensure the API works as expected, including proper response for all supported endpoints such as `/fields` and `/summary`.
+We’ve implemented unit tests for various API functionalities in the `space2stats_api/src/tests` directory. These tests ensure the API works as expected, including proper responses for all supported endpoints, such as `/fields` and `/summary`.
 
 Automated tests cover:
 
