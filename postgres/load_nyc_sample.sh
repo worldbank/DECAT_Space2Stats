@@ -6,7 +6,7 @@ if [ -f db.env ]; then
 fi
 
 # Check if required environment variables are set
-if [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_PASSWORD" ]; then
+if [ -z "$PGHOST" ] || [ -z "$PGPORT" ] || [ -z "$PGDATABASE" ] || [ -z "$PGUSER" ] || [ -z "$PGPASSWORD" ]; then
   echo "One or more required environment variables are missing."
   exit 1
 fi
@@ -18,21 +18,21 @@ PARQUET_FILE="nyc_sample.parquet"
 TABLE_NAME="space2stats_nyc_sample"
 
 # Check if the table exists
-TABLE_EXISTS=$(psql -h $DB_HOST -p $DB_PORT -d $DB_NAME -U $DB_USER -tAc "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema='public' AND table_name='$TABLE_NAME');")
+TABLE_EXISTS=$(psql -h $PGHOST -p $PGPORT -d $PGDATABASE -U $PGUSER -tAc "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema='public' AND table_name='$TABLE_NAME');")
 
 echo "Importing $PARQUET_FILE..."
 
 if [ "$TABLE_EXISTS" = "t" ]; then
     # Table exists, append data
     ogr2ogr -f "PostgreSQL" \
-        PG:"host=$DB_HOST port=$DB_PORT dbname=$DB_NAME user=$DB_USER password=$DB_PASSWORD" \
+        PG:"host=$PGHOST port=$PGPORT dbname=$PGDATABASE user=$PGUSER password=$PGPASSWORD" \
         "$PARQUET_FILE" \
         -nln $TABLE_NAME \
         -append 
 else
     # Table does not exist, create table and import data
     ogr2ogr -f "PostgreSQL" \
-        PG:"host=$DB_HOST port=$DB_PORT dbname=$DB_NAME user=$DB_USER password=$DB_PASSWORD" \
+        PG:"host=$PGHOST port=$PGPORT dbname=$PGDATABASE user=$PGUSER password=$PGPASSWORD" \
         "$PARQUET_FILE" \
         -nln $TABLE_NAME 
     

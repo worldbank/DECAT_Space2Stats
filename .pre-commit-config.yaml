@@ -18,6 +18,8 @@ repos:
     rev: v1.11.1
     hooks:
       - id: mypy
-        args: [--ignore-missing-imports]
+        args: [--ignore-missing-imports]  # You can adjust this as needed
         files: ^space2stats_api/
         exclude: ^space2stats/env/
+        additional_dependencies:
+          - types-requests
