@@ -12,7 +12,7 @@ from .db import connect_to_db
 @app.on_event("startup")
 async def startup_event() -> None:
     """Connect to database on startup."""
-    await connect_to_db(app)
+    await connect_to_db(app, max_size=1)
 
 
 handler = Mangum(app, lifespan="off")
