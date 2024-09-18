@@ -18,7 +18,7 @@ class StatsTable:
     table_name: str
 
     @classmethod
-    def from_settings(cls, settings: Settings):
+    def from_settings(cls, settings: "Settings") -> "StatsTable":
         conn = pg.connect(settings.DB_CONNECTION_STRING)
         return cls(conn=conn, table_name=settings.PGTABLENAME)
 
