@@ -3,22 +3,27 @@ from typing import Any, Dict, List
 
 import boto3
 from asgi_s3_response_middleware import S3ResponseMiddleware
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 
+from ..lib import StatsTable
+from ..settings import Settings as BaseSettings
 from .db import close_db_connection, connect_to_db
 from .errors import add_exception_handlers
-from .main import (
-    SummaryRequest,
-    get_available_fields,
-    get_summaries_from_geom,
-    settings,
-)
+from .schemas import SummaryRequest
 
 s3_client = boto3.client("s3")
+
+
+class Settings(BaseSettings):
+    # Bucket for large responses
+    S3_BUCKET_NAME: str
+
+
+settings = Settings()
 
 
 @asynccontextmanager
@@ -31,6 +36,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
+    settings=settings,
 )
 
 app.add_middleware(
@@ -50,22 +56,25 @@ app.add_middleware(
 add_exception_handlers(app)
 
 
-@app.post("/summary", response_model=List[Dict[str, Any]])
-def get_summary(request: Request, body: SummaryRequest):
+def stats_table(request: Request):
+    """Dependency to generate a per-request connection to stats table"""
     with request.app.state.pool.connection() as conn:
-        return get_summaries_from_geom(
-            body.aoi,
-            body.spatial_join_method,
-            body.fields,
-            conn,
-            geometry=body.geometry,
-        )
+        yield StatsTable(conn=conn, table_name=settings.PGTABLENAME)
+
+
+@app.post("/summary", response_model=List[Dict[str, Any]])
+def get_summary(body: SummaryRequest, table: StatsTable = Depends(stats_table)):
+    return table.summaries(
+        body.aoi,
+        body.spatial_join_method,
+        body.fields,
+        body.geometry,
+    )
 
 
 @app.get("/fields", response_model=List[str])
-def fields(request: Request):
-    with request.app.state.pool.connection() as conn:
-        return get_available_fields(conn)
+def fields(table: StatsTable = Depends(stats_table)):
+    return table.fields()
 
 
 @app.get("/")

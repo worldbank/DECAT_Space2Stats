@@ -1,6 +1,6 @@
 import os
 
-from .app import app
+from .api.app import app
 
 try:
     import uvicorn  # noqa

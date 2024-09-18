@@ -1,15 +1,17 @@
 # Space2Stats
 
-Consistent, comparable, authoritative data describing sub-national variation is a constant point of complication for World Bank teams, our development partners, and client countries when assessing and investigating economic issues and national policy. This project will focus on creating and disseminating such data through aggregation of geospatial information at standard administrative divisions, and through the attribution of household survey data with foundational geospatial variables. 
+Consistent, comparable, authoritative data describing sub-national variation is a constant point of complication for World Bank teams, our development partners, and client countries when assessing and investigating economic issues and national policy. This project will focus on creating and disseminating such data through aggregation of geospatial information at standard administrative divisions, and through the attribution of household survey data with foundational geospatial variables.
 
 ## Getting Started Locally
 
-- Setup the database: 
+- Setup the database:
+
 ```
 docker-compose up -d
 ```
 
 - Create a `db.env` file:
+
 ```.env
 PGHOST=localhost
 PGPORT=5439
@@ -20,6 +22,7 @@ PGTABLENAME=space2stats
 ```
 
 - Load our dataset into the database
+
 ```
 ./postgres/download_parquet.sh
 python postgres/chunk_parquet.py
@@ -30,5 +33,10 @@ python postgres/chunk_parquet.py
 
 - Access your data using the Space2statS API! See the [example notebook](notebooks/space2stats_api_demo.ipynb).
 
+## Usage as a module
 
+The module can be installed via `pip` directly from Gtihub:
 
+```
+pip install "git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src
+```

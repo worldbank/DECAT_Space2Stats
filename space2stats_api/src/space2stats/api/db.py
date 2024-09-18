@@ -1,22 +1,25 @@
 """Database connection handling."""
 
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from fastapi import FastAPI
 from psycopg_pool import ConnectionPool
 
-from .settings import Settings
+if TYPE_CHECKING:
+    from .settings import Settings
 
 
 async def connect_to_db(
     app: FastAPI,
-    settings: Optional[Settings] = None,
     pool_kwargs: Optional[Dict[str, Any]] = None,
 ) -> None:
     """Connect to Database."""
+    settings: "Settings" = app.extra.get("settings")
     if not settings:
-        settings = Settings()
-
+        raise ValueError(
+            "Settings not found in app.extra. FastAPI app must be initialized with "
+            "settings provided as a keyword argument."
+        )
     pool_kwargs = pool_kwargs or {}
 
     app.state.pool = ConnectionPool(
