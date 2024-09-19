@@ -10,17 +10,12 @@ from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 
 from ..lib import StatsTable
-from ..settings import Settings as BaseSettings
 from .db import close_db_connection, connect_to_db
 from .errors import add_exception_handlers
 from .schemas import SummaryRequest
+from .settings import Settings
 
 s3_client = boto3.client("s3")
-
-
-class Settings(BaseSettings):
-    # Bucket for large responses
-    S3_BUCKET_NAME: str
 
 
 @asynccontextmanager
