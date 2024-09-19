@@ -84,7 +84,9 @@ def client(monkeypatch, database, test_bucket):
     monkeypatch.setenv("PGTABLENAME", "space2stats")
     monkeypatch.setenv("S3_BUCKET_NAME", test_bucket)
 
-    from space2stats.api import app
+    from space2stats.api import build_app
+
+    app = build_app()
 
     with TestClient(app) as test_client:
         yield test_client
