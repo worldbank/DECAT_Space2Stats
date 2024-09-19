@@ -6,10 +6,8 @@ from geojson_pydantic import Feature
 from psycopg import Connection
 
 from .h3_utils import generate_h3_geometries, generate_h3_ids
+from .settings import Settings
 from .types import AoiModel
-
-if TYPE_CHECKING:
-    from .settings import Settings
 
 
 @dataclass
@@ -18,7 +16,19 @@ class StatsTable:
     table_name: str
 
     @classmethod
-    def from_settings(cls, settings: "Settings") -> "StatsTable":
+    def connect(cls, settings: Optional[Settings] = None, **kwargs) -> "StatsTable":
+        """
+        Helper method to connect to the database and return a StatsTable instance.
+        It is left up to the caller to close the connection when finished, eg:
+        ```py
+        stats_table = StatsTable.connect()
+        try:
+            stats_table.summaries(aoi, spatial_join_method, fields)
+        finally:
+            stats_table.conn.close()
+        ```
+        """
+        settings = settings or Settings(**kwargs)
         conn = pg.connect(settings.DB_CONNECTION_STRING)
         return cls(conn=conn, table_name=settings.PGTABLENAME)
 
