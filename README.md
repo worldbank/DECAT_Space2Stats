@@ -32,6 +32,14 @@ PGTABLENAME=space2stats
 
 - Access your data using the Space2statS API! See the [example notebook](notebooks/space2stats_api_demo.ipynb).
 
+## Usage as an API
+
+The API can be run with:
+
+```
+python -m space2stats
+```
+
 ## Usage as a module
 
 The module can be installed via `pip` directly from Github:

@@ -1,7 +1,5 @@
 import os
 
-from .api.app import build_app
-
 try:
     import uvicorn  # noqa
 
@@ -15,10 +13,11 @@ if __name__ == "__main__":
     ), "uvicorn must be installed: `python -m pip install 'space2stats[server]'`"
 
     uvicorn.run(
-        app=build_app,
+        app="space2stats.api.app:build_app",
         host=os.getenv("UVICORN_HOST", "127.0.0.1"),
-        port=os.getenv("UVICORN_PORT", "8000"),
+        port=int(os.getenv("UVICORN_PORT", "8000")),
         root_path=os.getenv("UVICORN_ROOT_PATH", ""),
         log_level="info",
         factory=True,
+        reload=True,
     )
