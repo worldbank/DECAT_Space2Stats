@@ -1,4 +1,4 @@
-from space2stats import StatsTable, Settings
+from space2stats import Settings, StatsTable
 
 
 def test_stats_table(mock_env):

@@ -6,7 +6,6 @@ import pytest
 from fastapi.testclient import TestClient
 from moto import mock_aws
 from pytest_postgresql.janitor import DatabaseJanitor
-
 from space2stats.api.app import build_app
 
 

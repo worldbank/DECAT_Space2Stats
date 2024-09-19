@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Dict, List, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 import psycopg as pg
 from geojson_pydantic import Feature
