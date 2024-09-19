@@ -25,8 +25,7 @@ PGTABLENAME=space2stats
 
 ```
 ./postgres/download_parquet.sh
-python postgres/chunk_parquet.py
-./postgres/load_parquet_chunks.sh
+./load_to_prod.sh
 ```
 
 > You can get started with a subset of data for NYC with `./load_nyc_sample.sh` which requires changing your `db.env` value for `PGTABLENAME` to `space2stats_nyc_sample`.
@@ -38,7 +37,7 @@ python postgres/chunk_parquet.py
 The module can be installed via `pip` directly from Github:
 
 ```
-pip install "git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src
+pip install "git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src"
 ```
 
 It can then be used within Python as such:
