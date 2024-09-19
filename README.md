@@ -30,7 +30,7 @@ PGTABLENAME=space2stats
 
 > You can get started with a subset of data for NYC with `./load_nyc_sample.sh` which requires changing your `db.env` value for `PGTABLENAME` to `space2stats_nyc_sample`.
 
-- Access your data using the Space2statS API! See the [example notebook](notebooks/space2stats_api_demo.ipynb).
+- Access your data using the Space2stats API! See the [example notebook](notebooks/space2stats_api_demo.ipynb).
 
 ## Usage as an API
 
