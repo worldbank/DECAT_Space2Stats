@@ -5,9 +5,9 @@ import os
 
 from mangum import Mangum
 
-from ..settings import Settings
 from .app import build_app
 from .db import connect_to_db
+from .settings import Settings
 
 settings = Settings(DB_MAX_CONN_SIZE=1)  # disable connection pooling
 app = build_app(settings)
