@@ -19,18 +19,22 @@ class StatsTable:
     def connect(cls, settings: Optional[Settings] = None, **kwargs) -> "StatsTable":
         """
         Helper method to connect to the database and return a StatsTable instance.
-        It is left up to the caller to close the connection when finished, eg:
+
         ```py
-        stats_table = StatsTable.connect()
-        try:
-            stats_table.summaries(aoi, spatial_join_method, fields)
-        finally:
-            stats_table.conn.close()
+        with StatsTable.connect() as stats_table:
+            stats_table.fields()
         ```
         """
-        settings = settings or Settings(**kwargs)
+        settings = settings or Settings(**kwargs, _extra="forbid")
         conn = pg.connect(settings.DB_CONNECTION_STRING)
         return cls(conn=conn, table_name=settings.PGTABLENAME)
+
+    def __enter__(self) -> "StatsTable":
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        if self.conn:
+            self.conn.close()
 
     def _get_summaries(self, fields: List[str], h3_ids: List[str]):
         colnames = ["hex_id"] + fields

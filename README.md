@@ -35,8 +35,45 @@ python postgres/chunk_parquet.py
 
 ## Usage as a module
 
-The module can be installed via `pip` directly from Gtihub:
+The module can be installed via `pip` directly from Github:
 
 ```
 pip install "git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src
+```
+
+It can then be used within Python as such:
+
+```py
+from space2stats import StatsTable
+
+with StatsTable.connect() as stats_table:
+    ...
+```
+
+Connection parameters may be explicitely provided. Otherwise, connection parameters will expected to be available via standard [PostgreSQL Environment Variables](https://www.postgresql.org/docs/current/libpq-envars.html#LIBPQ-ENVARS).
+
+```py
+from space2stats import StatsTable
+
+with StatsTable.connect(
+    PGHOST="localhost",
+    PGPORT="5432",
+    PGUSER="postgres",
+    PGPASSWORD="changeme",
+    PGDATABASE="postgis",
+    PGTABLENAME="space2stats",
+) as stats_table:
+    ...
+
+# alternatively:
+# settings = Settings(
+#     PGHOST="localhost",
+#     PGPORT="5432",
+#     PGUSER="postgres",
+#     PGPASSWORD="changeme",
+#     PGDATABASE="postgis",
+#     PGTABLENAME="space2stats",
+# )
+# with StatsTable.connect(settings):
+#     ...
 ```
