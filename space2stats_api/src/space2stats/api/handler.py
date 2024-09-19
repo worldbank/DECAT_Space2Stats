@@ -9,14 +9,14 @@ from ..settings import Settings
 from .app import build_app
 from .db import connect_to_db
 
-settings = Settings()
+settings = Settings(DB_MAX_CONN_SIZE=1)  # disable connection pooling
 app = build_app(settings)
 
 
 @app.on_event("startup")
 async def startup_event() -> None:
     """Connect to database on startup."""
-    await connect_to_db(app, max_size=1)
+    await connect_to_db(app, settings=settings)
 
 
 handler = Mangum(app, lifespan="off")

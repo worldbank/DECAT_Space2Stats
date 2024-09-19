@@ -18,20 +18,18 @@ from .settings import Settings
 s3_client = boto3.client("s3")
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await connect_to_db(app)
-    yield
-    await close_db_connection(app)
-
-
 def build_app(settings: Optional[Settings] = None) -> FastAPI:
     settings = settings or Settings()
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        await connect_to_db(app, settings=settings)
+        yield
+        await close_db_connection(app)
 
     app = FastAPI(
         default_response_class=ORJSONResponse,
         lifespan=lifespan,
-        settings=settings,
     )
 
     app.add_middleware(
