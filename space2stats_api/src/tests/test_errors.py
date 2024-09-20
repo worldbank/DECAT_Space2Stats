@@ -5,8 +5,8 @@ from fastapi import HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
 from psycopg.errors import OperationalError
-from space2stats.app import app
-from space2stats.errors import (
+from space2stats.api import app
+from space2stats.api.errors import (
     database_exception_handler,
     http_exception_handler,
     validation_exception_handler,

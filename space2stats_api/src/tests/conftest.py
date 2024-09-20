@@ -6,6 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 from moto import mock_aws
 from pytest_postgresql.janitor import DatabaseJanitor
+from space2stats.api.app import build_app
 
 
 @pytest.fixture
@@ -59,23 +60,27 @@ def database(postgresql_proc):
         )
         with psycopg.connect(db_url) as conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                     CREATE TABLE IF NOT EXISTS space2stats (
                         hex_id TEXT PRIMARY KEY,
                         sum_pop_2020 INT,
                         sum_pop_f_10_2020 INT
                     );
-                """)
-                cur.execute("""
+                """
+                )
+                cur.execute(
+                    """
                     INSERT INTO space2stats (hex_id, sum_pop_2020, sum_pop_f_10_2020)
                     VALUES ('hex_1', 100, 200), ('hex_2', 150, 250);
-                """)
+                """
+                )
 
         yield jan
 
 
 @pytest.fixture(autouse=True)
-def client(monkeypatch, database, test_bucket):
+def mock_env(monkeypatch, database, test_bucket):
     monkeypatch.setenv("PGHOST", database.host)
     monkeypatch.setenv("PGPORT", str(database.port))
     monkeypatch.setenv("PGDATABASE", database.dbname)
@@ -84,7 +89,9 @@ def client(monkeypatch, database, test_bucket):
     monkeypatch.setenv("PGTABLENAME", "space2stats")
     monkeypatch.setenv("S3_BUCKET_NAME", test_bucket)
 
-    from space2stats.app import app
 
+@pytest.fixture
+def client():
+    app = build_app()
     with TestClient(app) as test_client:
         yield test_client

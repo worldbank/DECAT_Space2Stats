@@ -9,9 +9,6 @@ class Settings(BaseSettings):
     PGPASSWORD: str
     PGTABLENAME: str
 
-    # Bucket for large responses
-    S3_BUCKET_NAME: str
-
     # see https://www.psycopg.org/psycopg3/docs/api/pool.html#the-connectionpool-class for options
     DB_MIN_CONN_SIZE: int = 1
     DB_MAX_CONN_SIZE: int = 10
