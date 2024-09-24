@@ -34,7 +34,7 @@ def download(s3_path: str, local_path: str = typer.Option("local.parquet")):
 def load(
     connection_string: str,
     parquet_file: str = typer.Option("local.parquet"),
-    chunksize: int = 10000,
+    chunksize: int = 64_000,
 ):
     """
     Load a Parquet file into a PostgreSQL database.
@@ -50,15 +50,17 @@ def download_and_load(
     s3_path: str,
     connection_string: str,
     local_parquet: str = typer.Option("local.parquet"),
-    chunksize: int = 10000,
+    chunksize: int = 64_000,
 ):
     """
     Download a Parquet file from S3 and load it into a PostgreSQL database.
     """
-    typer.echo(f"Starting download from S3: {s3_path}")
-    download_parquet_from_s3(s3_path, local_parquet)
-    typer.echo(f"Download complete: {local_parquet}")
-
-    typer.echo(f"Loading data into PostgreSQL database from {local_parquet}")
-    load_parquet_to_db(local_parquet, connection_string, chunksize)
-    typer.echo("Data loaded successfully to PostgreSQL!")
+    download(
+        s3_path=s3_path,
+        local_path=local_parquet,
+    )
+    load(
+        parquet_file=local_parquet,
+        connection_string=connection_string,
+        chunksize=chunksize,
+    )
