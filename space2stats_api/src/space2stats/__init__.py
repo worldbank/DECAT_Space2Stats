@@ -1,3 +1,7 @@
 """space2stats."""
 
-__version__ = "0.1.0"
+from .lib import StatsTable
+from .settings import Settings
+
+__all__ = ["StatsTable", "Settings"]
+__version__ = "1.0.0"
