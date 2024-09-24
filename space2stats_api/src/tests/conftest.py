@@ -60,19 +60,15 @@ def database(postgresql_proc):
         )
         with psycopg.connect(db_url) as conn:
             with conn.cursor() as cur:
+                # Drop the table if it exists, ensuring a clean start
+                cur.execute("DROP TABLE IF EXISTS space2stats")
                 cur.execute(
                     """
-                    CREATE TABLE IF NOT EXISTS space2stats (
+                    CREATE TABLE space2stats (
                         hex_id TEXT PRIMARY KEY,
                         sum_pop_2020 INT,
                         sum_pop_f_10_2020 INT
                     );
-                """
-                )
-                cur.execute(
-                    """
-                    INSERT INTO space2stats (hex_id, sum_pop_2020, sum_pop_f_10_2020)
-                    VALUES ('hex_1', 100, 200), ('hex_2', 150, 250);
                 """
                 )
 

@@ -47,6 +47,7 @@ moto = "^5.0.13"
 pytest-benchmark = "^4.0.0"
 requests = "^2.32.3"
 types-requests = "^2.32.0.20240907"
+pyarrow = "^17.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

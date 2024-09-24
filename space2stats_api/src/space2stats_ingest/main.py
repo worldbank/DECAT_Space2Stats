@@ -39,5 +39,7 @@ def load_parquet_to_db(
         for start in range(0, total_rows, chunksize):
             end = min(start + chunksize, total_rows)
             chunk = df.iloc[start:end]
-            chunk.to_sql("space2stats", engine, if_exists="append", index=False)
+            chunk.to_sql(
+                "space2stats", engine, if_exists="append", index=False, method="multi"
+            )
             pbar.update(len(chunk))
