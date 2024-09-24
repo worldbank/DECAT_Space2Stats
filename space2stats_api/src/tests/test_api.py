@@ -41,6 +41,58 @@ def test_get_summary(client):
         assert len(summary) == len(request_payload["fields"]) + 1
 
 
+def test_get_summary_with_geometry_multipolygon(client):
+    request_payload = {
+        "aoi": {
+            **aoi,
+            "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [102.0, 2.0],
+                            [103.0, 2.0],
+                            [103.0, 3.0],
+                            [102.0, 3.0],
+                            [102.0, 2.0],
+                        ]
+                    ],
+                    [
+                        [
+                            [100.0, 0.0],
+                            [101.0, 0.0],
+                            [101.0, 1.0],
+                            [100.0, 1.0],
+                            [100.0, 0.0],
+                        ],
+                        [
+                            [100.2, 0.2],
+                            [100.8, 0.2],
+                            [100.8, 0.8],
+                            [100.2, 0.8],
+                            [100.2, 0.2],
+                        ],
+                    ],
+                ],
+            },
+        },
+        "spatial_join_method": "touches",
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
+        "geometry": "polygon",
+    }
+
+    response = client.post("/summary", json=request_payload)
+    assert response.status_code == 200
+    response_json = response.json()
+    assert isinstance(response_json, list)
+
+    for summary in response_json:
+        assert "hex_id" in summary
+        assert "geometry" in summary
+        assert summary["geometry"]["type"] == "Polygon"
+        assert len(summary) == len(request_payload["fields"]) + 2
+
+
 def test_get_summary_with_geometry_polygon(client):
     request_payload = {
         "aoi": aoi,
