@@ -49,7 +49,7 @@ def load(
 def download_and_load(
     s3_path: str,
     connection_string: str,
-    local_parquet: str = typer.Option("local.parquet"),
+    parquet_file: str = typer.Option("local.parquet"),
     chunksize: int = 64_000,
 ):
     """
@@ -57,10 +57,10 @@ def download_and_load(
     """
     download(
         s3_path=s3_path,
-        local_path=local_parquet,
+        local_path=parquet_file,
     )
     load(
-        parquet_file=local_parquet,
+        parquet_file=parquet_file,
         connection_string=connection_string,
         chunksize=chunksize,
     )
