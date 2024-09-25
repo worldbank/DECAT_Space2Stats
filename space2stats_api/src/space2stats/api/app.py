@@ -2,11 +2,11 @@ from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
 
 import boto3
+import psycopg as pg
 from asgi_s3_response_middleware import S3ResponseMiddleware
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-import psycopg as pg
 from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
 
