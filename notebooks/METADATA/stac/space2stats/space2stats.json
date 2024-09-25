@@ -4,7 +4,7 @@
   "id": "space2stats",
   "properties": {
     "name": "Space2Stats H3 Data",
-    "description": "GeoParquet file with h3 hexagons (level 6) for the global. Users can access data through an API, specifying variables and areas of interest.",
+    "description": "GeoParquet dataset with h3 hexagons (level 6) covering the globe. Users can access data through an API, specifying variables and areas of interest.",
     "table:primary_geometry": "geometry",
     "table:columns": [
       {
@@ -235,7 +235,7 @@
         "geometry": "geometry"
       }
     },
-    "datetime": "2024-09-25T13:04:29.953034Z"
+    "datetime": "2024-09-25T15:37:11.148821Z"
   },
   "geometry": {
     "type": "Polygon",
