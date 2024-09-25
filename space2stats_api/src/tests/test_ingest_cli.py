@@ -8,19 +8,21 @@ runner = CliRunner()
 
 def test_download_command(tmpdir, s3_mock):
     s3_path = "s3://mybucket/myfile.parquet"
-    local_path = tmpdir.join("local.parquet")
+    parquet_file = tmpdir.join("local.parquet")
 
     s3_mock.put_object(
         Bucket="mybucket", Key="myfile.parquet", Body=b"mock_parquet_data"
     )
 
-    result = runner.invoke(app, ["download", s3_path, "--local-path", str(local_path)])
+    result = runner.invoke(
+        app, ["download", s3_path, "--local-path", str(parquet_file)]
+    )
     print(result.output)
 
     assert result.exit_code == 0
     assert "Starting download from S3" in result.stdout
     assert "Download complete" in result.stdout
-    assert os.path.exists(local_path)
+    assert os.path.exists(parquet_file)
 
 
 def test_load_command(tmpdir, database):
@@ -41,7 +43,7 @@ def test_load_command(tmpdir, database):
 
 def test_download_and_load_command(tmpdir, database, s3_mock):
     s3_path = "s3://mybucket/myfile.parquet"
-    local_path = tmpdir.join("local.parquet")
+    parquet_file = tmpdir.join("local.parquet")
     connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
 
     s3_mock.put_object(
@@ -54,8 +56,8 @@ def test_download_and_load_command(tmpdir, database, s3_mock):
             "download-and-load",
             s3_path,
             connection_string,
-            "--local-parquet",
-            str(local_path),
+            "--parquet-file",
+            str(parquet_file),
         ],
     )
     print(result.output)
