@@ -1,6 +1,6 @@
-from typing import Dict
+from typing import Dict, Union
 
-from geojson_pydantic import Feature, Polygon
+from geojson_pydantic import Feature, MultiPolygon, Polygon
 from typing_extensions import TypeAlias
 
-AoiModel: TypeAlias = Feature[Polygon, Dict]
+AoiModel: TypeAlias = Feature[Union[Polygon, MultiPolygon], Dict]

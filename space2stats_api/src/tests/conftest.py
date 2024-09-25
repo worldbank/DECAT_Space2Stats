@@ -72,7 +72,7 @@ def database(postgresql_proc):
                 cur.execute(
                     """
                     INSERT INTO space2stats (hex_id, sum_pop_2020, sum_pop_f_10_2020)
-                    VALUES ('hex_1', 100, 200), ('hex_2', 150, 250);
+                    VALUES ('862a1070fffffff', 100, 200), ('862a10767ffffff', 150, 250);
                 """
                 )
 
