@@ -8,15 +8,15 @@ from space2stats_ingest.main import download_parquet_from_s3, load_parquet_to_db
 
 def test_download_parquet_from_s3(s3_mock):
     s3_path = "s3://mybucket/myfile.parquet"
-    local_path = "local.parquet"
+    parquet_file = "local.parquet"
 
     s3_mock.put_object(
         Bucket="mybucket", Key="myfile.parquet", Body=b"mock_parquet_data"
     )
 
-    download_parquet_from_s3(s3_path, local_path)
+    download_parquet_from_s3(s3_path, parquet_file)
 
-    assert os.path.exists(local_path)
+    assert os.path.exists(parquet_file)
 
 
 def test_load_parquet_to_db(database):
