@@ -30,7 +30,6 @@ def test_generate_h3_ids_within_multipolygon():
     print(h3_ids)
     print(f"Test 'within' MultiPolygon - Generated H3 IDs: {h3_ids}")
     assert len(h3_ids) > 0, "Expected at least one H3 ID for MultiPolygon"
-    assert False
 
 
 def test_generate_h3_ids_touches_multipolygon():
