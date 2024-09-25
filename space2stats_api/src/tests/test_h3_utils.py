@@ -63,5 +63,25 @@ def test_generate_h3_geometries_invalid_type():
         generate_h3_geometries(h3_ids, "invalid_type")
 
 
+@pytest.mark.parametrize("join_method", ["touches"])
+def test_generate_h3_oddity(join_method):
+    data = generate_h3_ids(
+        {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [41.14127371265408, -2.1034653113510444],
+                    [41.140645873470845, -2.104696345752785],
+                    [41.14205369446421, -2.104701102391104],
+                    [41.14127371265408, -2.1034653113510444],
+                ]
+            ],
+        },
+        6,
+        join_method,
+    )
+    assert len(data) > 0, "Expected at least one H3 ID for the polygon"
+
+
 if __name__ == "__main__":
     pytest.main()
