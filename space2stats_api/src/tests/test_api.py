@@ -1,6 +1,7 @@
 aoi = {
     "type": "Feature",
     "geometry": {
+        # This polygon intersects with the test data
         "type": "Polygon",
         "coordinates": [
             [
@@ -60,15 +61,8 @@ def test_get_summary_with_geometry_multipolygon(client):
             "geometry": {
                 "type": "MultiPolygon",
                 "coordinates": [
-                    [
-                        [
-                            [102.0, 2.0],
-                            [103.0, 2.0],
-                            [103.0, 3.0],
-                            [102.0, 3.0],
-                            [102.0, 2.0],
-                        ]
-                    ],
+                    # Ensure at least one multipolygon interacts with test data
+                    aoi["geometry"]["coordinates"],
                     [
                         [
                             [100.0, 0.0],
