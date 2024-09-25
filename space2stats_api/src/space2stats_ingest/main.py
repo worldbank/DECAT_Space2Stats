@@ -37,6 +37,7 @@ def load_parquet_to_db(
         conn.cursor() as cur,
         tqdm(total=table.num_rows, desc="Loading to PostgreSQL", unit="rows") as pbar,
     ):
+        cur.adbc_ingest(TABLE_NAME, table.slice(0, 0), mode="replace")
         for batch in table.to_batches(max_chunksize=chunksize):
             count = cur.adbc_ingest(TABLE_NAME, batch, mode="append")
             pbar.update(count)
