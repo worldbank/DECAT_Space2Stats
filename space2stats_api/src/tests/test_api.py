@@ -52,6 +52,7 @@ def test_bad_fields_validated(client):
 
     response = client.post("/summary", json=request_payload)
     assert response.status_code == 400
+    assert response.json() == {"error": 'column "a_non_existent_field" does not exist'}
 
 
 def test_get_summary_with_geometry_multipolygon(client):
