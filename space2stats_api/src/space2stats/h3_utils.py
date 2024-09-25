@@ -1,7 +1,8 @@
+from itertools import chain
 from typing import Any, Dict, List, Optional
 
 import h3
-from shapely.geometry import Point, Polygon, mapping, shape
+from shapely.geometry import MultiPolygon, Point, Polygon, mapping, shape
 
 
 def generate_h3_ids(
@@ -25,7 +26,24 @@ def generate_h3_ids(
     aoi_shape = shape(aoi_geojson)
 
     # Generate H3 hexagons covering the AOI
-    h3_ids = h3.polyfill(aoi_geojson, resolution, geo_json_conformant=True)
+    geoms = (
+        [mapping(geom) for geom in aoi_shape.geoms]
+        if isinstance(aoi_shape, MultiPolygon)
+        else [aoi_geojson]
+    )
+    h3_ids = list(
+        # Use set to remove duplicates
+        set(
+            # Treat list of sets as single iterable
+            chain(
+                *[
+                    # Generate H3 hexagons for each geometry
+                    h3.polyfill(geom, resolution, geo_json_conformant=True)
+                    for geom in geoms
+                ]
+            )
+        )
+    )
 
     # Filter hexagons based on spatial join method
     # Touches method returns plain h3_ids

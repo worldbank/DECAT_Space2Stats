@@ -2,8 +2,9 @@ from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
 
 import boto3
+import psycopg as pg
 from asgi_s3_response_middleware import S3ResponseMiddleware
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 from starlette.requests import Request
@@ -55,12 +56,15 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
     @app.post("/summary", response_model=List[Dict[str, Any]])
     def get_summary(body: SummaryRequest, table: StatsTable = Depends(stats_table)):
-        return table.summaries(
-            body.aoi,
-            body.spatial_join_method,
-            body.fields,
-            body.geometry,
-        )
+        try:
+            return table.summaries(
+                body.aoi,
+                body.spatial_join_method,
+                body.fields,
+                body.geometry,
+            )
+        except pg.errors.UndefinedColumn as e:
+            raise HTTPException(status_code=400, detail=e.diag.message_primary) from e
 
     @app.get("/fields", response_model=List[str])
     def fields(table: StatsTable = Depends(stats_table)):
