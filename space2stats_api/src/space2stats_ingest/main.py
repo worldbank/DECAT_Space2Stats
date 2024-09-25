@@ -41,4 +41,5 @@ def load_parquet_to_db(
         for batch in table.to_batches(max_chunksize=chunksize):
             count = cur.adbc_ingest(TABLE_NAME, batch, mode="append")
             pbar.update(count)
+        conn.execute("CREATE INDEX ON space2stats (hex_id);")
         conn.commit()
