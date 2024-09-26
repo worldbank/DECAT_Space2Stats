@@ -63,8 +63,7 @@ def test_generate_h3_geometries_invalid_type():
         generate_h3_geometries(h3_ids, "invalid_type")
 
 
-@pytest.mark.parametrize("join_method", ["touches"])
-def test_generate_h3_oddity(join_method):
+def test_generate_h3_sliver_polygon_touches():
     data = generate_h3_ids(
         {
             "type": "Polygon",
@@ -78,11 +77,52 @@ def test_generate_h3_oddity(join_method):
             ],
         },
         6,
-        join_method,
+        "touches",
     )
-    assert len(data) > 0, "Expected at least one H3 ID for the polygon"
-    print(data)
-    assert False
+
+    for h in ["867a74817ffffff", "867a74807ffffff"]:
+        assert h in data, f"Missing {h} in generated hexagons"
+    assert len(data) == 2
+
+
+def test_generate_h3_sliver_polygon_within():
+    data = generate_h3_ids(
+        {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [41.14127371265408, -2.1034653113510444],
+                    [41.140645873470845, -2.104696345752785],
+                    [41.14205369446421, -2.104701102391104],
+                    [41.14127371265408, -2.1034653113510444],
+                ]
+            ],
+        },
+        6,
+        "within",
+    )
+    assert len(data) == 0, "Expected no hexagons to match"
+
+
+def test_generate_h3_sliver_polygon_centroid():
+    data = generate_h3_ids(
+        {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [41.14127371265408, -2.1034653113510444],
+                    [41.140645873470845, -2.104696345752785],
+                    [41.14205369446421, -2.104701102391104],
+                    [41.14127371265408, -2.1034653113510444],
+                ]
+            ],
+        },
+        6,
+        "centroid",
+    )
+    h = "867a74817ffffff"
+    assert "867a74817ffffff" in data, f"{h} not in generated hexagons"
+    assert len(data) == 1
 
 
 if __name__ == "__main__":

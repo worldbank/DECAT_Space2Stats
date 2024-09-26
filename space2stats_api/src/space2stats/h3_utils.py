@@ -63,6 +63,67 @@ def _recursive_polyfill(
     return []
 
 
+def _find_within(aoi_geojson: Dict[str, Any], h3_ids: List[str]) -> List[str]:
+    """
+    Find H3 hexagon IDs that are completely within the polygon defined by the AOI GeoJSON.
+
+    Parameters:
+        aoi_geojson (Dict[str, Any]): The AOI GeoJSON object.
+        h3_ids (List[str]): A list of H3 hexagon IDs.
+
+    Returns:
+        List[str]: A list of unique H3 hexagon IDs that are within the polygon.
+    """
+    # Convert AOI GeoJSON to Shapely geometry
+    aoi_shape = shape(aoi_geojson)
+
+    # Find H3 IDs that are within the polygon
+    contained_h3_ids = [
+        h3_id
+        for h3_id in h3_ids
+        if aoi_shape.contains(Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)))
+    ]
+
+    return list(set(contained_h3_ids))
+
+
+def _find_touches(aoi_geojson: Dict[str, Any], h3_ids: List[str]) -> List[str]:
+    """
+    Find H3 hexagon IDs that intersect the boundary of the polygon defined by the AOI GeoJSON,
+    and also include their neighboring hexagons.
+
+    Parameters:
+        aoi_geojson (Dict[str, Any]): The AOI GeoJSON object.
+        h3_ids (List[str]): A list of H3 hexagon IDs.
+
+    Returns:
+        List[str]: A list of unique H3 hexagon IDs that intersect with the polygon.
+    """
+    aoi_shape = shape(aoi_geojson)
+
+    outer_h3_ids = set()
+    for h3_id in h3_ids:
+        if h3.h3_is_valid(h3_id):  # Check if h3_id is valid
+            hex_boundary = Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True))
+            if aoi_shape.intersects(hex_boundary):
+                outer_h3_ids.add(h3_id)
+
+    neighbors = set()
+    for h3_id in outer_h3_ids:
+        parent_id = h3.h3_to_parent(h3_id, h3.h3_get_resolution(h3_id) - 1)
+
+        for n_h3_id in h3.h3_to_children(
+            parent_id, h3.h3_get_resolution(parent_id) + 1
+        ):
+            boundary = Polygon(h3.h3_to_geo_boundary(n_h3_id, geo_json=True))
+            if h3.h3_indexes_are_neighbors(h3_id, n_h3_id) and aoi_shape.intersects(
+                boundary
+            ):
+                neighbors.add(n_h3_id)
+
+    return list(neighbors.union(h3_ids))
+
+
 def generate_h3_ids(
     aoi_geojson: Dict[str, Any], resolution: int, spatial_join_method: str
 ) -> List[str]:
@@ -80,27 +141,16 @@ def generate_h3_ids(
     if spatial_join_method not in ["touches", "within", "centroid"]:
         raise ValueError("Invalid spatial join method")
 
-    # Convert GeoJSON to Shapely geometry
-    aoi_shape = shape(aoi_geojson)
-
     # Generate H3 hexagons covering the AOI
+    # Polyfill defines containment based on centroid:
+    # https://h3geo.org/docs/3.x/api/regions/#polyfill
     h3_ids = _recursive_polyfill(aoi_geojson, resolution, resolution)
 
-    # Filter hexagons based on spatial join method
     if spatial_join_method == "within":
-        h3_ids = [
-            h3_id
-            for h3_id in h3_ids
-            if aoi_shape.contains(Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)))
-        ]
-    elif spatial_join_method == "centroid":
-        h3_ids = [
-            h3_id
-            for h3_id in h3_ids
-            if aoi_shape.contains(
-                Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)).centroid
-            )
-        ]
+        h3_ids = _find_within(aoi_geojson, h3_ids)
+
+    if spatial_join_method == "touches":
+        h3_ids = _find_touches(aoi_geojson, h3_ids)
 
     return h3_ids
 
