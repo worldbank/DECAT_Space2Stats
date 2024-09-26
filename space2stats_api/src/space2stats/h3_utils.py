@@ -7,19 +7,14 @@ from shapely.geometry import MultiPolygon, Point, Polygon, mapping, shape
 MAX_RESOLUTION = 15
 
 
-def _recursive_parent(
+def _get_parent(
     h3_ids: Iterable[str], resolution: int, target_resolution: int
 ) -> Set[str]:
-    # If we are already at the target resolution, return the h3_ids
     if resolution == target_resolution:
         return set(h3_ids)
 
-    # If we need to go to a higher resolution (lower level)
-    if resolution > target_resolution:
-        parent_ids = {h3.h3_to_parent(h3_id, target_resolution) for h3_id in h3_ids}
-        return set(parent_ids)
-
-    return set()
+    assert resolution > target_resolution
+    return {h3.h3_to_parent(h3_id, target_resolution) for h3_id in h3_ids}
 
 
 def _recursive_polyfill(
@@ -30,7 +25,7 @@ def _recursive_polyfill(
 
     # If valid H3 IDs are found, return them
     if h3_ids:
-        return _recursive_parent(h3_ids, resolution, original_resolution)
+        return _get_parent(h3_ids, resolution, original_resolution)
 
     # If we haven't reached the maximum resolution, try the next higher resolution
     if resolution < MAX_RESOLUTION:
