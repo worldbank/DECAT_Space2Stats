@@ -101,15 +101,8 @@ def _find_touches(aoi_geojson: Dict[str, Any], h3_ids: List[str]) -> List[str]:
     """
     aoi_shape = shape(aoi_geojson)
 
-    outer_h3_ids = set()
-    for h3_id in h3_ids:
-        if h3.h3_is_valid(h3_id):  # Check if h3_id is valid
-            hex_boundary = Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True))
-            if aoi_shape.intersects(hex_boundary):
-                outer_h3_ids.add(h3_id)
-
     neighbors = set()
-    for h3_id in outer_h3_ids:
+    for h3_id in h3_ids:
         parent_id = h3.h3_to_parent(h3_id, h3.h3_get_resolution(h3_id) - 1)
 
         for n_h3_id in h3.h3_to_children(
