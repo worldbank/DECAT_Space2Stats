@@ -81,6 +81,8 @@ def test_generate_h3_oddity(join_method):
         join_method,
     )
     assert len(data) > 0, "Expected at least one H3 ID for the polygon"
+    print(data)
+    assert False
 
 
 if __name__ == "__main__":
