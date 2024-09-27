@@ -1,20 +1,10 @@
-from typing import Any, Dict, Iterable, List, Optional, Set
+from typing import Any, Dict, Iterable, List, Literal, Optional, Set
 
 import h3
 from shapely.geometry import MultiPolygon, Point, Polygon, mapping, shape
 
 # https://h3geo.org/docs/core-library/restable
 MAX_RESOLUTION = 15
-
-
-def _get_parent(
-    h3_ids: Iterable[str], resolution: int, target_resolution: int
-) -> Set[str]:
-    if resolution == target_resolution:
-        return set(h3_ids)
-
-    assert resolution > target_resolution
-    return {h3.h3_to_parent(h3_id, target_resolution) for h3_id in h3_ids}
 
 
 def _recursive_polyfill(
@@ -25,7 +15,7 @@ def _recursive_polyfill(
 
     # If valid H3 IDs are found, return them
     if h3_ids:
-        return _get_parent(h3_ids, resolution, original_resolution)
+        return {h3.h3_to_parent(h3_id, original_resolution) for h3_id in h3_ids}
 
     # If we haven't reached the maximum resolution, try the next higher resolution
     if resolution < MAX_RESOLUTION:
@@ -68,10 +58,12 @@ def _find_touches(aoi_geojson: Dict[str, Any], h3_ids: Iterable[str]) -> Set[str
 
 
 def _generate_h3_ids(
-    aoi_geojson: Dict[str, Any], resolution: int, spatial_join_method: str
+    aoi_geojson: Dict[str, Any],
+    resolution: int,
+    spatial_join_method: Literal["touches", "within", "centroid"],
 ) -> Set[str]:
     if spatial_join_method not in ["touches", "within", "centroid"]:
-        raise ValueError("Invalid spatial join method")
+        raise ValueError(f"Invalid spatial join method: {spatial_join_method}")
 
     # Generate H3 hexagons covering the AOI
     # Polyfill defines containment based on centroid:
@@ -88,7 +80,9 @@ def _generate_h3_ids(
 
 
 def generate_h3_ids(
-    aoi_geojson: Dict[str, Any], resolution: int, spatial_join_method: str
+    aoi_geojson: Dict[str, Any],
+    resolution: int,
+    spatial_join_method: Literal["touches", "within", "centroid"],
 ) -> Set[str]:
     """
     Generate H3 hexagon IDs for a given AOI GeoJSON object, supporting both Polygon and MultiPolygon.
