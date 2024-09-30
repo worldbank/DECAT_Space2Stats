@@ -40,7 +40,7 @@ def test_stats_table_settings(mock_env, database):
         stats_table.conn.execute("SELECT 1")
 
 
-def test_aggregate_success(mock_env, database, aoi_example):
+def test_aggregate_sum_touches(mock_env, database, aoi_example):
     """Test successful aggregation."""
     settings = Settings(
         PGHOST=database.host,
@@ -63,6 +63,39 @@ def test_aggregate_success(mock_env, database, aoi_example):
         assert "sum_pop_f_10_2020" in result
         assert result["sum_pop_2020"] == 250
         assert result["sum_pop_f_10_2020"] == 450
+
+
+@pytest.mark.parametrize(
+    "aggregation_type",
+    [
+        "sum",
+        "avg",
+        "count",
+        "max",
+        "min",
+    ],
+)
+def test_aggregate_methods_no_errors(mock_env, database, aoi_example, aggregation_type):
+    """Test different aggregation methods to ensure no errors are thrown."""
+    settings = Settings(
+        PGHOST=database.host,
+        PGPORT=database.port,
+        PGDATABASE=database.dbname,
+        PGUSER=database.user,
+        PGPASSWORD=database.password,
+        PGTABLENAME="space2stats",
+    )
+
+    with StatsTable.connect(settings) as stats_table:
+        result = stats_table.aggregate(
+            aoi=aoi_example,
+            spatial_join_method="touches",
+            fields=["sum_pop_2020", "sum_pop_f_10_2020"],
+            aggregation_type=aggregation_type,
+        )
+
+        assert "sum_pop_2020" in result
+        assert "sum_pop_f_10_2020" in result
 
 
 def test_aggregate_empty_aoi(mock_env, database):

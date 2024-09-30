@@ -131,7 +131,7 @@ class StatsTable:
         aoi: AoiModel,
         spatial_join_method: Literal["touches", "centroid", "within"],
         fields: List[str],
-        aggregation_type: Literal["sum", "average", "count"],
+        aggregation_type: Literal["sum", "avg", "count", "max", "min"],
     ) -> Dict[str, float]:
         """Aggregate Statistics from a GeoJSON feature."""
         if not isinstance(aoi, Feature):
