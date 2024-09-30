@@ -13,7 +13,7 @@ from starlette_cramjam.middleware import CompressionMiddleware
 from ..lib import StatsTable
 from .db import close_db_connection, connect_to_db
 from .errors import add_exception_handlers
-from .schemas import SummaryRequest
+from .schemas import AggregateRequest, SummaryRequest
 from .settings import Settings
 
 s3_client = boto3.client("s3")
@@ -50,7 +50,6 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
     add_exception_handlers(app)
 
     def stats_table(request: Request):
-        """Dependency to generate a per-request connection to stats table"""
         with request.app.state.pool.connection() as conn:
             yield StatsTable(conn=conn, table_name=settings.PGTABLENAME)
 
@@ -62,6 +61,18 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
                 body.spatial_join_method,
                 body.fields,
                 body.geometry,
+            )
+        except pg.errors.UndefinedColumn as e:
+            raise HTTPException(status_code=400, detail=e.diag.message_primary) from e
+
+    @app.post("/aggregate", response_model=Dict[str, float])
+    def get_aggregate(body: AggregateRequest, table: StatsTable = Depends(stats_table)):
+        try:
+            return table.aggregate(
+                aoi=body.aoi,
+                spatial_join_method=body.spatial_join_method,
+                fields=body.fields,
+                aggregation_type=body.aggregation_type,
             )
         except pg.errors.UndefinedColumn as e:
             raise HTTPException(status_code=400, detail=e.diag.message_primary) from e
