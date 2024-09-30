@@ -156,7 +156,7 @@ class StatsTable:
             """
                 SELECT {0}
                 FROM {1}
-                WHERE hex_id IN (%s)
+                WHERE hex_id = ANY (%s)
             """
         ).format(
             pg.sql.SQL(", ").join(pg.sql.SQL(a) for a in aggregations),

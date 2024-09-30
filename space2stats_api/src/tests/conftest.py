@@ -29,7 +29,7 @@ def aws_credentials():
     os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def database(postgresql_proc):
     """Set up a PostgreSQL database for testing and clean up afterwards."""
     with DatabaseJanitor(
@@ -45,7 +45,6 @@ def database(postgresql_proc):
         )
         with psycopg.connect(db_url) as conn:
             with conn.cursor() as cur:
-                cur.execute("DROP TABLE IF EXISTS space2stats")
                 cur.execute(
                     """
                     CREATE TABLE space2stats (
@@ -55,6 +54,8 @@ def database(postgresql_proc):
                     );
                     """
                 )
+                conn.commit()
+
                 # Insert data that corresponds to the expected H3 IDs
                 cur.execute(
                     """
@@ -67,7 +68,7 @@ def database(postgresql_proc):
                         ('867a74807ffffff', 125, 225); 
                     """
                 )
-            conn.commit()
+                conn.commit()
 
         yield jan
 

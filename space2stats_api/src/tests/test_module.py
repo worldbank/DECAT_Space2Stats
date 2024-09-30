@@ -1,12 +1,57 @@
 import psycopg as pg
 import pytest
 from geojson_pydantic import Feature
-from space2stats.lib import StatsTable
+from space2stats.lib import Settings, StatsTable
+
+
+def test_stats_table(mock_env):
+    with StatsTable.connect() as stats_table:
+        assert stats_table.table_name == "space2stats"
+        assert stats_table.conn.closed == 0
+        stats_table.conn.execute("SELECT 1")
+
+
+def test_stats_table_connect(mock_env, database):
+    with StatsTable.connect(
+        PGHOST=database.host,
+        PGPORT=database.port,
+        PGDATABASE=database.dbname,
+        PGUSER=database.user,
+        PGPASSWORD=database.password,
+        PGTABLENAME="XYZ",
+    ) as stats_table:
+        assert stats_table.table_name == "XYZ"
+        assert stats_table.conn.closed == 0
+        stats_table.conn.execute("SELECT 1")
+
+
+def test_stats_table_settings(mock_env, database):
+    settings = Settings(
+        PGHOST=database.host,
+        PGPORT=database.port,
+        PGDATABASE=database.dbname,
+        PGUSER=database.user,
+        PGPASSWORD=database.password,
+        PGTABLENAME="ABC",
+    )
+    with StatsTable.connect(settings) as stats_table:
+        assert stats_table.table_name == "ABC"
+        assert stats_table.conn.closed == 0
+        stats_table.conn.execute("SELECT 1")
 
 
 def test_aggregate_success(mock_env, database, aoi_example):
     """Test successful aggregation."""
-    with StatsTable.connect() as stats_table:
+    settings = Settings(
+        PGHOST=database.host,
+        PGPORT=database.port,
+        PGDATABASE=database.dbname,
+        PGUSER=database.user,
+        PGPASSWORD=database.password,
+        PGTABLENAME="space2stats",
+    )
+
+    with StatsTable.connect(settings) as stats_table:
         result = stats_table.aggregate(
             aoi=aoi_example,
             spatial_join_method="touches",
@@ -39,7 +84,16 @@ def test_aggregate_empty_aoi(mock_env, database):
         properties={},
     )
 
-    with StatsTable.connect() as stats_table:
+    settings = Settings(
+        PGHOST=database.host,
+        PGPORT=database.port,
+        PGDATABASE=database.dbname,
+        PGUSER=database.user,
+        PGPASSWORD=database.password,
+        PGTABLENAME="space2stats",
+    )
+
+    with StatsTable.connect(settings) as stats_table:
         result = stats_table.aggregate(
             aoi=empty_aoi,
             spatial_join_method="centroid",
@@ -54,7 +108,16 @@ def test_aggregate_empty_aoi(mock_env, database):
 
 def test_aggregate_invalid_field(mock_env, database, aoi_example):
     """Test aggregation with an invalid field name."""
-    with StatsTable.connect() as stats_table:
+    settings = Settings(
+        PGHOST=database.host,
+        PGPORT=database.port,
+        PGDATABASE=database.dbname,
+        PGUSER=database.user,
+        PGPASSWORD=database.password,
+        PGTABLENAME="space2stats",
+    )
+
+    with StatsTable.connect(settings) as stats_table:
         with pytest.raises(pg.errors.UndefinedColumn):
             stats_table.aggregate(
                 aoi=aoi_example,
