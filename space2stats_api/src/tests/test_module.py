@@ -1,7 +1,6 @@
 import psycopg as pg
 import pytest
 from geojson_pydantic import Feature
-from space2stats.h3_utils import generate_h3_ids
 from space2stats.lib import StatsTable
 
 
@@ -14,22 +13,17 @@ def test_aggregate_success(mock_env, database, aoi_example):
             fields=["sum_pop_2020", "sum_pop_f_10_2020"],
             aggregation_type="sum",
         )
-        expected_h3_ids = generate_h3_ids(
-            aoi_example.geometry.model_dump(exclude_none=True), 6, "touches"
-        )
-        print(expected_h3_ids)
-        print(result)
+
         assert "sum_pop_2020" in result
         assert "sum_pop_f_10_2020" in result
-        assert result["sum_pop_2020"] == 250  # Adjust based on your test data
-        assert result["sum_pop_f_10_2020"] == 450  # Adjust based on your test data
-        assert False
+        assert result["sum_pop_2020"] == 250
+        assert result["sum_pop_f_10_2020"] == 450
 
 
 def test_aggregate_empty_aoi(mock_env, database):
     """Test aggregation with an empty AOI."""
     empty_aoi = Feature(
-        type="Feature",  # Ensure to include the type field
+        type="Feature",
         geometry={
             "type": "Polygon",
             "coordinates": [
@@ -65,6 +59,6 @@ def test_aggregate_invalid_field(mock_env, database, aoi_example):
             stats_table.aggregate(
                 aoi=aoi_example,
                 spatial_join_method="centroid",
-                fields=["invalid_field"],  # This field does not exist
+                fields=["invalid_field"],
                 aggregation_type="sum",
             )

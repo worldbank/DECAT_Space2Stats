@@ -139,20 +139,19 @@ class StatsTable:
 
         # Get H3 ids from geometry
         resolution = 6
-        h3_ids = generate_h3_ids(
-            aoi.geometry.model_dump(exclude_none=True),
-            resolution,
-            spatial_join_method,
+        h3_ids = list(
+            generate_h3_ids(
+                aoi.geometry.model_dump(exclude_none=True),
+                resolution,
+                spatial_join_method,
+            )
         )
-
-        print(h3_ids)
 
         if not h3_ids:
             return {}
 
         # Prepare SQL aggregation query
         aggregations = [f"{aggregation_type}({field}) AS {field}" for field in fields]
-        print(f"aggregation: {aggregations}")
         sql_query = pg.sql.SQL(
             """
                 SELECT {0}
@@ -163,9 +162,9 @@ class StatsTable:
             pg.sql.SQL(", ").join(pg.sql.SQL(a) for a in aggregations),
             pg.sql.Identifier(self.table_name),
         )
-        print(str(sql_query))
+
         # Convert h3_ids to a list to ensure compatibility with psycopg
-        h3_ids = set(h3_ids)
+        h3_ids = list(h3_ids)
         with self.conn.cursor() as cur:
             cur.execute(
                 sql_query,
