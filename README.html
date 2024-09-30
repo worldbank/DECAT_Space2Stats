@@ -568,16 +568,95 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#getting-started-locally">
    Getting Started Locally
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#installation">
+     Installation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setup">
+     Setup
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#usage-as-an-api">
-   Usage as an API
+  <a class="reference internal nav-link" href="#usage">
+   Usage
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#usage-as-a-module">
-   Usage as a module
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#api">
+     API
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#module">
+     Module
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#statstable-summaries">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         StatsTable.summaries()
+        </span>
+       </code>
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#description">
+         Description
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#parameters">
+         Parameters
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#returns">
+         Returns
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#example">
+         Example
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#fields-method">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         fields
+        </span>
+       </code>
+       Method
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id1">
+         Description
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id2">
+         Returns
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id3">
+         Example
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -593,6 +672,15 @@ title="Print to PDF"
 <p>Consistent, comparable, authoritative data describing sub-national variation is a constant point of complication for World Bank teams, our development partners, and client countries when assessing and investigating economic issues and national policy. This project will focus on creating and disseminating such data through aggregation of geospatial information at standard administrative divisions, and through the attribution of household survey data with foundational geospatial variables.</p>
 <section id="getting-started-locally">
 <h2>Getting Started Locally<a class="headerlink" href="#getting-started-locally" title="Permalink to this heading">#</a></h2>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h3>
+<p>The module can be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code> directly from Github:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Setup the database:</p></li>
 </ul>
@@ -624,20 +712,25 @@ PGTABLENAME=space2stats
 <li><p>Access your data using the Space2stats API! See the <span class="xref myst">example notebook</span>.</p></li>
 </ul>
 </section>
-<section id="usage-as-an-api">
-<h2>Usage as an API<a class="headerlink" href="#usage-as-an-api" title="Permalink to this heading">#</a></h2>
-<p>The API can be run with:</p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h3>
+<p>The API server can be run locally with the following command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">space2stats</span>
 </pre></div>
 </div>
+<p>Once running, interactive API documentation can be found at the <code class="docutils literal notranslate"><span class="pre">/docs</span></code> endpoint (e.g. <a class="reference external" href="http://localhost:8000/docs">http://localhost:8000/docs</a>).</p>
+<p>API server properties can be customized via the following environment variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">UVICORN_HOST</span></code>: Server host. <em>Default: <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code></em></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UVICORN_PORT</span></code>: Server port. <em>Default: <code class="docutils literal notranslate"><span class="pre">8000</span></code></em></p></li>
+</ul>
 </section>
-<section id="usage-as-a-module">
-<h2>Usage as a module<a class="headerlink" href="#usage-as-a-module" title="Permalink to this heading">#</a></h2>
-<p>The module can be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code> directly from Github:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src&quot;</span>
-</pre></div>
-</div>
-<p>It can then be used within Python as such:</p>
+<section id="module">
+<h3>Module<a class="headerlink" href="#module" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">space2stats</span></code> module surfaces the <code class="docutils literal notranslate"><span class="pre">StatsTable</span></code> class to enable direct DB queries (ie without using the API server).</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">space2stats</span> <span class="kn">import</span> <span class="n">StatsTable</span>
 
 <span class="k">with</span> <span class="n">StatsTable</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">stats_table</span><span class="p">:</span>
@@ -670,6 +763,88 @@ PGTABLENAME=space2stats
 <span class="c1">#     ...</span>
 </pre></div>
 </div>
+<section id="statstable-summaries">
+<h4><code class="docutils literal notranslate"><span class="pre">StatsTable.summaries()</span></code><a class="headerlink" href="#statstable-summaries" title="Permalink to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">StatsTable</span><span class="o">.</span><span class="n">summaries</span><span class="p">(</span>
+    <span class="n">aoi</span><span class="p">:</span> <span class="n">AoiModel</span><span class="p">,</span>
+    <span class="n">spatial_join_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;touches&quot;</span><span class="p">,</span> <span class="s2">&quot;centroid&quot;</span><span class="p">,</span> <span class="s2">&quot;within&quot;</span><span class="p">],</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">geometry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="s2">&quot;point&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="description">
+<h5>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h5>
+<p>Retrieves statistical summaries for the specified Area of Interest (AOI) from a PostgreSQL table.</p>
+<p>This method is used to obtain aggregated statistics from hexagonal H3 cells that intersect with the AOI’s geometry, using a chosen spatial join method.</p>
+</section>
+<section id="parameters">
+<h5>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h5>
+<ul class="simple">
+<li><p><strong>aoi</strong> (<code class="docutils literal notranslate"><span class="pre">AoiModel</span></code>): The Area of Interest, either as a <code class="docutils literal notranslate"><span class="pre">Feature</span></code> or an instance of <code class="docutils literal notranslate"><span class="pre">AoiModel</span></code>.</p></li>
+<li><p><strong>spatial_join_method</strong> (<code class="docutils literal notranslate"><span class="pre">Literal[&quot;touches&quot;,</span> <span class="pre">&quot;centroid&quot;,</span> <span class="pre">&quot;within&quot;]</span></code>): The method to use for performing the spatial join between the AOI and H3 cells.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;touches&quot;</span></code>: Includes H3 cells that touch the AOI.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;centroid&quot;</span></code>: Includes H3 cells where the centroid falls within the AOI.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;within&quot;</span></code>: Includes H3 cells entirely within the AOI.</p></li>
+</ul>
+</li>
+<li><p><strong>fields</strong> (<code class="docutils literal notranslate"><span class="pre">List[str]</span></code>): A list of field names to retrieve from the statistics table.</p></li>
+<li><p><strong>geometry</strong> (<code class="docutils literal notranslate"><span class="pre">Optional[Literal[&quot;polygon&quot;,</span> <span class="pre">&quot;point&quot;]]</span></code>): Specifies if the H3 geometries should be included in the response. It can be either <code class="docutils literal notranslate"><span class="pre">&quot;polygon&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;point&quot;</span></code>. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, geometries are not included.</p></li>
+</ul>
+</section>
+<section id="returns">
+<h5>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">#</a></h5>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">List[Dict]</span></code></strong>: A list of dictionaries containing statistical summaries for each H3 cell. Each dictionary contains:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;hex_id&quot;</span></code>: The H3 cell identifier.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;geometry&quot;</span></code> (optional): The geometry of the H3 cell, if <code class="docutils literal notranslate"><span class="pre">geometry</span></code> is specified.</p></li>
+<li><p>Other fields from the statistics table, based on the specified <code class="docutils literal notranslate"><span class="pre">fields</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="example">
+<h5>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aoi</span> <span class="o">=</span> <span class="n">AoiModel</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=...</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">StatsTable</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">stats_table</span><span class="p">:</span>
+    <span class="n">summaries</span> <span class="o">=</span> <span class="n">stats_table</span><span class="o">.</span><span class="n">summaries</span><span class="p">(</span>
+        <span class="n">aoi</span><span class="o">=</span><span class="n">aoi</span><span class="p">,</span>
+        <span class="n">spatial_join_method</span><span class="o">=</span><span class="s2">&quot;centroid&quot;</span><span class="p">,</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">,</span> <span class="s2">&quot;average_income&quot;</span><span class="p">],</span>
+        <span class="n">geometry</span><span class="o">=</span><span class="s2">&quot;polygon&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="fields-method">
+<h4><code class="docutils literal notranslate"><span class="pre">fields</span></code> Method<a class="headerlink" href="#fields-method" title="Permalink to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">StatsTable</span><span class="o">.</span><span class="n">fields</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="id1">
+<h5>Description<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h5>
+<p>Retrieves the list of column names from the PostgreSQL statistics table, excluding the <code class="docutils literal notranslate"><span class="pre">&quot;hex_id&quot;</span></code> column.</p>
+<p>This method is helpful for understanding the available fields that can be queried for statistical summaries.</p>
+</section>
+<section id="id2">
+<h5>Returns<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h5>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">List[str]</span></code></strong>: A list of column names from the statistics table, excluding <code class="docutils literal notranslate"><span class="pre">&quot;hex_id&quot;</span></code>.</p></li>
+</ul>
+</section>
+<section id="id3">
+<h5>Example<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">StatsTable</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">stats_table</span><span class="p">:</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">stats_table</span><span class="o">.</span><span class="n">fields</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>  <span class="c1"># Output: [&#39;population&#39;, &#39;average_income&#39;, ...]</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -736,16 +911,95 @@ PGTABLENAME=space2stats
   <a class="reference internal nav-link" href="#getting-started-locally">
    Getting Started Locally
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#installation">
+     Installation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setup">
+     Setup
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#usage-as-an-api">
-   Usage as an API
+  <a class="reference internal nav-link" href="#usage">
+   Usage
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#usage-as-a-module">
-   Usage as a module
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#api">
+     API
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#module">
+     Module
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#statstable-summaries">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         StatsTable.summaries()
+        </span>
+       </code>
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#description">
+         Description
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#parameters">
+         Parameters
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#returns">
+         Returns
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#example">
+         Example
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#fields-method">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         fields
+        </span>
+       </code>
+       Method
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id1">
+         Description
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id2">
+         Returns
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#id3">
+         Example
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
