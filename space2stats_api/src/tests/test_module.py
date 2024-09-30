@@ -1,37 +1,70 @@
-from space2stats import Settings, StatsTable
+import psycopg as pg
+import pytest
+from geojson_pydantic import Feature
+from space2stats.h3_utils import generate_h3_ids
+from space2stats.lib import StatsTable
 
 
-def test_stats_table(mock_env):
+def test_aggregate_success(mock_env, database, aoi_example):
+    """Test successful aggregation."""
     with StatsTable.connect() as stats_table:
-        assert stats_table.table_name == "space2stats"
-        assert stats_table.conn.closed == 0
-        stats_table.conn.execute("SELECT 1")
+        result = stats_table.aggregate(
+            aoi=aoi_example,
+            spatial_join_method="touches",
+            fields=["sum_pop_2020", "sum_pop_f_10_2020"],
+            aggregation_type="sum",
+        )
+        expected_h3_ids = generate_h3_ids(
+            aoi_example.geometry.model_dump(exclude_none=True), 6, "touches"
+        )
+        print(expected_h3_ids)
+        print(result)
+        assert "sum_pop_2020" in result
+        assert "sum_pop_f_10_2020" in result
+        assert result["sum_pop_2020"] == 250  # Adjust based on your test data
+        assert result["sum_pop_f_10_2020"] == 450  # Adjust based on your test data
+        assert False
 
 
-def test_stats_table_connect(mock_env, database):
-    with StatsTable.connect(
-        PGHOST=database.host,
-        PGPORT=database.port,
-        PGDATABASE=database.dbname,
-        PGUSER=database.user,
-        PGPASSWORD=database.password,
-        PGTABLENAME="XYZ",
-    ) as stats_table:
-        assert stats_table.table_name == "XYZ"
-        assert stats_table.conn.closed == 0
-        stats_table.conn.execute("SELECT 1")
-
-
-def test_stats_table_settings(mock_env, database):
-    settings = Settings(
-        PGHOST=database.host,
-        PGPORT=database.port,
-        PGDATABASE=database.dbname,
-        PGUSER=database.user,
-        PGPASSWORD=database.password,
-        PGTABLENAME="ABC",
+def test_aggregate_empty_aoi(mock_env, database):
+    """Test aggregation with an empty AOI."""
+    empty_aoi = Feature(
+        type="Feature",  # Ensure to include the type field
+        geometry={
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [-124.000, 50.000],
+                    [-124.000, 51.000],
+                    [-125.000, 51.000],
+                    [-125.000, 50.000],
+                    [-124.000, 50.000],
+                ]
+            ],
+        },
+        properties={},
     )
-    with StatsTable.connect(settings) as stats_table:
-        assert stats_table.table_name == "ABC"
-        assert stats_table.conn.closed == 0
-        stats_table.conn.execute("SELECT 1")
+
+    with StatsTable.connect() as stats_table:
+        result = stats_table.aggregate(
+            aoi=empty_aoi,
+            spatial_join_method="centroid",
+            fields=["sum_pop_2020", "sum_pop_f_10_2020"],
+            aggregation_type="sum",
+        )
+
+        assert result["sum_pop_2020"] is None
+        assert result["sum_pop_f_10_2020"] is None
+        assert len(result) == 2
+
+
+def test_aggregate_invalid_field(mock_env, database, aoi_example):
+    """Test aggregation with an invalid field name."""
+    with StatsTable.connect() as stats_table:
+        with pytest.raises(pg.errors.UndefinedColumn):
+            stats_table.aggregate(
+                aoi=aoi_example,
+                spatial_join_method="centroid",
+                fields=["invalid_field"],  # This field does not exist
+                aggregation_type="sum",
+            )
