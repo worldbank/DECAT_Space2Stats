@@ -84,13 +84,15 @@ class StatsTable:
             return []
 
         # Get Summaries from H3 ids
-        rows, colnames = self._get_summaries(fields=fields, h3_ids=h3_ids)
+        rows, colnames = self._get_summaries(fields=fields, h3_ids=list(h3_ids))
         if not rows:
             return []
 
         # Format Summaries
         summaries: List[Dict] = []
-        geometries = generate_h3_geometries(h3_ids, geometry) if geometry else None
+        geometries = (
+            generate_h3_geometries(list(h3_ids), geometry) if geometry else None
+        )
 
         for idx, row in enumerate(rows):
             summary = {"hex_id": row[0]}

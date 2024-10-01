@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "space2stats"
-version = "0.1.0"  # Set your version explicitly here
-description = "Space 2 Stats"
+version = "0.1.0"  
+description = "Tools for setting up and accessing the Space2Stats project's data."
 authors = ["Zac Deziel <zac@developmentseed.org>"]
 readme = "README.md"
 
@@ -9,7 +9,7 @@ readme = "README.md"
 python = ">=3.10,<3.13"
 orjson = "*"
 fastapi = ">=0.112.0"
-pandas = "*"
+pandas = "*" 
 shapely = "*"
 h3 = "*"
 psycopg = { version = "*", extras = ["binary", "pool"] }
@@ -29,16 +29,27 @@ mangum = "*"
 [tool.poetry.group.server.dependencies]
 uvicorn = "*"
 
+[tool.poetry.group.ingest.dependencies]
+typer = "^0.12.5"
+boto3 = "^1.35.25"
+pyarrow = "^17.0.0"
+adbc-driver-postgresql = "^1.2.0"
+tqdm = "^4.66.5"
+
 [tool.poetry.group.test.dependencies]
 pre-commit = "*"
-pytest = "*" 
-pytest-cov = "*" 
+pytest = "*"
+pytest-cov = "*"
 pytest-mock = "*"
 pytest-postgresql = "*"
 moto = "^5.0.13"
 pytest-benchmark = "^4.0.0"
 requests = "^2.32.3"
 types-requests = "^2.32.0.20240907"
+pyarrow = "^17.0.0"
+
+[tool.poetry.scripts]
+space2stats-ingest = "space2stats_ingest.cli:app"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
