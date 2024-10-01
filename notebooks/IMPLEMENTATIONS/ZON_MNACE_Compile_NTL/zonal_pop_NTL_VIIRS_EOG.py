@@ -10,7 +10,7 @@ import GOSTrocks.rasterMisc as rMisc
 import GOSTrocks.ntlMisc as ntl
 from GOSTrocks.misc import tPrint
 
-sys.path.append("../../src")
+sys.path.append("../../../src")
 import h3_helper
 
 AWS_S3_BUCKET = 'wbg-geography01'
@@ -36,12 +36,20 @@ if __name__ == "__main__":
     verbose = True
     tPrint("Starting")
     h3_level = 6
-    data_prefix = "VIIRS_ANNUAL_EOG"
+    data_prefix = "VIIRS_Monthly_LEN"
     
     # Get list of nighttime lights VIIRS data
-    # ntl_files = ntl.aws_search_ntl()
-    ntl_folder = "/home/public/Data/GLOBAL/NighttimeLights/VIIRS_ANNUAL_EOG_V21"
-    ntl_files = [os.path.join(ntl_folder, x) for x in os.listdir(ntl_folder) if x.endswith(".tif")]
+    ntl_files = ntl.aws_search_ntl()
+    good_months = ['01','04','07','10']
+    final_ntl_files = []
+    for ntl_file in ntl_files:
+        date = os.path.basename(ntl_file).split("_")[2].split("-")[0]
+        month = date[4:6]
+        if month in good_months:
+            final_ntl_files.append(ntl_file)
+    ntl_files = final_ntl_files
+    # ntl_folder = "/home/public/Data/GLOBAL/NighttimeLights/VIIRS_ANNUAL_EOG_V21"
+    # ntl_files = [os.path.join(ntl_folder, x) for x in os.listdir(ntl_folder) if x.endswith(".tif")]
     
     # h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False)
     admin_bounds = "/home/wb411133/data/Global/ADMIN/Admin2_Polys.shp"
