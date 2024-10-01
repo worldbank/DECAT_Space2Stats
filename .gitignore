@@ -94,3 +94,10 @@ _build/
 
 # python-dotenv
 .env
+wb_aws.env
+db.env
+
+# data
+*.parquet
+*.duckdb
+.pgdata
