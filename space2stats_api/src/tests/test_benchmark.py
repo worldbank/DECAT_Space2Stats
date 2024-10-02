@@ -5,15 +5,6 @@ import requests
 from shapely.geometry import Point, Polygon
 
 
-def get_field_counts():
-    fields_endpoint = f"{os.getenv('BASE_URL')}{os.getenv('FIELDS_ENDPOINT')}"
-    response = requests.get(fields_endpoint)
-    num_fields = len(response.json())
-
-    # Generate field counts in steps of 5
-    return list(range(5, num_fields + 1, 5))
-
-
 def generate_aoi_params(area, centroid_latitude, centroid_longitude):
     half_side = (area**0.5) / 2
     center = Point(centroid_longitude, centroid_latitude)
@@ -66,9 +57,7 @@ def test_benchmark_summary_varying_aoi(benchmark, area, setup_benchmark_env):
     )
 
 
-@pytest.mark.parametrize(
-    "field_count", [5, 10, 15, 20, 25]
-)  # Adjust the range manually for now
+@pytest.mark.parametrize("field_count", [10, 20, 30, 40])
 def test_benchmark_summary_aoi_10_varying_fields(
     benchmark, field_count, setup_benchmark_env
 ):
