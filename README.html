@@ -681,15 +681,13 @@ title="Print to PDF"
 </section>
 <section id="setup">
 <h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p>Setup the database:</p></li>
-</ul>
+<ul>
+<li><p>Setup the database:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="o">-</span><span class="n">d</span>
 </pre></div>
 </div>
-<ul class="simple">
-<li><p>Create a <code class="docutils literal notranslate"><span class="pre">db.env</span></code> file:</p></li>
-</ul>
+</li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">db.env</span></code> file:</p>
 <div class="highlight-.env notranslate"><div class="highlight"><pre><span></span>PGHOST=localhost
 PGPORT=5439
 PGDATABASE=postgis
@@ -698,18 +696,37 @@ PGPASSWORD=password
 PGTABLENAME=space2stats
 </pre></div>
 </div>
-<ul class="simple">
-<li><p>Load our dataset into the database</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">postgres</span><span class="o">/</span><span class="n">download_parquet</span><span class="o">.</span><span class="n">sh</span>
-<span class="o">./</span><span class="n">load_to_prod</span><span class="o">.</span><span class="n">sh</span>
+</li>
+<li><p>Ingest the dataset into the database:</p>
+<p>Use the space2stats-ingest CLI to download the Parquet file from S3 and load it into your database. You’ll also need the STAC metadata file to validate the Parquet schema during ingestion.</p>
+<p>To download the Parquet file from S3 and load it into the database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">space2stats</span><span class="o">-</span><span class="n">ingest</span> <span class="n">download</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">load</span> \
+<span class="s2">&quot;s3://&lt;bucket&gt;/space2stats.parquet&quot;</span> \
+<span class="s2">&quot;postgresql://username:password@localhost:5439/postgis&quot;</span> \
+<span class="s2">&quot;&lt;path&gt;/space2stats.json&quot;</span> \
+<span class="o">--</span><span class="n">parquet</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;local.parquet&quot;</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p>You can get started with a subset of data for NYC with <code class="docutils literal notranslate"><span class="pre">./load_nyc_sample.sh</span></code> which requires changing your <code class="docutils literal notranslate"><span class="pre">db.env</span></code> value for <code class="docutils literal notranslate"><span class="pre">PGTABLENAME</span></code> to <code class="docutils literal notranslate"><span class="pre">space2stats_nyc_sample</span></code>.</p>
-</div></blockquote>
-<ul class="simple">
-<li><p>Access your data using the Space2stats API! See the <span class="xref myst">example notebook</span>.</p></li>
+</li>
+</ul>
+<p>Alternatively, you can download the Parquet file and load it into the database separately:</p>
+<ul>
+<li><p>Download the Parquet file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">space2stats</span><span class="o">-</span><span class="n">ingest</span> <span class="n">download</span> \
+    <span class="s2">&quot;s3://&lt;bucket&gt;/space2stats.parquet&quot;</span> \
+    <span class="o">--</span><span class="n">local</span><span class="o">-</span><span class="n">path</span> <span class="s2">&quot;local.parquet&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Load the Parquet file into the database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">space2stats</span><span class="o">-</span><span class="n">ingest</span> <span class="n">load</span> \
+<span class="s2">&quot;postgresql://username:password@localhost:5439/postgis&quot;</span> \
+<span class="s2">&quot;&lt;path&gt;/space2stats.json&quot;</span> \
+<span class="o">--</span><span class="n">parquet</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;local.parquet&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Finally, access your data using the Space2stats API! See the <span class="xref myst">example notebook</span>.</p></li>
 </ul>
 </section>
 </section>
