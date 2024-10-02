@@ -1,7 +1,8 @@
+import pytest
+
 aoi = {
     "type": "Feature",
     "geometry": {
-        # This polygon intersects with the test data
         "type": "Polygon",
         "coordinates": [
             [
@@ -55,6 +56,23 @@ def test_bad_fields_validated(client):
     assert response.json() == {"error": 'column "a_non_existent_field" does not exist'}
 
 
+@pytest.mark.parametrize("aggregation_type", ["sum", "avg", "count", "max", "min"])
+def test_aggregate_methods(client, aggregation_type):
+    request_payload = {
+        "aoi": aoi,
+        "spatial_join_method": "touches",
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
+        "aggregation_type": aggregation_type,
+    }
+
+    response = client.post("/aggregate", json=request_payload)
+    assert response.status_code == 200
+    response_json = response.json()
+    assert isinstance(response_json, dict)
+    assert "sum_pop_2020" in response_json
+    assert "sum_pop_f_10_2020" in response_json
+
+
 def test_get_summary_with_geometry_multipolygon(client):
     request_payload = {
         "aoi": {
@@ -62,7 +80,6 @@ def test_get_summary_with_geometry_multipolygon(client):
             "geometry": {
                 "type": "MultiPolygon",
                 "coordinates": [
-                    # Ensure at least one multipolygon interacts with test data
                     aoi["geometry"]["coordinates"],
                     [
                         [

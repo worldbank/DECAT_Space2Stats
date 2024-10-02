@@ -125,3 +125,57 @@ class StatsTable:
             columns = [row[0] for row in cur.fetchall() if row[0] != "hex_id"]
 
         return columns
+
+    def aggregate(
+        self,
+        aoi: AoiModel,
+        spatial_join_method: Literal["touches", "centroid", "within"],
+        fields: List[str],
+        aggregation_type: Literal["sum", "avg", "count", "max", "min"],
+    ) -> Dict[str, float]:
+        """Aggregate Statistics from a GeoJSON feature."""
+        if not isinstance(aoi, Feature):
+            aoi = AoiModel.model_validate(aoi)
+
+        # Get H3 ids from geometry
+        resolution = 6
+        h3_ids = list(
+            generate_h3_ids(
+                aoi.geometry.model_dump(exclude_none=True),
+                resolution,
+                spatial_join_method,
+            )
+        )
+
+        if not h3_ids:
+            return {}
+
+        # Prepare SQL aggregation query
+        aggregations = [f"{aggregation_type}({field}) AS {field}" for field in fields]
+        sql_query = pg.sql.SQL(
+            """
+                SELECT {0}
+                FROM {1}
+                WHERE hex_id = ANY (%s)
+            """
+        ).format(
+            pg.sql.SQL(", ").join(pg.sql.SQL(a) for a in aggregations),
+            pg.sql.Identifier(self.table_name),
+        )
+
+        # Convert h3_ids to a list to ensure compatibility with psycopg
+        h3_ids = list(h3_ids)
+        with self.conn.cursor() as cur:
+            cur.execute(
+                sql_query,
+                [h3_ids],
+            )
+            row = cur.fetchone()  # Get a single row of results
+            colnames = [desc[0] for desc in cur.description]
+
+        # Create a dictionary to hold the aggregation results
+        aggregated_results: Dict[str, float] = {}
+        for idx, col in enumerate(colnames):
+            aggregated_results[col] = row[idx]
+
+        return aggregated_results
