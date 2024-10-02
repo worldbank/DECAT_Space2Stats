@@ -13,6 +13,8 @@ The input data is stored in Parquet format on AWS S3, located in the file `space
 - `hex_id`
 - `{variable_name}_{aggregation_method[sum, mean, etc.]}_{year}`
 
+In addition to the Parquet file, a corresponding STAC metadata file is required to ensure that the data structure in the Parquet file matches the metadata specification. The STAC metadata file describes the columns present in the Parquet file and is used to perform schema validation before loading the data into the database.
+
 ### Database Setup
 
 You can use a local database for this acceptance test by running:
@@ -40,6 +42,12 @@ PGTABLENAME=space2stats
 
 ### CLI Usage:
 
+You can use the CLI tool for data ingestion, which includes validation of the Parquet file against the STAC metadata file to ensure consistency between the data structure and the metadata.
+
+#### Ingestion Process
+
+The ingestion process now includes an additional parameter for specifying the STAC metadata file, which ensures that the Parquet file schema matches the metadata. This validation step ensures that there are no extra columns in either the Parquet file or the metadata, providing a 1:1 correspondence between them.
+
 You can use the CLI tool for data ingestion. First, ensure you have the required dependencies installed via Poetry:
 
 ```bash
@@ -49,19 +57,27 @@ poetry install
 To download the Parquet file from S3 and load it into the database, run the following command:
 
 ```bash
-poetry run space2stats-ingest download-and-load "s3://yourbucket/space2stats_updated.parquet" "postgresql://postgres:password@localhost:5432/postgis"
+poetry run space2stats-ingest download-and-load \
+    "s3://<bucket>/space2stats.parquet" \
+    "postgresql://username:password@localhost:5439/postgres" \
+    "<path>/space2stats.json" \
+    --parquet-file "local.parquet"
 ```
 
 Alternatively, you can run the `download` and `load` commands separately:
 
 1. **Download the Parquet file**:
    ```bash
-   poetry run space2stats-ingest download "s3://yourbucket/space2stats_updated.parquet" --local-path "local.parquet"
+   poetry run space2stats-ingest download "s3://<bucket>/space2stats.parquet" --local-path "local.parquet"
    ```
 
 2. **Load the Parquet file into the database**:
    ```bash
-   poetry run space2stats-ingest load "postgresql://postgres:password@localhost:5432/postgis" --parquet-file "local.parquet"
+   poetry run space2stats-ingest download-and-load \
+    "s3://<bucket>/space2stats.parquet" \
+    "postgresql://username:password@localhost:5439/postgres" \
+    "<path>/space2stats.json" \
+    --parquet-file "local.parquet"  
    ```
 
 ### Database Configuration
