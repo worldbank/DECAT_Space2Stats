@@ -66,12 +66,14 @@ def generate_h3_geometries(
     # Convert pyarrow Array to GeoJSON geometries
     geojson_geometries = []
     for geom in wkb_geometries:
-        if isinstance(geom, pa.Scalar):
-            # Convert to buffer and then to bytes
-            shapely_geom = wkb.loads(geom.as_buffer().to_pybytes())
+        if isinstance(geom, pa.LargeBinaryScalar):
+            # Convert the LargeBinaryScalar to bytes
+            shapely_geom = wkb.loads(geom.as_py())
             # Convert Shapely geometry to GeoJSON-like dict
             geojson_geometries.append(mapping(shapely_geom))
         else:
-            raise TypeError(f"Expected pyarrow Scalar, but got {type(geom).__name__}")
+            raise TypeError(
+                f"Expected pa.LargeBinaryScalar, but got {type(geom).__name__}"
+            )
 
     return geojson_geometries
