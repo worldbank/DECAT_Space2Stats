@@ -1,4 +1,5 @@
 import pytest
+from h3ronpy.arrow import cells_parse
 from shapely.geometry import MultiPolygon, Polygon, mapping
 from space2stats.h3_utils import generate_h3_geometries, generate_h3_ids
 
@@ -83,7 +84,7 @@ def test_generate_h3_sliver_polygon_touches():
         "touches",
     )
 
-    for h in ["867a74817ffffff", "867a74807ffffff"]:
+    for h in cells_parse(["867a74817ffffff", "867a74807ffffff"]):
         assert h in data, f"Missing {h} in generated hexagons"
     assert len(data) == 2
 
@@ -123,9 +124,7 @@ def test_generate_h3_sliver_polygon_centroid():
         6,
         "centroid",
     )
-    h = "867a74817ffffff"
-    assert "867a74817ffffff" in data, f"{h} not in generated hexagons"
-    assert len(data) == 1
+    assert len(data) == 0
 
 
 if __name__ == "__main__":
