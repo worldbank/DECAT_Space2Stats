@@ -3,6 +3,7 @@ from typing import Dict, List, Literal, Optional
 
 import psycopg as pg
 from geojson_pydantic import Feature
+from h3ronpy.arrow import cells_to_string
 from psycopg import Connection
 
 from .h3_utils import generate_h3_geometries, generate_h3_ids
@@ -36,7 +37,7 @@ class StatsTable:
         if self.conn:
             self.conn.close()
 
-    def _get_summaries(self, fields: List[str], h3_ids: List[str]):
+    def _get_summaries(self, fields: List[str], h3_ids: List[int]):
         colnames = ["hex_id"] + fields
         cols = [pg.sql.Identifier(c) for c in colnames]
         sql_query = pg.sql.SQL(
@@ -53,7 +54,7 @@ class StatsTable:
             cur.execute(
                 sql_query,
                 [
-                    h3_ids,
+                    cells_to_string(h3_ids).to_pylist(),
                 ],
             )
             rows = cur.fetchall()
@@ -71,6 +72,10 @@ class StatsTable:
         """Retrieve Statistics from a GeoJSON feature."""
         if not isinstance(aoi, Feature):
             aoi = AoiModel.model_validate(aoi)
+
+        invalid_fields = [field for field in fields if field not in self.fields()]
+        if invalid_fields:
+            raise ValueError(f"Invalid fields: {invalid_fields}")
 
         # Get H3 ids from geometry
         resolution = 6
@@ -137,6 +142,10 @@ class StatsTable:
         if not isinstance(aoi, Feature):
             aoi = AoiModel.model_validate(aoi)
 
+        invalid_fields = [field for field in fields if field not in self.fields()]
+        if invalid_fields:
+            raise ValueError(f"Invalid fields: {invalid_fields}")
+
         # Get H3 ids from geometry
         resolution = 6
         h3_ids = list(
@@ -168,7 +177,7 @@ class StatsTable:
         with self.conn.cursor() as cur:
             cur.execute(
                 sql_query,
-                [h3_ids],
+                [cells_to_string(h3_ids).to_pylist()],
             )
             row = cur.fetchone()  # Get a single row of results
             colnames = [desc[0] for desc in cur.description]
