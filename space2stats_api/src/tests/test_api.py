@@ -53,7 +53,7 @@ def test_bad_fields_validated(client):
 
     response = client.post("/summary", json=request_payload)
     assert response.status_code == 400
-    assert response.json() == {"error": 'column "a_non_existent_field" does not exist'}
+    assert response.json() == {"error": "Invalid fields: ['a_non_existent_field']"}
 
 
 @pytest.mark.parametrize("aggregation_type", ["sum", "avg", "count", "max", "min"])
