@@ -16,31 +16,54 @@ pip install "git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory
 
 - Setup the database:
 
-```
-docker-compose up -d
-```
+    ```
+    docker-compose up -d
+    ```
 
 - Create a `db.env` file:
 
-```.env
-PGHOST=localhost
-PGPORT=5439
-PGDATABASE=postgis
-PGUSER=username
-PGPASSWORD=password
-PGTABLENAME=space2stats
-```
+    ```.env
+    PGHOST=localhost
+    PGPORT=5439
+    PGDATABASE=postgis
+    PGUSER=username
+    PGPASSWORD=password
+    PGTABLENAME=space2stats
+    ```
 
-- Load our dataset into the database
+- Ingest the dataset into the database:
 
-```
-./postgres/download_parquet.sh
-./load_to_prod.sh
-```
+    Use the space2stats-ingest CLI to download the Parquet file from S3 and load it into your database. You’ll also need the STAC metadata file to validate the Parquet schema during ingestion.
 
-> You can get started with a subset of data for NYC with `./load_nyc_sample.sh` which requires changing your `db.env` value for `PGTABLENAME` to `space2stats_nyc_sample`.
+    To download the Parquet file from S3 and load it into the database:
+    ```
+    poetry run space2stats-ingest download-and-load \
+    "s3://<bucket>/space2stats.parquet" \
+    "postgresql://username:password@localhost:5439/postgis" \
+    "<path>/space2stats.json" \
+    --parquet-file "local.parquet"
+    ```
 
-- Access your data using the Space2stats API! See the [example notebook](notebooks/space2stats_api_demo.ipynb).
+Alternatively, you can download the Parquet file and load it into the database separately:
+
+- Download the Parquet file:
+
+    ```
+    poetry run space2stats-ingest download \
+        "s3://<bucket>/space2stats.parquet" \
+        --local-path "local.parquet"
+    ```
+
+- Load the Parquet file into the database:
+
+    ```
+    poetry run space2stats-ingest load \
+    "postgresql://username:password@localhost:5439/postgis" \
+    "<path>/space2stats.json" \
+    --parquet-file "local.parquet"
+    ```
+
+- Finally, access your data using the Space2stats API! See the [example notebook](notebooks/space2stats_api_demo.ipynb).
 
 ## Usage
 

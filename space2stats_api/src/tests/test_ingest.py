@@ -19,9 +19,10 @@ def test_download_parquet_from_s3(s3_mock):
     assert os.path.exists(parquet_file)
 
 
-def test_load_parquet_to_db(database):
+def test_load_parquet_to_db(database, tmpdir):
     connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
-    parquet_file = "local.parquet"
+    parquet_file = tmpdir.join("local.parquet")
+    stac_metadata_file = tmpdir.join("stac_metadata.json")
 
     data = {
         "hex_id": ["hex_1", "hex_2"],
@@ -31,7 +32,21 @@ def test_load_parquet_to_db(database):
     table = pa.table(data)
     pq.write_table(table, parquet_file)
 
-    load_parquet_to_db(parquet_file, connection_string)
+    with open(stac_metadata_file, "w") as f:
+        f.write("""
+        {
+            "type": "Feature",
+            "properties": {
+                "table:columns": [
+                    {"name": "hex_id", "type": "string"},
+                    {"name": "sum_pop_2020", "type": "int64"},
+                    {"name": "sum_pop_f_10_2020", "type": "int64"}
+                ]
+            }
+        }
+        """)
+
+    load_parquet_to_db(str(parquet_file), connection_string, str(stac_metadata_file))
 
     with psycopg.connect(connection_string) as conn:
         with conn.cursor() as cur:

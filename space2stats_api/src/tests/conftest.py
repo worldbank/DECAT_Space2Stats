@@ -4,6 +4,7 @@ import boto3
 import psycopg
 import pytest
 from fastapi.testclient import TestClient
+from geojson_pydantic import Feature
 from moto import mock_aws
 from pytest_postgresql.janitor import DatabaseJanitor
 from space2stats.api.app import build_app
@@ -11,9 +12,7 @@ from space2stats.api.app import build_app
 
 @pytest.fixture
 def s3_mock():
-    """
-    Mock S3 environment and create a test bucket.
-    """
+    """Mock S3 environment and create a test bucket."""
     with mock_aws():
         s3 = boto3.client("s3", region_name="us-east-1")
         s3.create_bucket(Bucket="mybucket")
@@ -22,9 +21,7 @@ def s3_mock():
 
 @pytest.fixture()
 def aws_credentials():
-    """
-    Mocked AWS credentials for moto.
-    """
+    """Mocked AWS credentials for moto."""
     os.environ["AWS_ACCESS_KEY_ID"] = "testing"
     os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
     os.environ["AWS_SECURITY_TOKEN"] = "testing"
@@ -32,11 +29,9 @@ def aws_credentials():
     os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def database(postgresql_proc):
-    """
-    Set up a PostgreSQL database for testing and clean up afterwards.
-    """
+    """Set up a PostgreSQL database for testing and clean up afterwards."""
     with DatabaseJanitor(
         user=postgresql_proc.user,
         host=postgresql_proc.host,
@@ -50,7 +45,6 @@ def database(postgresql_proc):
         )
         with psycopg.connect(db_url) as conn:
             with conn.cursor() as cur:
-                cur.execute("DROP TABLE IF EXISTS space2stats")
                 cur.execute(
                     """
                     CREATE TABLE space2stats (
@@ -60,21 +54,28 @@ def database(postgresql_proc):
                     );
                     """
                 )
+                conn.commit()
+
+                # Insert data that corresponds to the expected H3 IDs
                 cur.execute(
                     """
                     INSERT INTO space2stats (hex_id, sum_pop_2020, sum_pop_f_10_2020)
-                    VALUES ('862a1070fffffff', 100, 200), ('862a10767ffffff', 150, 250);
-                """
+                    VALUES 
+                        ('862a1070fffffff', 100, 200), 
+                        ('862a10767ffffff', 150, 250), 
+                        ('862a1073fffffff', 120, 220),
+                        ('867a74817ffffff', 125, 225),
+                        ('867a74807ffffff', 125, 225); 
+                    """
                 )
+                conn.commit()
 
         yield jan
 
 
 @pytest.fixture(autouse=True)
 def mock_env(monkeypatch, database):
-    """
-    Automatically set environment variables for PostgreSQL and S3.
-    """
+    """Automatically set environment variables for PostgreSQL and S3."""
     monkeypatch.setenv("PGHOST", database.host)
     monkeypatch.setenv("PGPORT", str(database.port))
     monkeypatch.setenv("PGDATABASE", database.dbname)
@@ -86,9 +87,27 @@ def mock_env(monkeypatch, database):
 
 @pytest.fixture
 def client():
-    """
-    Provide a test client for FastAPI.
-    """
+    """Provide a test client for FastAPI."""
     app = build_app()
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture
+def aoi_example():
+    """Provide an example AOI feature for testing."""
+    return Feature(
+        type="Feature",
+        geometry={
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [41.14127371265408, -2.1034653113510444],
+                    [41.140645873470845, -2.104696345752785],
+                    [41.14205369446421, -2.104701102391104],
+                    [41.14127371265408, -2.1034653113510444],
+                ]
+            ],
+        },
+        properties={},
+    )
