@@ -101,7 +101,7 @@ class StatsTable:
 
         for idx, row in enumerate(rows):
             summary = {"hex_id": row[0]}
-            if geometry and geometries:
+            if geometry and geometries is not None:
                 summary["geometry"] = geometries[idx]
 
             summary.update(

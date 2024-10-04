@@ -1,4 +1,5 @@
 import pytest
+from shapely import from_geojson
 
 aoi = {
     "type": "Feature",
@@ -114,7 +115,8 @@ def test_get_summary_with_geometry_multipolygon(client):
     for summary in response_json:
         assert "hex_id" in summary
         assert "geometry" in summary
-        assert summary["geometry"]["type"] == "Polygon"
+        geometry = from_geojson(summary["geometry"])
+        assert geometry.geom_type == "Polygon"
         assert len(summary) == len(request_payload["fields"]) + 2
 
 
@@ -135,7 +137,8 @@ def test_get_summary_with_geometry_polygon(client):
     for summary in response_json:
         assert "hex_id" in summary
         assert "geometry" in summary
-        assert summary["geometry"]["type"] == "Polygon"
+        geometry = from_geojson(summary["geometry"])
+        assert geometry.geom_type == "Polygon"
         assert len(summary) == len(request_payload["fields"]) + 2
 
 
@@ -148,6 +151,7 @@ def test_get_summary_with_geometry_point(client):
     }
 
     response = client.post("/summary", json=request_payload)
+    print(response.json())
     assert response.status_code == 200
     response_json = response.json()
     assert len(response_json) > 0, "Test query failed to return any summaries"
@@ -156,7 +160,8 @@ def test_get_summary_with_geometry_point(client):
     for summary in response_json:
         assert "hex_id" in summary
         assert "geometry" in summary
-        assert summary["geometry"]["type"] == "Point"
+        geometry = from_geojson(summary["geometry"])
+        assert geometry.geom_type == "Point"
         assert len(summary) == len(request_payload["fields"]) + 2
 
 
