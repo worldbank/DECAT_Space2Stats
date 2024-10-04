@@ -19,6 +19,8 @@ starlette-cramjam = ">=0.3,<0.4"
 asgi-s3-response-middleware = "^0.0.4"
 boto3 = "^1.35.11"
 numpy = "^1.24.0"
+
+[tool.poetry.group.h3.dependencies]
 h3ronpy = "^0.21.0"
 
 [tool.poetry.group.lambda.dependencies]

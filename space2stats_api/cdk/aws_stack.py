@@ -4,7 +4,7 @@ from aws_cdk import aws_apigatewayv2_integrations as integrations
 from aws_cdk import aws_certificatemanager as acm
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_s3 as s3
-from aws_cdk.aws_lambda_python_alpha import PythonFunction
+from aws_cdk.aws_lambda_python_alpha import PythonFunction, PythonLayerVersion
 from constructs import Construct
 from settings import AppSettings, DeploymentSettings
 
@@ -22,12 +22,13 @@ class Space2StatsStack(Stack):
             lifecycle_rules=[s3.LifecycleRule(expiration=Duration.days(1))],
         )
 
-        lambda_layer = _lambda.LayerVersion(
+        h3ronpy_layer = PythonLayerVersion(
             self,
-            "Space2StatsDependenciesLayer",
-            code=_lambda.AssetCode("./layer.zip"),
+            "H3RonPyLayer",
+            entry="./layers/h3ronpy",
             compatible_runtimes=[_lambda.Runtime.PYTHON_3_11],
             description="Layer with common dependencies for Space2Stats",
+            layer_version_name="h3ronpy",
         )
 
         lambda_function = PythonFunction(
@@ -38,7 +39,7 @@ class Space2StatsStack(Stack):
             index="space2stats/api/handler.py",
             timeout=Duration.seconds(120),
             handler="handler",
-            layers=[lambda_layer],
+            layers=[h3ronpy_layer],
             environment={
                 "S3_BUCKET_NAME": bucket.bucket_name,
                 **app_settings.model_dump(),
