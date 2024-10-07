@@ -1,0 +1,37 @@
+{
+  "type": "Catalog",
+  "id": "space2stats-catalog",
+  "stac_version": "1.0.0",
+  "description": "This database contains geospatial statistics for the entire globe standardized to a hexagonal grid...",
+  "links": [
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    },
+    {
+      "rel": "self",
+      "href": "./catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Catalog"
+    },
+    {
+      "rel": "item",
+      "href": "./space2stats/space2stats.json",
+      "type": "application/json",
+      "title": "Space2Stats Item"
+    }
+  ],
+  "License": "Creative Commons Attribution 4.0",
+  "Responsible Party": "Ben Stewart (Task Leader), Andres Chamorro (Collaborator), Development Data Group (DECDG), World Bank",
+  "Purpose": "The purpose of this API is to facilitate the generation of sub-national geospatial aggregates...",
+  "Keywords": [
+    "space2stats",
+    "sub-national",
+    "h3",
+    "hexagons",
+    "global"
+  ],
+  "title": "Space2Stats Database"
+}
