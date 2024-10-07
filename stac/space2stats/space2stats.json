@@ -1,0 +1,308 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "space2stats",
+  "properties": {
+    "name": "Space2Stats H3 Data",
+    "description": "GeoParquet dataset with h3 hexagons (level 6) covering the globe. Users can access data through an API, specifying variables and areas of interest.",
+    "table:primary_geometry": "geometry",
+    "table:columns": [
+      {
+        "name": "hex_id",
+        "description": "H3 unique identifier",
+        "type": "object"
+      },
+      {
+        "name": "sum_pop_f_0_2020",
+        "description": "Total population female, ages 0 to 1, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_10_2020",
+        "description": "Total population female, ages 10 to 15, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_15_2020",
+        "description": "Total population female, ages 15 to 20, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_1_2020",
+        "description": "Total population female, ages 1 to 10, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_20_2020",
+        "description": "Total population female, ages 20 to 25, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_25_2020",
+        "description": "Total population female, ages 25 to 30, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_30_2020",
+        "description": "Total population female, ages 30 to 35, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_35_2020",
+        "description": "Total population female, ages 35 to 40, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_40_2020",
+        "description": "Total population female, ages 40 to 45, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_45_2020",
+        "description": "Total population female, ages 45 to 50, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_50_2020",
+        "description": "Total population female, ages 50 to 55, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_55_2020",
+        "description": "Total population female, ages 55 to 60, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_5_2020",
+        "description": "Total population female, ages 5 to 10, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_60_2020",
+        "description": "Total population female, ages 60 to 65, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_65_2020",
+        "description": "Total population female, ages 65 to 70, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_70_2020",
+        "description": "Total population female, ages 70 to 75, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_75_2020",
+        "description": "Total population female, ages 75 to 80, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_80_2020",
+        "description": "Total population female, ages 80 and above, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_0_2020",
+        "description": "Total population male, ages 0 to 1, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_10_2020",
+        "description": "Total population male, ages 10 to 15, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_15_2020",
+        "description": "Total population male, ages 15 to 20, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_1_2020",
+        "description": "Total population male, ages 1 to 10, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_20_2020",
+        "description": "Total population male, ages 20 to 25, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_25_2020",
+        "description": "Total population male, ages 25 to 30, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_30_2020",
+        "description": "Total population male, ages 30 to 35, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_35_2020",
+        "description": "Total population male, ages 35 to 40, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_40_2020",
+        "description": "Total population male, ages 40 to 45, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_45_2020",
+        "description": "Total population male, ages 45 to 50, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_50_2020",
+        "description": "Total population male, ages 50 to 55, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_55_2020",
+        "description": "Total population male, ages 55 to 60, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_5_2020",
+        "description": "Total population male, ages 5 to 10, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_60_2020",
+        "description": "Total population male, ages 60 to 65, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_65_2020",
+        "description": "Total population male, ages 65 to 70, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_70_2020",
+        "description": "Total population male, ages 70 to 75, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_75_2020",
+        "description": "Total population male, ages 75 to 80, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_80_2020",
+        "description": "Total population male, ages 80 and above, 2020",
+        "type": "float64"
+      }
+    ],
+    "vector:layers": {
+      "space2stats": {
+        "hex_id": "object",
+        "sum_pop_f_0_2020": "float64",
+        "sum_pop_f_10_2020": "float64",
+        "sum_pop_f_15_2020": "float64",
+        "sum_pop_f_1_2020": "float64",
+        "sum_pop_f_20_2020": "float64",
+        "sum_pop_f_25_2020": "float64",
+        "sum_pop_f_30_2020": "float64",
+        "sum_pop_f_35_2020": "float64",
+        "sum_pop_f_40_2020": "float64",
+        "sum_pop_f_45_2020": "float64",
+        "sum_pop_f_50_2020": "float64",
+        "sum_pop_f_55_2020": "float64",
+        "sum_pop_f_5_2020": "float64",
+        "sum_pop_f_60_2020": "float64",
+        "sum_pop_f_65_2020": "float64",
+        "sum_pop_f_70_2020": "float64",
+        "sum_pop_f_75_2020": "float64",
+        "sum_pop_f_80_2020": "float64",
+        "sum_pop_m_0_2020": "float64",
+        "sum_pop_m_10_2020": "float64",
+        "sum_pop_m_15_2020": "float64",
+        "sum_pop_m_1_2020": "float64",
+        "sum_pop_m_20_2020": "float64",
+        "sum_pop_m_25_2020": "float64",
+        "sum_pop_m_30_2020": "float64",
+        "sum_pop_m_35_2020": "float64",
+        "sum_pop_m_40_2020": "float64",
+        "sum_pop_m_45_2020": "float64",
+        "sum_pop_m_50_2020": "float64",
+        "sum_pop_m_55_2020": "float64",
+        "sum_pop_m_5_2020": "float64",
+        "sum_pop_m_60_2020": "float64",
+        "sum_pop_m_65_2020": "float64",
+        "sum_pop_m_70_2020": "float64",
+        "sum_pop_m_75_2020": "float64",
+        "sum_pop_m_80_2020": "float64",
+        "geometry": "geometry"
+      }
+    },
+    "datetime": "2024-10-07T11:21:25.944150Z"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    }
+  ],
+  "assets": {
+    "sources-metadata": {
+      "href": "./sources.json",
+      "type": "application/json",
+      "title": "Sources Metadata",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "api-docs": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json"
+  ]
+}
