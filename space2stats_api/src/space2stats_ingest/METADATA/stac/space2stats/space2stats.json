@@ -280,7 +280,7 @@
   ],
   "assets": {
     "sources-metadata": {
-      "href": "./stac/space2stats/sources.json",
+      "href": "./sources.json",
       "type": "application/json",
       "title": "Sources Metadata",
       "roles": [
