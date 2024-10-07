@@ -1,4 +1,0 @@
-aws-cdk-lib==2.130.0
-constructs==10.3.0
-
-pydantic_settings>=2.0
