@@ -17,9 +17,9 @@
     },
     {
       "rel": "item",
-      "href": "./space2stats/space2stats.json",
+      "href": "./space2stats/space2stats_population_2020.json",
       "type": "application/json",
-      "title": "Space2Stats Item"
+      "title": "Space2Stats Population Data Item"
     }
   ],
   "License": "Creative Commons Attribution 4.0",
