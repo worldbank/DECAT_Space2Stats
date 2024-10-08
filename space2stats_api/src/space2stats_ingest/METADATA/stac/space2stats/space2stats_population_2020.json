@@ -284,14 +284,6 @@
     }
   ],
   "assets": {
-    "sources-metadata": {
-      "href": "./sources.json",
-      "type": "application/json",
-      "title": "Sources Metadata",
-      "roles": [
-        "metadata"
-      ]
-    },
     "api-docs": {
       "href": "https://space2stats.ds.io/docs",
       "type": "text/html",
