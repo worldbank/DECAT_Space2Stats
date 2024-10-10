@@ -196,6 +196,21 @@
         "name": "sum_pop_m_80_2020",
         "description": "Total population male, ages 80 and above, 2020",
         "type": "float64"
+      },
+      {
+        "name": "sum_pop_2020",
+        "description": "Total population, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_2020",
+        "description": "Total population female, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_2020",
+        "description": "Total population male, 2020",
+        "type": "float64"
       }
     ],
     "vector:layers": {
