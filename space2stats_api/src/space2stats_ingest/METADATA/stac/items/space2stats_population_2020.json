@@ -278,7 +278,7 @@
     },
     {
       "rel": "parent",
-      "href": "../catalog.json",
+      "href": "../collection.json",
       "type": "application/json",
       "title": "Space2Stats Database"
     }
