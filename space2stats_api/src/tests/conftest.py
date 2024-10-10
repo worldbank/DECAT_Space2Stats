@@ -111,3 +111,8 @@ def aoi_example():
         },
         properties={},
     )
+
+
+@pytest.fixture
+def stac_catalog_path():
+    return "./space2stats_ingest/METADATA/stac/catalog.json"
