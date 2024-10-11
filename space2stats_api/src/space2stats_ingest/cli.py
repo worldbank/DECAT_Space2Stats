@@ -37,7 +37,7 @@ def download(s3_path: str, local_path: str = typer.Option("local.parquet")):
 @handle_errors
 def load(
     connection_string: str,
-    stac_metadata_file: str,  # Add the STAC metadata file path as an argument
+    stac_catalog_path: str,  # Add the STAC metadata file path as an argument
     parquet_file: str = typer.Option("local.parquet"),
     chunksize: int = 64_000,
 ):
@@ -45,7 +45,7 @@ def load(
     Load a Parquet file into a PostgreSQL database after verifying columns with the STAC metadata.
     """
     typer.echo(f"Loading data into PostgreSQL database from {parquet_file}")
-    load_parquet_to_db(parquet_file, connection_string, stac_metadata_file, chunksize)
+    load_parquet_to_db(parquet_file, connection_string, stac_catalog_path, chunksize)
     typer.echo("Data loaded successfully to PostgreSQL!")
 
 
@@ -54,7 +54,7 @@ def load(
 def download_and_load(
     s3_path: str,
     connection_string: str,
-    stac_metadata_file: str,  # Add the STAC metadata file path as an argument
+    stac_catalog_path: str,
     parquet_file: str = typer.Option("local.parquet"),
     chunksize: int = 64_000,
 ):
@@ -68,6 +68,6 @@ def download_and_load(
     load(
         parquet_file=parquet_file,
         connection_string=connection_string,
-        stac_metadata_file=stac_metadata_file,  # Ensure this is passed along
+        stac_catalog_path=stac_catalog_path,  # Ensure this is passed along
         chunksize=chunksize,
     )
