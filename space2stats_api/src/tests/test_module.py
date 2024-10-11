@@ -1,4 +1,3 @@
-import psycopg as pg
 import pytest
 from geojson_pydantic import Feature
 from space2stats.lib import Settings, StatsTable
@@ -151,7 +150,7 @@ def test_aggregate_invalid_field(mock_env, database, aoi_example):
     )
 
     with StatsTable.connect(settings) as stats_table:
-        with pytest.raises(pg.errors.UndefinedColumn):
+        with pytest.raises(ValueError):
             stats_table.aggregate(
                 aoi=aoi_example,
                 spatial_join_method="centroid",
