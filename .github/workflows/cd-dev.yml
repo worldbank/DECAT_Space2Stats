@@ -23,17 +23,23 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Staging-Deploy-Role  # Staging-specific IAM role
-          aws-region: ${{ env.CDK_DEFAULT_REGION }}
+          role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Staging-Deploy-Role 
+          aws-region: ${{ vars.CDK_DEFAULT_REGION }}
 
       - name: Bootstrap CDK (if not done yet)
-        run: cdk bootstrap aws://${{ env.CDK_DEFAULT_ACCOUNT }}/${{ env.CDK_DEFAULT_REGION }}
+        run: cdk bootstrap aws://${{ vars.CDK_DEFAULT_ACCOUNT }}/${{ vars.CDK_DEFAULT_REGION }}
 
       - name: Deploy CDK stack to staging
         env:
-          STAGE: dev
-          CDK_CERTIFICATE_ARN: ${{ env.STAGING_CDK_CERTIFICATE_ARN }}  # Staging-specific certificate
-          CDK_DEFAULT_ACCOUNT: ${{ env.STAGING_CDK_DEFAULT_ACCOUNT }}  # Staging-specific AWS account
-          CDK_DEFAULT_REGION: ${{ env.CDK_DEFAULT_REGION }}
-          CDK_DOMAIN_NAME: ${{ env.STAGING_CDK_DOMAIN_NAME }}  # Staging-specific domain
+            STAGE: dev
+            PGHOST: ${{ secrets.PGHOST }}
+            PGPORT: ${{ secrets.PGPORT }}
+            PGDATABASE: ${{ secrets.PGDATABASE }}
+            PGUSER: ${{ secrets.PGUSER }}
+            PGPASSWORD: ${{ secrets.PGPASSWORD }}
+            PGTABLENAME: ${{ secrets.PGTABLENAME }}
+            CDK_CERTIFICATE_ARN: ${{ vars.STAGING_CDK_CERTIFICATE_ARN }}  
+            CDK_DEFAULT_ACCOUNT: ${{ vars.STAGING_CDK_DEFAULT_ACCOUNT }}  
+            CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
+            CDK_DOMAIN_NAME: ${{ vars.STAGING_CDK_DOMAIN_NAME }} 
         run: cdk deploy --require-approval never

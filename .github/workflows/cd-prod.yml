@@ -31,9 +31,15 @@ jobs:
 
       - name: Deploy CDK stack
         env:
-          STAGING: prod
-          CDK_CERTIFICATE_ARN: ${{ env.CDK_CERTIFICATE_ARN }}
-          CDK_DEFAULT_ACCOUNT: ${{ env.CDK_DEFAULT_ACCOUNT }}
-          CDK_DEFAULT_REGION: ${{ env.CDK_DEFAULT_REGION }}
-          CDK_DOMAIN_NAME: ${{ env.CDK_DOMAIN_NAME }}
+            STAGING: prod
+            PGHOST: ${{ secrets.PGHOST }}
+            PGPORT: ${{ secrets.PGPORT }}
+            PGDATABASE: ${{ secrets.PGDATABASE }}
+            PGUSER: ${{ secrets.PGUSER }}
+            PGPASSWORD: ${{ secrets.PGPASSWORD }}
+            PGTABLENAME: ${{ secrets.PGTABLENAME }}
+            CDK_CERTIFICATE_ARN: ${{ vars.STAGING_CDK_CERTIFICATE_ARN }}  
+            CDK_DEFAULT_ACCOUNT: ${{ vars.STAGING_CDK_DEFAULT_ACCOUNT }}  
+            CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
+            CDK_DOMAIN_NAME: ${{ vars.STAGING_CDK_DOMAIN_NAME }} 
         run: cdk deploy --require-approval never
