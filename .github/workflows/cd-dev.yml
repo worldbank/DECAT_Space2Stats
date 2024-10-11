@@ -26,6 +26,11 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Deploy-Role
           aws-region: ${{ vars.CDK_DEFAULT_REGION }}
+    
+      - name: Install CDK dependencies
+        working-directory: ./space2stats_api/cdk
+        run: |
+          pip install -r requirements-cdk.txt 
 
       - name: Deploy CDK stack to staging
         working-directory: ./space2stats_api/cdk
