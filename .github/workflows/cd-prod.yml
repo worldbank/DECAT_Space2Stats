@@ -27,9 +27,6 @@ jobs:
           role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Deploy-Role  
           aws-region: ${{ vars.CDK_DEFAULT_REGION }}  
 
-      - name: Bootstrap CDK (if not done yet)
-        run: cdk bootstrap aws://${{ vars.CDK_DEFAULT_ACCOUNT }}/${{ vars.CDK_DEFAULT_REGION }} 
-
       - name: Deploy CDK stack
         env:
             STAGING: prod
