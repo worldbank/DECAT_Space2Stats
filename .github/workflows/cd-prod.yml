@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   build:
+    environment: "Space2Stats API Prod"
     runs-on: ubuntu-latest
 
     steps:
@@ -24,10 +25,10 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Deploy-Role  
-          aws-region: ${{ env.CDK_DEFAULT_REGION }}  
+          aws-region: ${{ vars.CDK_DEFAULT_REGION }}  
 
       - name: Bootstrap CDK (if not done yet)
-        run: cdk bootstrap aws://${{ env.CDK_DEFAULT_ACCOUNT }}/${{ env.CDK_DEFAULT_REGION }} 
+        run: cdk bootstrap aws://${{ vars.CDK_DEFAULT_ACCOUNT }}/${{ vars.CDK_DEFAULT_REGION }} 
 
       - name: Deploy CDK stack
         env:

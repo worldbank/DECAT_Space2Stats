@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   build:
+    environment: "Space2Stats API Dev"
     runs-on: ubuntu-latest
 
     steps:
