@@ -15,3 +15,4 @@ class DeploymentSettings(BaseSettings):
     CDK_DEFAULT_REGION: str
     CDK_CERTIFICATE_ARN: str
     CDK_DOMAIN_NAME: str
+    STAGE: str = "dev"
