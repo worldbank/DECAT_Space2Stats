@@ -1,0 +1,49 @@
+name: Deploy Space2Stats API Prod
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Ensure compatibility with CDK
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build code
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Deploy-Role  
+          aws-region: ${{ env.CDK_DEFAULT_REGION }}  
+
+      - name: Bootstrap CDK (if not done yet)
+        run: cdk bootstrap aws://${{ env.CDK_DEFAULT_ACCOUNT }}/${{ env.CDK_DEFAULT_REGION }} 
+
+      - name: Deploy CDK stack
+        env:
+          CDK_CERTIFICATE_ARN: ${{ env.CDK_CERTIFICATE_ARN }}
+          CDK_DEFAULT_ACCOUNT: ${{ env.CDK_DEFAULT_ACCOUNT }}
+          CDK_DEFAULT_REGION: ${{ env.CDK_DEFAULT_REGION }}
+          CDK_DOMAIN_NAME: ${{ env.CDK_DOMAIN_NAME }}
+        run: cdk deploy --require-approval never
