@@ -10,11 +10,16 @@ from settings import AppSettings, DeploymentSettings
 
 
 class Space2StatsStack(Stack):
-    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
+    def __init__(
+        self,
+        scope: Construct,
+        id: str,
+        deployment_settings: DeploymentSettings,
+        **kwargs,
+    ) -> None:
         super().__init__(scope, id, **kwargs)
 
         app_settings = AppSettings(_env_file="./aws_app.env")
-        deployment_settings = DeploymentSettings(_env_file="./aws_deployment.env")
 
         bucket = s3.Bucket(
             self,
