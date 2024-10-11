@@ -17,19 +17,8 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'  # Ensure compatibility with CDK
-
       - name: Install AWS CDK
         run: npm install -g aws-cdk
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build code
-        run: npm run build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
