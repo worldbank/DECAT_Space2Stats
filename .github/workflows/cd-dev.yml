@@ -28,6 +28,7 @@ jobs:
           aws-region: ${{ vars.CDK_DEFAULT_REGION }}
 
       - name: Deploy CDK stack to staging
+        working-directory: ./space2stats_api/cdk
         env:
             STAGE: dev
             PGHOST: ${{ secrets.PGHOST }}
