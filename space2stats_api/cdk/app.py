@@ -5,7 +5,7 @@ from aws_stack import Space2StatsStack
 from settings import DeploymentSettings
 
 settings = DeploymentSettings(
-    _env_file=f"aws_deployment_{os.environ.get("STAGE", "dev")}.env"
+    _env_file=f"aws_deployment_{os.environ.get('STAGE', 'dev')}.env"
 )
 
 env = Environment(
