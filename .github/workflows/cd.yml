@@ -1,7 +1,7 @@
 name: Deploy Space2Stats API Prod
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
