@@ -24,7 +24,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Staging-Deploy-Role 
+          role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Deploy-Role
           aws-region: ${{ vars.CDK_DEFAULT_REGION }}
 
       - name: Bootstrap CDK (if not done yet)
