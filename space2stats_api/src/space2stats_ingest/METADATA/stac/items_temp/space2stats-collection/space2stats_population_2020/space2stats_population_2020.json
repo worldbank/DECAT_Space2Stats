@@ -1,7 +1,44 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
+  ],
   "id": "space2stats_population_2020",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
   "properties": {
     "name": "Population Data",
     "description": "Gridded population disaggregated by gender for the year 2020, with data available for different age groups.",
@@ -10,7 +47,8 @@
     "sci:citation": "Stevens FR, Gaughan AE, Linard C, Tatem AJ (2015) Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data.",
     "organization": "WorldPop, https://www.worldpop.org",
     "method": "sum",
-    "resolution": "100 meters","table:primary_geometry": "geometry",
+    "resolution": "100 meters",
+    "table:primary_geometry": "geometry",
     "table:columns": [
       {
         "name": "hex_id",
@@ -196,21 +234,6 @@
         "name": "sum_pop_m_80_2020",
         "description": "Total population male, ages 80 and above, 2020",
         "type": "float64"
-      },
-      {
-        "name": "sum_pop_2020",
-        "description": "Total population, 2020",
-        "type": "float64"
-      },
-      {
-        "name": "sum_pop_f_2020",
-        "description": "Total population female, 2020",
-        "type": "float64"
-      },
-      {
-        "name": "sum_pop_m_2020",
-        "description": "Total population male, 2020",
-        "type": "float64"
       }
     ],
     "vector:layers": {
@@ -255,47 +278,28 @@
         "geometry": "geometry"
       }
     },
-    "datetime": "2024-10-07T11:21:25.944150Z"
-  },
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [
-      [
-        [
-          -179.99999561620714,
-          -89.98750455101016
-        ],
-        [
-          -179.99999561620714,
-          89.98750455101016
-        ],
-        [
-          179.99999096313272,
-          89.98750455101016
-        ],
-        [
-          179.99999096313272,
-          -89.98750455101016
-        ],
-        [
-          -179.99999561620714,
-          -89.98750455101016
-        ]
-      ]
-    ]
+    "themes": [
+      "Demographics",
+      "Population"
+    ],
+    "datetime": "2024-10-21T17:11:03.723836Z"
   },
   "links": [
     {
       "rel": "root",
-      "href": "../catalog.json",
+      "href": "../../catalog.json",
       "type": "application/json",
       "title": "Space2Stats Database"
     },
     {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json"
+    },
+    {
       "rel": "parent",
       "href": "../collection.json",
-      "type": "application/json",
-      "title": "Space2Stats Database"
+      "type": "application/json"
     }
   ],
   "assets": {
@@ -308,18 +312,5 @@
       ]
     }
   },
-  "bbox": [
-    -179.99999561620714,
-    -89.98750455101016,
-    179.99999096313272,
-    89.98750455101016
-  ],
-  "stac_extensions": [
-    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
-    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
-  ],
-  "themes": [
-    "Demographics",
-    "Population"
-  ]
+  "collection": "space2stats-collection"
 }
