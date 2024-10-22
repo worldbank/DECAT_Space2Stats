@@ -2,7 +2,7 @@
   "type": "Catalog",
   "id": "space2stats-catalog",
   "stac_version": "1.0.0",
-  "description": "This database contains geospatial statistics for the entire globe standardized to a hexagonal grid. The spatial unit of the dataset is the H3 level 6 (approximately 36 sq. km. per cell).",
+  "description": "This database contains geospatial statistics for the entire globe standardized to a hexagonal grid. The spatial unit of the dataset is the H3 level 6 (approximately 36 sq. km. per cell). The variables cover a wide range of geographic themes relevant to international development, including demographic, socio-economic, environmental, climate, and infrastructure. An API enables users to query, access, and aggregate statistics from the Space2Stats database. The purpose of this API is to facilitate the generation of sub-national geospatial aggregates for any administrative boundary set.",
   "links": [
     {
       "rel": "root",
@@ -11,17 +11,25 @@
       "title": "Space2Stats Database"
     },
     {
-      "rel": "self",
-      "href": "./catalog.json",
+      "rel": "child",
+      "href": "./space2stats-collection/collection.json",
       "type": "application/json"
     },
     {
-      "rel": "child",
-      "href": "./collection.json",
-      "type": "application/json",
-      "title": "Space2Stats Collection"
+      "rel": "self",
+      "href": "./catalog.json",
+      "type": "application/json"
     }
   ],
-  "license": "CC-BY-4.0",
+  "License": "Creative Commons Attribution 4.0",
+  "Responsible Party": "Ben Stewart (Task Leader), Andres Chamorro (Collaborator), Development Data Group (DECDG), World Bank",
+  "Purpose": "The purpose of this API is to facilitate the generation of sub-national geospatial aggregates for any administrative boundary set.",
+  "Keywords": [
+    "space2stats",
+    "sub-national",
+    "h3",
+    "hexagons",
+    "global"
+  ],
   "title": "Space2Stats Database"
 }

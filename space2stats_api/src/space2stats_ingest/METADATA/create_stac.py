@@ -210,7 +210,7 @@ def main():
     catalog = create_stac_catalog(
         metadata["overview"],
         metadata["nada"],
-        join(git_root, metadata_dir, "stac/items_temp"),
+        join(git_root, metadata_dir, "stac"),
     )
 
     # Create or retrieve STAC collection
@@ -220,7 +220,7 @@ def main():
     item = create_stac_item(
         column_types,
         metadata["feature_catalog"],
-        join(git_root, metadata_dir, "stac/items_temp"),
+        join(git_root, metadata_dir, "stac"),
     )
 
     # Add assets to item
@@ -234,7 +234,7 @@ def main():
     catalog.add_child(collection)
 
     # Save the catalog
-    save_stac_catalog(catalog, join(git_root, metadata_dir, "stac", "items_temp"))
+    save_stac_catalog(catalog, join(git_root, metadata_dir, "stac"))
 
     # Save sources metadata as JSON
     metadata["sources"].to_json(sources_path, orient="records", indent=4)
