@@ -58,8 +58,7 @@ def create_stac_catalog(
         },
         href="./catalog.json",
     )
-    # catalog.set_self_href(join(catalog_dir, "catalog.json"))
-    # catalog.set_self_href("catalog.json")
+
     catalog.set_self_href(os.path.relpath("catalog.json", start=catalog_dir))
 
     return catalog
@@ -152,7 +151,6 @@ def create_stac_item(
         ],
     )
 
-    # item.set_self_href(join(item_dir, f"{item.id}.json"))
     item.set_self_href(os.path.join("items", f"{item.id}.json"))
     return item
 
@@ -170,14 +168,13 @@ def add_assets_to_item(item: Item):
 
 # Function to remove absolute paths from the Catalog
 def adjust_self_href(catalog_path: str):
-    # Read the catalog.json file
     with open(catalog_path, "r") as f:
         catalog_json = json.load(f)
 
     # Modify the self link
     for link in catalog_json.get("links", []):
         if link.get("rel") == "self":
-            link["href"] = "./catalog.json"  # Set to the desired relative path
+            link["href"] = "./catalog.json"
 
     # Write the updated catalog.json back to the file
     with open(catalog_path, "w") as f:
@@ -192,7 +189,6 @@ def save_stac_catalog(catalog: Catalog, dest_dir: str):
 
 
 def main():
-    # Get the root of the git repository
     git_root = get_git_root()
     metadata_dir = "space2stats_api/src/space2stats_ingest/METADATA"
 
@@ -200,10 +196,8 @@ def main():
     column_types_file = join(git_root, metadata_dir, "types.json")
     column_types = load_column_types_from_json(column_types_file)
 
-    # Get the current working directory
-    excel_path = join(git_root, metadata_dir, "Space2Stats Metadata Content.xlsx")
-
     # Load metadata from the Excel file
+    excel_path = join(git_root, metadata_dir, "Space2Stats Metadata Content.xlsx")
     metadata = load_metadata(excel_path)
 
     # Create STAC catalog
@@ -213,7 +207,7 @@ def main():
         join(git_root, metadata_dir, "stac"),
     )
 
-    # Create or retrieve STAC collection
+    # Create STAC collection
     collection = create_stac_collection(metadata["overview"])
 
     # Create STAC item
@@ -235,9 +229,6 @@ def main():
 
     # Save the catalog
     save_stac_catalog(catalog, join(git_root, metadata_dir, "stac"))
-
-    # Save sources metadata as JSON
-    metadata["sources"].to_json(sources_path, orient="records", indent=4)
 
 
 if __name__ == "__main__":
