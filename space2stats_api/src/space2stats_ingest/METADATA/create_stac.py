@@ -7,7 +7,16 @@ from typing import Dict
 
 import git
 import pandas as pd
-from pystac import Asset, Catalog, CatalogType, Collection, Item, SpatialExtent
+from pystac import (
+    Asset,
+    Catalog,
+    CatalogType,
+    Collection,
+    Extent,
+    Item,
+    SpatialExtent,
+    TemporalExtent,
+)
 
 
 # Function to get the root of the git repository
@@ -62,13 +71,17 @@ def create_stac_catalog(
     return catalog
 
 
-# Function to create STAC collection
+# Updated function to create STAC collection
 def create_stac_collection(overview: pd.DataFrame) -> Collection:
     spatial_extent = SpatialExtent([[-180.0, -90.0, 180.0, 90.0]])
+    temporal_extent = TemporalExtent([[datetime(2020, 1, 1), None]])
+
+    extent = Extent(spatial=spatial_extent, temporal=temporal_extent)
+
     collection = Collection(
         id="space2stats-collection",
         description="This collection contains geospatial statistics for the entire globe standardized to a hexagonal grid (H3 level 6). It covers various themes, including demographic, socio-economic, and environmental data.",
-        extent=spatial_extent,
+        extent=extent,
         extra_fields={
             "Title": overview.loc["Title"].values[0],
             "Description": overview.loc["Description Resource"].values[0],

@@ -32,14 +32,24 @@
     "global"
   ],
   "extent": {
-    "bbox": [
-      [
-        -180.0,
-        -90.0,
-        180.0,
-        90.0
+    "spatial": {
+      "bbox": [
+        [
+          -180.0,
+          -90.0,
+          180.0,
+          90.0
+        ]
       ]
-    ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2020-01-01T00:00:00Z",
+          null
+        ]
+      ]
+    }
   },
   "license": "proprietary"
 }
