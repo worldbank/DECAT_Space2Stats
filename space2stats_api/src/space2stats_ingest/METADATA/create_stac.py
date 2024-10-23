@@ -218,7 +218,6 @@ def main():
     )
 
     # Add assets to item
-    sources_path = join(git_root, metadata_dir, "stac", "sources.json")
     add_assets_to_item(item)
 
     # Add the item to the collection
