@@ -7,25 +7,21 @@ import pytest
 
 @pytest.fixture
 def stac_file_path():
-    test_file_dir = os.path.dirname(
-        "space2stats_api/src/space2stats_ingest/METADATA/tests/test_stack_columns.py"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.abspath(os.path.join(current_dir, "../../../../.."))
+    json_file_path = os.path.join(
+        root_dir,
+        "space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/space2stats_population_2020/space2stats_population_2020.json",
     )
-    json_file_path = "space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/space2stats_population_2020/space2stats_population_2020.json"
-
-    relative_dir = os.path.relpath(json_file_path, start=test_file_dir)
-
-    return relative_dir
+    return json_file_path
 
 
 @pytest.fixture
 def parquet_file_path():
-    test_file_dir = os.path.dirname(
-        "space2stats_api/src/space2stats_ingest/METADATA/tests/test_stack_columns.py"
-    )
-    parquet_file_path = "space2stats_api/src/local.parquet"
-
-    relative_dir = os.path.relpath(parquet_file_path, start=test_file_dir)
-    return relative_dir
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.abspath(os.path.join(current_dir, "../../../../.."))
+    parquet_file_path = os.path.join(root_dir, "space2stats_api/src/local.parquet")
+    return parquet_file_path
 
 
 def test_stac_columns_vs_parquet(stac_file_path, parquet_file_path):
