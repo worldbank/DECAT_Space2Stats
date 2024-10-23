@@ -1,7 +1,8 @@
 import json
-import pytest
 import os
+
 import pandas as pd
+import pytest
 
 
 @pytest.fixture
@@ -44,8 +45,8 @@ def test_stac_columns_vs_parquet(stac_file_path, parquet_file_path):
     parquet_columns = {col: str(df[col].dtype) for col in df.columns}
 
     # Assert that the number of columns in the Parquet file matches the number of columns in the STAC file
-    assert len(parquet_columns) == len(
-        stac_columns
+    assert (
+        len(parquet_columns) == len(stac_columns)
     ), f"Mismatch in column count: Parquet ({len(parquet_columns)}) vs STAC ({len(stac_columns)})"
 
     # Assert that column names and types match

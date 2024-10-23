@@ -1,8 +1,9 @@
-import pandas as pd
 import json
 import os
 from os.path import join
+
 import git
+import pandas as pd
 
 
 # Function to get the root of the git repository
@@ -33,7 +34,9 @@ def save_parquet_types_to_json(parquet_file: str, json_file: str):
 if __name__ == "__main__":
     git_root = get_git_root()
     parquet_file = join(git_root, "space2stats_api/src/local.parquet")
-    json_file = join(git_root, "space2stats_api/src/space2stats_ingest/METADATA/types.json") 
+    json_file = join(
+        git_root, "space2stats_api/src/space2stats_ingest/METADATA/types.json"
+    )
 
     # Ensure the directory exists
     os.makedirs(os.path.dirname(json_file), exist_ok=True)

@@ -1,15 +1,13 @@
-from typing import Dict
-import pandas as pd
-import geopandas as gpd
-from shapely.geometry import Polygon
-import h3
 import ast
-from os.path import join
-from pystac import Catalog, Item, Asset, CatalogType, Collection, Link, SpatialExtent
-from datetime import datetime
-import git
-import os
 import json
+import os
+from datetime import datetime
+from os.path import join
+from typing import Dict
+
+import git
+import pandas as pd
+from pystac import Asset, Catalog, CatalogType, Collection, Item, SpatialExtent
 
 
 # Function to get the root of the git repository
