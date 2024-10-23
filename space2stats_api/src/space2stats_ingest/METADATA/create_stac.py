@@ -86,6 +86,28 @@ def create_stac_collection(overview: pd.DataFrame) -> Collection:
             "Title": overview.loc["Title"].values[0],
             "Description": overview.loc["Description Resource"].values[0],
             "Keywords": ["space2stats", "sub-national", "h3", "hexagons", "global"],
+            "License": overview.loc["License"].values[0],
+            "summaries": {
+                "datetime": {
+                    "min": "2020-01-01T00:00:00Z",
+                    "max": None
+                }
+            },
+            "providers": [
+                {
+                    "name": "World Bank",
+                    "roles": ["producer", "licensor"],
+                    "url": "https://www.worldbank.org/"
+                }
+            ],
+            "assets": {
+                "documentation": {
+                    "href": "https://space2stats.ds.io/docs",
+                    "type": "text/html",
+                    "title": "API Documentation",
+                    "roles": ["metadata"]
+                }
+            },
         },
     )
     collection.set_self_href("collection.json")
@@ -232,10 +254,10 @@ def main():
     add_assets_to_item(item)
 
     # Add the item to the collection
-    collection.add_item(item)
+    collection.add_item(item, title= "Space2Stats Population Data Item")
 
     # Add the collection to the catalog
-    catalog.add_child(collection)
+    catalog.add_child(collection, title= "Space2Stats Collection")
 
     # Save the catalog
     save_stac_catalog(catalog, join(git_root, metadata_dir, "stac"))

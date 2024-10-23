@@ -13,7 +13,8 @@
     {
       "rel": "item",
       "href": "./space2stats_population_2020/space2stats_population_2020.json",
-      "type": "application/json"
+      "type": "application/json",
+      "title": "Space2Stats Population Data Item"
     },
     {
       "rel": "parent",
@@ -31,6 +32,33 @@
     "hexagons",
     "global"
   ],
+  "License": "Creative Commons Attribution 4.0",
+  "summaries": {
+    "datetime": {
+      "min": "2020-01-01T00:00:00Z",
+      "max": null
+    }
+  },
+  "providers": [
+    {
+      "name": "World Bank",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://www.worldbank.org/"
+    }
+  ],
+  "assets": {
+    "documentation": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
   "extent": {
     "spatial": {
       "bbox": [
