@@ -63,7 +63,7 @@ def create_stac_catalog(
             "Purpose": nada.loc["Purpose", "Value"],
             "Keywords": ["space2stats", "sub-national", "h3", "hexagons", "global"],
         },
-        href="https://worldbank.github.io/DECAT_Space2Stats/stac/catalog.json"
+        href="https://worldbank.github.io/DECAT_Space2Stats/stac/catalog.json",
     )
 
     # catalog.set_self_href(os.path.relpath("catalog.json", start=catalog_dir))
@@ -212,9 +212,7 @@ def adjust_self_href(catalog_path: str):
 
 
 def save_stac_catalog(catalog: Catalog, dest_dir: str):
-    catalog.save(
-        dest_href=dest_dir, catalog_type=CatalogType.RELATIVE_PUBLISHED
-    )
+    catalog.save(dest_href=dest_dir, catalog_type=CatalogType.RELATIVE_PUBLISHED)
     # adjust_self_href(join(dest_dir, "catalog.json"))
 
 
