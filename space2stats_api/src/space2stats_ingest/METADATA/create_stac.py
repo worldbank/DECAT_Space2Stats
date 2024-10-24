@@ -63,10 +63,10 @@ def create_stac_catalog(
             "Purpose": nada.loc["Purpose", "Value"],
             "Keywords": ["space2stats", "sub-national", "h3", "hexagons", "global"],
         },
-        href="./catalog.json",
+        href="https://worldbank.github.io/DECAT_Space2Stats/stac/catalog.json"
     )
 
-    catalog.set_self_href(os.path.relpath("catalog.json", start=catalog_dir))
+    # catalog.set_self_href(os.path.relpath("catalog.json", start=catalog_dir))
 
     return catalog
 
@@ -81,12 +81,14 @@ def create_stac_collection(overview: pd.DataFrame) -> Collection:
     collection = Collection(
         id="space2stats-collection",
         description="This collection contains geospatial statistics for the entire globe standardized to a hexagonal grid (H3 level 6). It covers various themes, including demographic, socio-economic, and environmental data.",
+        title="Space2Stats Collection",
         extent=extent,
+        license="CC-BY-4.0",
         extra_fields={
             "Title": overview.loc["Title"].values[0],
             "Description": overview.loc["Description Resource"].values[0],
             "Keywords": ["space2stats", "sub-national", "h3", "hexagons", "global"],
-            "License": overview.loc["License"].values[0],
+            # "License": overview.loc["License"].values[0],
             "summaries": {"datetime": {"min": "2020-01-01T00:00:00Z", "max": None}},
             "providers": [
                 {
@@ -105,7 +107,7 @@ def create_stac_collection(overview: pd.DataFrame) -> Collection:
             },
         },
     )
-    collection.set_self_href("collection.json")
+    # collection.set_self_href("collection.json")
     return collection
 
 
@@ -179,7 +181,7 @@ def create_stac_item(
         ],
     )
 
-    item.set_self_href(os.path.join("items", f"{item.id}.json"))
+    # item.set_self_href(os.path.join("items", f"{item.id}.json"))
     return item
 
 
@@ -210,10 +212,10 @@ def adjust_self_href(catalog_path: str):
 
 
 def save_stac_catalog(catalog: Catalog, dest_dir: str):
-    catalog.normalize_and_save(
-        root_href=dest_dir, catalog_type=CatalogType.RELATIVE_PUBLISHED
+    catalog.save(
+        dest_href=dest_dir, catalog_type=CatalogType.RELATIVE_PUBLISHED
     )
-    adjust_self_href(join(dest_dir, "catalog.json"))
+    # adjust_self_href(join(dest_dir, "catalog.json"))
 
 
 def main():
@@ -248,11 +250,11 @@ def main():
     # Add assets to item
     add_assets_to_item(item)
 
-    # Add the item to the collection
-    collection.add_item(item, title="Space2Stats Population Data Item")
-
     # Add the collection to the catalog
     catalog.add_child(collection, title="Space2Stats Collection")
+
+    # Add the item to the collection
+    collection.add_item(item, title="Space2Stats Population Data Item")
 
     # Save the catalog
     save_stac_catalog(catalog, join(git_root, metadata_dir, "stac"))

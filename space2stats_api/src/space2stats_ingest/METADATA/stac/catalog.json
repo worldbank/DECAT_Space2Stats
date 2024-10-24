@@ -11,14 +11,15 @@
       "title": "Space2Stats Database"
     },
     {
-      "rel": "child",
-      "href": "./space2stats-collection/collection.json",
+      "rel": "self",
+      "href": "https://worldbank.github.io/DECAT_Space2Stats/stac/catalog.json",
       "type": "application/json"
     },
     {
-      "rel": "self",
-      "href": "./catalog.json",
-      "type": "application/json"
+      "rel": "child",
+      "href": "./space2stats-collection/collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
     }
   ],
   "License": "Creative Commons Attribution 4.0",

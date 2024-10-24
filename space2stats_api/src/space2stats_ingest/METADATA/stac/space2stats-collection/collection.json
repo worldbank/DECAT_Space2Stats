@@ -11,16 +11,16 @@
       "title": "Space2Stats Database"
     },
     {
-      "rel": "item",
-      "href": "./space2stats_population_2020/space2stats_population_2020.json",
-      "type": "application/json",
-      "title": "Space2Stats Population Data Item"
-    },
-    {
       "rel": "parent",
       "href": "../catalog.json",
       "type": "application/json",
       "title": "Space2Stats Database"
+    },
+    {
+      "rel": "item",
+      "href": "./space2stats_population_2020/space2stats_population_2020.json",
+      "type": "application/json",
+      "title": "Space2Stats Population Data Item"
     }
   ],
   "Title": "Space2Stats Database",
@@ -32,7 +32,6 @@
     "hexagons",
     "global"
   ],
-  "License": "Creative Commons Attribution 4.0",
   "summaries": {
     "datetime": {
       "min": "2020-01-01T00:00:00Z",
@@ -59,6 +58,7 @@
       ]
     }
   },
+  "title": "Space2Stats Collection",
   "extent": {
     "spatial": {
       "bbox": [
@@ -79,5 +79,5 @@
       ]
     }
   },
-  "license": "proprietary"
+  "license": "CC-BY-4.0"
 }

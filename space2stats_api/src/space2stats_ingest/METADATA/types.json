@@ -35,5 +35,8 @@
     "sum_pop_m_65_2020": "float64",
     "sum_pop_m_70_2020": "float64",
     "sum_pop_m_75_2020": "float64",
-    "sum_pop_m_80_2020": "float64"
+    "sum_pop_m_80_2020": "float64",
+    "sum_pop_f_2020": "float64",
+    "sum_pop_m_2020": "float64",
+    "sum_pop_2020": "float64"
 }

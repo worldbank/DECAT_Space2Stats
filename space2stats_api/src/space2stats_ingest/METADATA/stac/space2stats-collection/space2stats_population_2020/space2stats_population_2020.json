@@ -234,6 +234,21 @@
         "name": "sum_pop_m_80_2020",
         "description": "Total population male, ages 80 and above, 2020",
         "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_2020",
+        "description": "Total population female, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_2020",
+        "description": "Total population male, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2020",
+        "description": "Total population, 2020",
+        "type": "float64"
       }
     ],
     "vector:layers": {
@@ -275,6 +290,9 @@
         "sum_pop_m_70_2020": "float64",
         "sum_pop_m_75_2020": "float64",
         "sum_pop_m_80_2020": "float64",
+        "sum_pop_f_2020": "float64",
+        "sum_pop_m_2020": "float64",
+        "sum_pop_2020": "float64",
         "geometry": "geometry"
       }
     },
@@ -282,7 +300,7 @@
       "Demographics",
       "Population"
     ],
-    "datetime": "2024-10-22T10:32:40.349482Z"
+    "datetime": "2024-10-24T14:54:26.131129Z"
   },
   "links": [
     {
@@ -292,14 +310,16 @@
       "title": "Space2Stats Database"
     },
     {
-      "rel": "collection",
-      "href": "../collection.json",
-      "type": "application/json"
-    },
-    {
       "rel": "parent",
       "href": "../collection.json",
-      "type": "application/json"
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
     }
   ],
   "assets": {
