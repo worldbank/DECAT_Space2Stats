@@ -1,10 +1,53 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "space2stats",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
+  ],
+  "id": "space2stats_population_2020",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
   "properties": {
-    "name": "Space2Stats H3 Data",
-    "description": "GeoParquet dataset with h3 hexagons (level 6) covering the globe. Users can access data through an API, specifying variables and areas of interest.",
+    "name": "Population Data",
+    "description": "Gridded population disaggregated by gender for the year 2020, with data available for different age groups.",
+    "methodological_notes": "Global raster files are processed for each hexagonal grid using zonal statistics.",
+    "source_data": "WorldPop gridded population, 2020, Unconstrained, UN-Adjusted",
+    "sci:citation": "Stevens FR, Gaughan AE, Linard C, Tatem AJ (2015) Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data.",
+    "organization": "WorldPop, https://www.worldpop.org",
+    "method": "sum",
+    "resolution": "100 meters",
     "table:primary_geometry": "geometry",
     "table:columns": [
       {
@@ -191,6 +234,21 @@
         "name": "sum_pop_m_80_2020",
         "description": "Total population male, ages 80 and above, 2020",
         "type": "float64"
+      },
+      {
+        "name": "sum_pop_f_2020",
+        "description": "Total population female, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_m_2020",
+        "description": "Total population male, 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2020",
+        "description": "Total population, 2020",
+        "type": "float64"
       }
     ],
     "vector:layers": {
@@ -232,61 +290,39 @@
         "sum_pop_m_70_2020": "float64",
         "sum_pop_m_75_2020": "float64",
         "sum_pop_m_80_2020": "float64",
+        "sum_pop_f_2020": "float64",
+        "sum_pop_m_2020": "float64",
+        "sum_pop_2020": "float64",
         "geometry": "geometry"
       }
     },
-    "datetime": "2024-10-07T11:21:25.944150Z"
-  },
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [
-      [
-        [
-          -179.99999561620714,
-          -89.98750455101016
-        ],
-        [
-          -179.99999561620714,
-          89.98750455101016
-        ],
-        [
-          179.99999096313272,
-          89.98750455101016
-        ],
-        [
-          179.99999096313272,
-          -89.98750455101016
-        ],
-        [
-          -179.99999561620714,
-          -89.98750455101016
-        ]
-      ]
-    ]
+    "themes": [
+      "Demographics",
+      "Population"
+    ],
+    "datetime": "2024-10-24T14:54:26.131129Z"
   },
   "links": [
     {
       "rel": "root",
-      "href": "../catalog.json",
+      "href": "../../catalog.json",
       "type": "application/json",
       "title": "Space2Stats Database"
     },
     {
       "rel": "parent",
-      "href": "../catalog.json",
+      "href": "../collection.json",
       "type": "application/json",
-      "title": "Space2Stats Database"
+      "title": "Space2Stats Collection"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
     }
   ],
   "assets": {
-    "sources-metadata": {
-      "href": "./sources.json",
-      "type": "application/json",
-      "title": "Sources Metadata",
-      "roles": [
-        "metadata"
-      ]
-    },
     "api-docs": {
       "href": "https://space2stats.ds.io/docs",
       "type": "text/html",
@@ -296,13 +332,5 @@
       ]
     }
   },
-  "bbox": [
-    -179.99999561620714,
-    -89.98750455101016,
-    179.99999096313272,
-    89.98750455101016
-  ],
-  "stac_extensions": [
-    "https://stac-extensions.github.io/table/v1.2.0/schema.json"
-  ]
+  "collection": "space2stats-collection"
 }
