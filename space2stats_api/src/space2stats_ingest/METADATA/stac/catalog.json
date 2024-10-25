@@ -16,10 +16,10 @@
       "type": "application/json"
     },
     {
-      "rel": "item",
-      "href": "./space2stats/space2stats.json",
+      "rel": "child",
+      "href": "./space2stats-collection/collection.json",
       "type": "application/json",
-      "title": "Space2Stats Item"
+      "title": "Space2Stats Collection"
     }
   ],
   "License": "Creative Commons Attribution 4.0",
