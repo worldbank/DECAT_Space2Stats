@@ -16,8 +16,8 @@ def test_stac_columns_vs_types_json(stac_file_path, types_json_file_path):
     }
 
     # Assert that the number of columns in the STAC file matches the number of columns in the types JSON file
-    assert len(stac_columns) == len(
-        expected_columns
+    assert (
+        len(stac_columns) == len(expected_columns)
     ), f"Mismatch in column count: STAC ({len(stac_columns)}) vs JSON ({len(expected_columns)})"
 
     # Assert that column names and types match
