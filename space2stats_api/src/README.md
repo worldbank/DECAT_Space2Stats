@@ -11,5 +11,5 @@
 
 ### Adding new ITEM files
 - Navigate to the METADATA sub-directory
-- In link_new_item.py set "Paths and metadata setup" in the main function towards the corresponding parquet
+- In link_new_item.py set "Paths and metadata setup" in the main function to point towards the corresponding locally saved parquet file
 - Run line_new_items.py
