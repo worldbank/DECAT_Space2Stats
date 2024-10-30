@@ -46,7 +46,9 @@ def load(
     Load a Parquet file into a PostgreSQL database after verifying columns with the STAC metadata.
     """
     typer.echo(f"Loading data into PostgreSQL database from {parquet_file}")
-    load_parquet_to_db(parquet_file, connection_string, stac_catalog_path, item_name, chunksize)
+    load_parquet_to_db(
+        parquet_file, connection_string, stac_catalog_path, item_name, chunksize
+    )
     typer.echo("Data loaded successfully to PostgreSQL!")
 
 

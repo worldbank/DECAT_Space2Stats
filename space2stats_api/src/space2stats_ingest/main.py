@@ -33,6 +33,7 @@ def read_parquet_file(file_path: str):
 
     return table
 
+
 def get_all_stac_fields(stac_catalog_path: str, item: str) -> Set[str]:
     catalog = Catalog.from_file(stac_catalog_path)
     items = catalog.get_items(recursive=True)
@@ -41,10 +42,13 @@ def get_all_stac_fields(stac_catalog_path: str, item: str) -> Set[str]:
     # Filter items to match the given item param
     for it in items:
         if item in it.get_self_href():
-            columns.extend([col["name"] for col in it.properties.get("table:columns", [])])
+            columns.extend(
+                [col["name"] for col in it.properties.get("table:columns", [])]
+            )
             break
-    
+
     return set(columns)
+
 
 def verify_columns(parquet_file: str, stac_catalog_path: str, item: str) -> bool:
     """
@@ -54,7 +58,7 @@ def verify_columns(parquet_file: str, stac_catalog_path: str, item: str) -> bool
         parquet_file (str): Path to the Parquet file.
         stac_metadata_file (str): Path to the STAC item metadata JSON file.
         item (str): Name of the relevant STAC item.
-        
+
     Returns:
         bool: True if the columns match, False otherwise.
     """
@@ -90,7 +94,7 @@ def load_parquet_to_db(
     parquet_file: str,
     connection_string: str,
     stac_catalog_path: str,
-    item: str, 
+    item: str,
     chunksize: int = 64_000,
 ):
     # Verify column consistency between Parquet file and STAC metadata

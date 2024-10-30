@@ -1,21 +1,22 @@
+import ast
 import json
+import os
 from datetime import datetime
 from os.path import join
+from typing import Dict
 
 import git
-from pystac import Collection, Item, Asset, CatalogType
-from pystac.extensions.table import TableExtension
-from typing import Dict
 import pandas as pd
-import ast
-import os
+from pystac import Asset, CatalogType, Collection, Item
+from pystac.extensions.table import TableExtension
 
 
 # Function to get the root of the git repository
 def get_git_root() -> str:
     git_repo = git.Repo(os.getcwd(), search_parent_directories=True)
     return git_repo.git.rev_parse("--show-toplevel")
-  
+
+
 # Function to load metadata from the Excel file
 def load_metadata(file: str) -> Dict[str, pd.DataFrame]:
     overview = pd.read_excel(file, sheet_name="DDH Dataset", index_col="Field")
@@ -32,9 +33,11 @@ def load_metadata(file: str) -> Dict[str, pd.DataFrame]:
         "sources": sources,
     }
 
+
 # Function to read the existing STAC collection
 def load_existing_collection(collection_path: str) -> Collection:
     return Collection.from_file(collection_path)
+
 
 # Function to create a new STAC item
 def create_new_item(sources: pd.DataFrame, column_types: dict, item_name: str) -> Item:
@@ -51,7 +54,12 @@ def create_new_item(sources: pd.DataFrame, column_types: dict, item_name: str) -
             ]
         ],
     }
-    bbox = [-179.99999561620714, -89.98750455101016, 179.99999096313272, 89.98750455101016]
+    bbox = [
+        -179.99999561620714,
+        -89.98750455101016,
+        179.99999096313272,
+        89.98750455101016,
+    ]
 
     # Get metadata for Population item
     src_metadata = sources[sources["Name"] == "Nighttime Lights"].iloc[0]
@@ -93,25 +101,28 @@ def create_new_item(sources: pd.DataFrame, column_types: dict, item_name: str) -
             title="API Documentation",
             media_type="text/html",
             roles=["metadata"],
-        )
+        ),
     )
 
     return item
 
+
 # Function to add the new item to the existing collection
 def add_item_to_collection(collection: Collection, item: Item):
     collection.add_item(item)
+
 
 # Save the updated collection
 def save_collection(collection: Collection, collection_path: str):
     collection.normalize_hrefs(collection_path)
     collection.save(catalog_type=CatalogType.RELATIVE_PUBLISHED)
 
+
 # Main function
 def main():
     git_root = get_git_root()
     metadata_dir = join(git_root, "space2stats_api/src/space2stats_ingest/METADATA")
-    
+
     # Paths and metadata setup
     item_name = "space2stats_ntl_2013"
     collection_path = join(metadata_dir, "stac/space2stats-collection/collection.json")
@@ -134,6 +145,7 @@ def main():
 
     # Save the updated collection
     save_collection(collection, collection_path)
+
 
 if __name__ == "__main__":
     main()
