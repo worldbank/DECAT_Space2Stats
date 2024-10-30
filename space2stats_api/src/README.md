@@ -10,6 +10,7 @@
 ![Create Stac](../../docs/images/create_stac_workflow.png)
 
 ### Adding new ITEM files
-- Navigate to the METADATA sub-directory
 - In link_new_item.py set "Paths and metadata setup" in the main function to point towards the corresponding locally saved parquet file
-- Run line_new_items.py
+- Navigate to the METADATA sub-directory and run the following commands in order:
+    1. get_types.py
+    2. line_new_items.py
