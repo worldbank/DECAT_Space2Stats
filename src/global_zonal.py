@@ -1,4 +1,5 @@
 import boto3, os
+import rasterio
 
 import pandas as pd
 import geopandas as gpd
@@ -271,18 +272,45 @@ def zonal_stats_categories(gdf, gdf_id, raster_file, categories, out_file,
 
 
 def zonal_stats_categorical(gdf, gdf_id, raster_file, category_raster_file, out_file, categories=None, reclass_dict=None,
-                          buffer0=False, minVal=None, maxVal=None, verbose=False):
+                          buffer0=False, minVal='', maxVal='', verbose=False):
     ''' Run zonal stats on a continuous raster file using a matching categorical raster 
         file and a list of h3 cells. For each defined category in the categorical 
         raster file, calculate the sum, min, max, mean for that category.
+
+        Parameters
+        ----------
+        gdf : geopandas.GeoDataFrame
+            data frame of polygons to run zonal stats with
+        gdf_id : str
+            column in gdf with unique id
+        raster_file : str
+            path to raster file of continuous values to summarize with gdf
+        category_raster_file : str
+            path to raster file of categorical data to categorize the raster_file
+        out_file : str
+            path to write results
+        categories : list of numbers, optional
+            List of unique categories in category_raster_file to summarize, defaults to None.
+            One of categories and reclass_dict must be defined
+        reclass_dict : dictionary
+            describes how to reclass category_raster_file if it is a continuous dataset, defaults to None.
+            One of categories and reclass_dict must be defined
+        buffer0 : boolean
+            Should gdf be buffered by 0 (fixes shapely shapes), defaults to False.
+        minVal : int
+            minimum value to summarize in raster_file, anything less than minVal is set to 0, defaults to None.
+        maxVal : int
+            maximum value to summarize in raster_file, anything more than maxVal is set to 0, defaults to None.
+        verbose : bool
+            print extraneous updates using print statements
     '''
-    
-    tPrint(f'Starting zonal stats on {out_file}')
+    if verbose:
+        tPrint(f'Starting zonal stats on {out_file}')
     if buffer0:
         gdf['geometry'] = gdf['geometry'].buffer(0)        
     
     #extract category raster to gdf extent
-    cat_d, cat_profile = rMisc.clipRaster(category_raster_file, gdf)
+    cat_d, cat_profile = rMisc.clipRaster(rasterio.open(category_raster_file), gdf)
     # reclasify if necessary
     if not reclass_dict is None:
         categories = []
@@ -290,7 +318,7 @@ def zonal_stats_categorical(gdf, gdf_id, raster_file, category_raster_file, out_
             cat_d[(cat_d >= range[0]) & (cat_d <= range[1])] = key
             categories.append(key)
     # extract raster to gdf extent
-    rast_d, rast_profile = rMisc.clipRaster(raster_file, gdf)
+    rast_d, rast_profile = rMisc.clipRaster(rasterio.open(raster_file), gdf)
         
     # standardize categorical raster to zonal raster
     final_zonal_res = []
