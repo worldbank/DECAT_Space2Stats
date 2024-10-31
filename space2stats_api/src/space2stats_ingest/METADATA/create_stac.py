@@ -50,9 +50,7 @@ def load_metadata(file: str) -> Dict[str, pd.DataFrame]:
 
 
 # Function to create STAC catalog
-def create_stac_catalog(
-    overview: pd.DataFrame, nada: pd.DataFrame, catalog_dir: str
-) -> Catalog:
+def create_stac_catalog(overview: pd.DataFrame, nada: pd.DataFrame) -> Catalog:
     catalog = Catalog(
         id="space2stats-catalog",
         description=overview.loc["Description Resource"].values[0],
@@ -65,8 +63,6 @@ def create_stac_catalog(
         },
         href="https://worldbank.github.io/DECAT_Space2Stats/stac/catalog.json",
     )
-
-    # catalog.set_self_href(os.path.relpath("catalog.json", start=catalog_dir))
 
     return catalog
 
@@ -112,10 +108,10 @@ def create_stac_collection(overview: pd.DataFrame) -> Collection:
 
 
 # Function to create STAC Item from GeoDataFrame
-def create_stac_item(
-    column_types: dict, feature_catalog: pd.DataFrame, item_dir: str
-) -> Item:
+def create_stac_item(column_types: dict, metadata: pd.DataFrame) -> Item:
     data_dict = []
+
+    feature_catalog = metadata["feature_catalog"]
 
     for column, dtype in column_types.items():
         description = feature_catalog.loc[
@@ -154,26 +150,28 @@ def create_stac_item(
         89.98750455101016,
     ]
 
+    sources = metadata["sources"]
+    pop_metadata = sources[sources["Name"] == "Population"].iloc[0]
     item = Item(
         id="space2stats_population_2020",
         geometry=geom,
         bbox=bbox,
         datetime=datetime.now(),
         properties={
-            "name": "Population Data",
-            "description": "Gridded population disaggregated by gender for the year 2020, with data available for different age groups.",
-            "methodological_notes": "Global raster files are processed for each hexagonal grid using zonal statistics.",
-            "source_data": "WorldPop gridded population, 2020, Unconstrained, UN-Adjusted",
-            "sci:citation": "Stevens FR, Gaughan AE, Linard C, Tatem AJ (2015) Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data.",
-            "organization": "WorldPop, https://www.worldpop.org",
-            "method": "sum",
-            "resolution": "100 meters",
+            "name": pop_metadata["Name"],
+            "description": pop_metadata["Description"],
+            "methodological_notes": pop_metadata["Methodological Notes"],
+            "source_data": pop_metadata["Source Data"],
+            "sci:citation": pop_metadata["Citation source"],
+            "organization": pop_metadata["Organization"],
+            "method": pop_metadata["Method"],
+            "resolution": pop_metadata["Resolution"],
             "table:primary_geometry": "geometry",
             "table:columns": data_dict,
             "vector:layers": {
                 "space2stats": column_types_with_geometry,
             },
-            "themes": ["Demographics", "Population"],
+            "themes": pop_metadata["Theme"],
         },
         stac_extensions=[
             "https://stac-extensions.github.io/table/v1.2.0/schema.json",
@@ -181,7 +179,6 @@ def create_stac_item(
         ],
     )
 
-    # item.set_self_href(os.path.join("items", f"{item.id}.json"))
     return item
 
 
@@ -232,7 +229,6 @@ def main():
     catalog = create_stac_catalog(
         metadata["overview"],
         metadata["nada"],
-        join(git_root, metadata_dir, "stac"),
     )
 
     # Create STAC collection
@@ -241,8 +237,7 @@ def main():
     # Create STAC item
     item = create_stac_item(
         column_types,
-        metadata["feature_catalog"],
-        join(git_root, metadata_dir, "stac"),
+        metadata,
     )
 
     # Add assets to item
