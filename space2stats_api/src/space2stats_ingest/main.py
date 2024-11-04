@@ -4,7 +4,7 @@ from typing import Set
 import adbc_driver_postgresql.dbapi as pg
 import boto3
 import pyarrow.parquet as pq
-from pystac import Catalog
+from pystac import Item, STACValidationError
 from tqdm import tqdm
 
 TABLE_NAME = "space2stats"
@@ -34,17 +34,22 @@ def read_parquet_file(file_path: str):
     return table
 
 
-def get_all_stac_fields(stac_catalog_path: str) -> Set[str]:
-    catalog = Catalog.from_file(stac_catalog_path)
-    items = catalog.get_items(recursive=True)
-    columns = []
-    for it in items:
-        columns.extend([col["name"] for col in it.properties.get("table:columns")])
-        print(columns)
+def get_stac_fields_from_item(stac_item_path: str) -> Set[str]:
+    item = Item.from_file(stac_item_path)
+    columns = [c["name"] for c in item.properties.get("table:columns")]
     return set(columns)
 
 
-def verify_columns(parquet_file: str, stac_catalog_path: str) -> bool:
+def validate_stac_item(stac_item_path) -> bool:
+    item = Item.from_file(stac_item_path)
+    try:
+        item.validate()
+        return True
+    except STACValidationError as e:
+        raise STACValidationError(f"Expected valid STAC item, error: {e}")
+
+
+def verify_columns(parquet_file: str, stac_item_path: str) -> bool:
     """
     Verifies that the Parquet file columns match the STAC item metadata columns.
 
@@ -58,7 +63,7 @@ def verify_columns(parquet_file: str, stac_catalog_path: str) -> bool:
     parquet_table = read_parquet_file(parquet_file)
     parquet_columns = set(parquet_table.column_names)
 
-    stac_fields = get_all_stac_fields(stac_catalog_path)
+    stac_fields = get_stac_fields_from_item(stac_item_path)
 
     if parquet_columns != stac_fields:
         extra_in_parquet = parquet_columns - stac_fields
@@ -87,12 +92,11 @@ def download_parquet_from_s3(s3_path: str, local_path: str):
 def load_parquet_to_db(
     parquet_file: str,
     connection_string: str,
-    stac_catalog_path: str,
+    stac_item_path: str,
     chunksize: int = 64_000,
 ):
-    # Verify column consistency between Parquet file and STAC metadata
-    if not verify_columns(parquet_file, stac_catalog_path):
-        raise ValueError("Column mismatch between Parquet file and STAC metadata")
+    validate_stac_item(stac_item_path)
+    verify_columns(parquet_file, stac_item_path)
 
     table = pq.read_table(parquet_file)
     with (

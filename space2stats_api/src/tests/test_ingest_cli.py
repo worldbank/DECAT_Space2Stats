@@ -104,7 +104,7 @@ def test_load_command(tmpdir, database):
         [
             "load",
             connection_string,
-            str(catalog_file),
+            str(item_file),
             "--parquet-file",
             str(parquet_file),
         ],
@@ -134,7 +134,7 @@ def test_load_command_column_mismatch(tmpdir, database):
         [
             "load",
             connection_string,
-            str(catalog_file),
+            str(item_file),
             "--parquet-file",
             str(parquet_file),
         ],
@@ -171,7 +171,7 @@ def test_download_and_load_command(tmpdir, database, s3_mock):
             "download-and-load",
             s3_path,
             connection_string,
-            str(catalog_file),
+            str(item_file),
             "--parquet-file",
             str(parquet_file),
         ],

@@ -119,7 +119,7 @@ def stac_catalog_path():
 
 
 @pytest.fixture
-def stac_file_path():
+def stac_item_path():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, "../../.."))
     json_file_path = os.path.join(

@@ -6,15 +6,13 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from space2stats_ingest.main import (
     download_parquet_from_s3,
-    get_all_stac_fields,
+    get_stac_fields_from_item,
     load_parquet_to_db,
 )
 
 
-def test_get_all_stac_fields(stac_catalog_path):
-    print(stac_catalog_path)
-    fields = get_all_stac_fields(stac_catalog_path)
-    print(fields)
+def test_get_stac_fields(stac_item_path):
+    fields = get_stac_fields_from_item(stac_item_path)
     assert (
         len(fields) > 0 and len(fields) < 100
     ), f"Fields have unexpected length: {fields}"
@@ -102,7 +100,7 @@ def test_load_parquet_to_db(database, tmpdir):
     with open(catalog_file, "w") as f:
         json.dump(stac_catalog, f)
 
-    load_parquet_to_db(str(parquet_file), connection_string, str(catalog_file))
+    load_parquet_to_db(str(parquet_file), connection_string, str(item_file))
 
     with psycopg.connect(connection_string) as conn:
         with conn.cursor() as cur:
