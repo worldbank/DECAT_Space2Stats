@@ -45,3 +45,21 @@ jobs:
         PGPASSWORD: mypassword
         PGTABLENAME: space2stats
         S3_BUCKET_NAME: test-bucket
+
+  deploy-to-dev:
+    uses: "./.github/workflows/deploy.yml"
+    needs: test
+    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'main' }}
+    with:
+      environment: Space2Stats API Dev
+      stage: dev
+    secrets: inherit
+
+  deploy-to-production:
+    uses: "./.github/workflows/deploy.yml"
+    needs: test
+    if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+    with:
+      environment: Space2Stats API Prod
+      stage: prod
+    secrets: inherit
