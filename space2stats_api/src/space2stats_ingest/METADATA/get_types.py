@@ -33,7 +33,7 @@ def save_parquet_types_to_json(parquet_file: str, json_file: str):
 
 if __name__ == "__main__":
     git_root = get_git_root()
-    parquet_file = join(git_root, "space2stats_api/src/ntl2012.parquet")
+    parquet_file = join(git_root, "space2stats_api/src/space2stats.parquet")
     json_file = join(
         git_root, "space2stats_api/src/space2stats_ingest/METADATA/types.json"
     )
