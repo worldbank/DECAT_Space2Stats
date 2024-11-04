@@ -40,14 +40,14 @@
     89.98750455101016
   ],
   "properties": {
-    "name": "Population",
-    "description": "Gridded population disaggregated by gender.",
+    "name": "Population Data",
+    "description": "Gridded population disaggregated by gender for the year 2020, with data available for different age groups.",
     "methodological_notes": "Global raster files are processed for each hexagonal grid using zonal statistics.",
-    "source_data": "WorldPop gridded population, 2020, Unconstrained, UN-Adjusted, https://www.worldpop.org/methods/top_down_constrained_vs_unconstrained/",
-    "sci:citation": "Stevens FR, Gaughan AE, Linard C, Tatem AJ (2015) Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data. ",
-    "organization": "World Pop, https://www.worldpop.org/methods/populations",
+    "source_data": "WorldPop gridded population, 2020, Unconstrained, UN-Adjusted",
+    "sci:citation": "Stevens FR, Gaughan AE, Linard C, Tatem AJ (2015) Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data.",
+    "organization": "WorldPop, https://www.worldpop.org",
     "method": "sum",
-    "resolution": "100 mts",
+    "resolution": "100 meters",
     "table:primary_geometry": "geometry",
     "table:columns": [
       {
@@ -296,8 +296,11 @@
         "geometry": "geometry"
       }
     },
-    "themes": "Demographics",
-    "datetime": "2024-10-30T13:43:45.940644Z"
+    "themes": [
+      "Demographics",
+      "Population"
+    ],
+    "datetime": "2024-10-24T14:54:26.131129Z"
   },
   "links": [
     {

@@ -130,11 +130,10 @@ def stac_file_path():
 
 
 @pytest.fixture
-def metadata_excel_file_path():
+def types_json_file_path():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.abspath(os.path.join(current_dir, "../../.."))
-    metadata_excel_file_path = os.path.join(
-        root_dir,
-        "space2stats_api/src/space2stats_ingest/METADATA/Space2Stats Metadata Content.xlsx",
+    types_json_file_path = os.path.join(
+        root_dir, "space2stats_api/src/space2stats_ingest/METADATA/types.json"
     )
-    return metadata_excel_file_path
+    return types_json_file_path

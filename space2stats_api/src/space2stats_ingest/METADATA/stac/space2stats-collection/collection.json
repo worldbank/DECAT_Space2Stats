@@ -21,12 +21,6 @@
       "href": "./space2stats_population_2020/space2stats_population_2020.json",
       "type": "application/json",
       "title": "Space2Stats Population Data Item"
-    },
-    {
-      "rel": "item",
-      "href": "./space2stats_ntl_2013/space2stats_ntl_2013.json",
-      "type": "application/json",
-      "title": "Space2Stats NTL 2013 Data Item"
     }
   ],
   "Title": "Space2Stats Database",
@@ -38,6 +32,32 @@
     "hexagons",
     "global"
   ],
+  "summaries": {
+    "datetime": {
+      "min": "2020-01-01T00:00:00Z",
+      "max": null
+    }
+  },
+  "providers": [
+    {
+      "name": "World Bank",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://www.worldbank.org/"
+    }
+  ],
+  "assets": {
+    "documentation": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
   "title": "Space2Stats Collection",
   "extent": {
     "spatial": {
@@ -59,31 +79,5 @@
       ]
     }
   },
-  "license": "CC-BY-4.0",
-  "providers": [
-    {
-      "name": "World Bank",
-      "roles": [
-        "producer",
-        "licensor"
-      ],
-      "url": "https://www.worldbank.org/"
-    }
-  ],
-  "summaries": {
-    "datetime": {
-      "min": "2020-01-01T00:00:00Z",
-      "max": null
-    }
-  },
-  "assets": {
-    "documentation": {
-      "href": "https://space2stats.ds.io/docs",
-      "type": "text/html",
-      "title": "API Documentation",
-      "roles": [
-        "metadata"
-      ]
-    }
-  }
+  "license": "CC-BY-4.0"
 }
