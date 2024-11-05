@@ -1,6 +1,10 @@
 name: Run Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   test:
@@ -49,7 +53,7 @@ jobs:
   deploy-to-dev:
     uses: "./.github/workflows/deploy.yml"
     needs: test
-    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'main' }}
+    if: ${{ github.event_name == 'pull_request' }}
     with:
       environment: Space2Stats API Dev
       stage: pr-${{ github.event.pull_request.number }}
