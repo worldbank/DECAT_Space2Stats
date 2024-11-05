@@ -12,8 +12,8 @@ permissions:
 
 jobs:
   build:
-    concurrency: ${{ inputs.environment }}
-    environment: ${{ inputs.environment }}
+    concurrency: Space2Stats API Dev
+    environment: Space2Stats API Dev
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,7 @@ jobs:
       - name: Tear down CDK stack
         working-directory: ./space2stats_api/cdk
         env:
-          STAGE: ${{ inputs.stage }}
+          STAGE: pr-${{ github.event.pull_request.number }}
           PGHOST: ${{ secrets.PGHOST }}
           PGPORT: ${{ secrets.PGPORT }}
           PGDATABASE: ${{ secrets.PGDATABASE }}
@@ -53,17 +53,17 @@ jobs:
       - name: Find Comment
         uses: peter-evans/find-comment@v3
         id: find-comment
-        if: ${{ inputs.pr-number }}
+        if: ${{ github.event.pull_request.number }}
         with:
-          issue-number: ${{ inputs.pr-number }}
+          issue-number: ${{ github.event.pull_request.number }}
           comment-author: "github-actions[bot]"
           body-includes: "PR Deployment Details:"
 
       - name: Create or update comment with removal confirmation
         uses: peter-evans/create-or-update-comment@v4
-        if: ${{ inputs.pr-number }}
+        if: ${{ github.event.pull_request.number }}
         with:
-          issue-number: ${{ inputs.pr-number }}
+          issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           body: |
             Removed PR Preview Environment.
