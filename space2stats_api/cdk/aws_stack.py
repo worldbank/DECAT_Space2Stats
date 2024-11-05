@@ -1,4 +1,4 @@
-from aws_cdk import Duration, Stack
+from aws_cdk import CfnOutput, Duration, Stack
 from aws_cdk import aws_apigatewayv2 as apigatewayv2
 from aws_cdk import aws_apigatewayv2_integrations as integrations
 from aws_cdk import aws_certificatemanager as acm
@@ -48,13 +48,6 @@ class Space2StatsStack(Stack):
             self, "Certificate", deployment_settings.CDK_CERTIFICATE_ARN
         )
 
-        domain_name = apigatewayv2.DomainName(
-            self,
-            "DomainName",
-            domain_name=deployment_settings.CDK_DOMAIN_NAME,
-            certificate=certificate,
-        )
-
         http_api = apigatewayv2.HttpApi(
             self,
             "Space2StatsHttpApi",
@@ -63,10 +56,24 @@ class Space2StatsStack(Stack):
             ),
         )
 
-        apigatewayv2.ApiMapping(
+        CfnOutput(
             self,
-            "ApiMapping",
-            api=http_api,
-            domain_name=domain_name,
-            stage=http_api.default_stage,
+            "ApiGatewayUrl",
+            key="ApiGatewayUrl",
+            value=http_api.url,
         )
+
+        if deployment_settings.CDK_DOMAIN_NAME:
+            domain_name = apigatewayv2.DomainName(
+                self,
+                "DomainName",
+                domain_name=deployment_settings.CDK_DOMAIN_NAME,
+                certificate=certificate,
+            )
+            apigatewayv2.ApiMapping(
+                self,
+                "ApiMapping",
+                api=http_api,
+                domain_name=domain_name,
+                stage=http_api.default_stage,
+            )
