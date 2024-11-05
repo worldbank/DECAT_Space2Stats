@@ -51,18 +51,18 @@ jobs:
           S3_BUCKET_NAME: test-bucket
 
   deploy-to-dev:
+    if: ${{ github.event_name == 'pull_request' }}
     uses: "./.github/workflows/deploy.yml"
     needs: test
-    if: ${{ github.event_name == 'pull_request' }}
     with:
       environment: Space2Stats API Dev
       stage: pr-${{ github.event.pull_request.number }}
     secrets: inherit
 
   deploy-to-production:
+    if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
     uses: "./.github/workflows/deploy.yml"
     needs: test
-    if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
     with:
       environment: Space2Stats API Prod
       stage: prod
@@ -96,6 +96,10 @@ jobs:
   destroy-pr-preview:
     if: ${{ github.event.action == 'closed' }}
     uses: "./.github/workflows/deploy.yml"
+    with:
+      environment: Space2Stats API Dev
+      stage: pr-${{ github.event.pull_request.number }}
+    secrets: inherit
 
   post-cleanup-message-to-slack:
     needs: destroy-pr-preview
