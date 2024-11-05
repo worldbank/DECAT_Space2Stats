@@ -11,44 +11,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.11
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
 
-    - name: Install Poetry
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install poetry
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
 
-    - name: Install dependencies
-      working-directory: ./space2stats_api/src
-      run: |
-        poetry install --with test
+      - name: Install dependencies
+        working-directory: ./space2stats_api/src
+        run: |
+          poetry install --with test
 
-    - name: install lib postgres
-      uses: nyurik/action-setup-postgis@v2
+      - name: install lib postgres
+        uses: nyurik/action-setup-postgis@v2
 
-    - name: Run pre-commit
-      working-directory: ./space2stats_api/src
-      run: |
-        poetry run pre-commit run --all-files
+      - name: Run pre-commit
+        working-directory: ./space2stats_api/src
+        run: |
+          poetry run pre-commit run --all-files
 
-    - name: Run tests
-      working-directory: ./space2stats_api/src
-      run: |
-        poetry run python -m pytest --benchmark-skip tests
-      env:
-        PGHOST: localhost
-        PGPORT: 5432
-        PGDATABASE: mydatabase
-        PGUSER: myuser
-        PGPASSWORD: mypassword
-        PGTABLENAME: space2stats
-        S3_BUCKET_NAME: test-bucket
+      - name: Run tests
+        working-directory: ./space2stats_api/src
+        run: |
+          poetry run python -m pytest --benchmark-skip tests
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: mydatabase
+          PGUSER: myuser
+          PGPASSWORD: mypassword
+          PGTABLENAME: space2stats
+          S3_BUCKET_NAME: test-bucket
 
   deploy-to-dev:
     uses: "./.github/workflows/deploy.yml"
@@ -71,13 +71,24 @@ jobs:
   post-url-to-slack:
     needs: deploy-to-dev
     runs-on: ubuntu-latest
-    steps: 
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "🚀 PR deployed to"
+
       - name: Create or update comment with URL
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            🚀 PR deployed to ${{ needs.deploy-to-dev.outputs.get_api_url }}
+            🚀 PR deployed to ${{ needs.deploy-to-dev.outputs.api_url }}
           edit-mode: replace
 
   # TODO: When PR is merged, destroy CDK Stack for PR Preview

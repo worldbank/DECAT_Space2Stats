@@ -60,7 +60,7 @@ jobs:
             CDK_DOMAIN_NAME: ${{ vars.CDK_DOMAIN_NAME }} 
         run: cdk deploy --require-approval never --outputs-file outputs.json
 
-      - name: Get API Urls
+      - name: Get API URL
         id: get_api_url
         working-directory: ./space2stats_api/cdk
         run: |
