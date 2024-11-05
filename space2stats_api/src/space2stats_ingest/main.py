@@ -11,15 +11,7 @@ TABLE_NAME = "space2stats"
 
 
 def read_parquet_file(file_path: str):
-    """
-    Reads a Parquet file either from a local path or an S3 path.
-
-    Args:
-        file_path (str): Path to the Parquet file, either local or S3.
-
-    Returns:
-        pyarrow.Table: Parquet table object.
-    """
+    """Reads a Parquet file either from a local path or an S3 path."""
     if file_path.startswith("s3://"):
         # Read from S3
         s3 = boto3.client("s3")
@@ -30,7 +22,6 @@ def read_parquet_file(file_path: str):
     else:
         # Read from local path
         table = pq.read_table(file_path)
-
     return table
 
 
@@ -40,7 +31,7 @@ def get_stac_fields_from_item(stac_item_path: str) -> Set[str]:
     return set(columns)
 
 
-def validate_stac_item(stac_item_path) -> bool:
+def validate_stac_item(stac_item_path: str) -> bool:
     item = Item.from_file(stac_item_path)
     try:
         item.validate()
@@ -50,19 +41,9 @@ def validate_stac_item(stac_item_path) -> bool:
 
 
 def verify_columns(parquet_file: str, stac_item_path: str) -> bool:
-    """
-    Verifies that the Parquet file columns match the STAC item metadata columns.
-
-    Args:
-        parquet_file (str): Path to the Parquet file.
-        stac_metadata_file (str): Path to the STAC item metadata JSON file.
-
-    Returns:
-        bool: True if the columns match, False otherwise.
-    """
+    """Verifies that the Parquet file columns match the STAC item metadata columns."""
     parquet_table = read_parquet_file(parquet_file)
     parquet_columns = set(parquet_table.column_names)
-
     stac_fields = get_stac_fields_from_item(stac_item_path)
 
     if parquet_columns != stac_fields:
@@ -71,7 +52,6 @@ def verify_columns(parquet_file: str, stac_item_path: str) -> bool:
         raise ValueError(
             f"Column mismatch: Extra in Parquet: {extra_in_parquet}, Extra in STAC: {extra_in_stac}"
         )
-
     return True
 
 
@@ -81,18 +61,71 @@ def load_parquet_to_db(
     stac_item_path: str,
     chunksize: int = 64_000,
 ):
+    """Loads and updates Parquet data in PostgreSQL, creating the table if it does not exist."""
     validate_stac_item(stac_item_path)
     verify_columns(parquet_file, stac_item_path)
 
-    table = pq.read_table(parquet_file)
+    table = read_parquet_file(parquet_file)
+
+    # Connect to the database
     with (
         pg.connect(connection_string) as conn,
         conn.cursor() as cur,
-        tqdm(total=table.num_rows, desc="Loading to PostgreSQL", unit="rows") as pbar,
+        tqdm(total=table.num_rows, desc="Ingesting Data", unit="rows") as pbar,
     ):
-        cur.adbc_ingest(TABLE_NAME, table.slice(0, 0), mode="replace")
-        for batch in table.to_batches(max_chunksize=chunksize):
-            count = cur.adbc_ingest(TABLE_NAME, batch, mode="append")
-            pbar.update(count)
-        cur.execute("CREATE INDEX ON space2stats (hex_id);")
+        # Check if the main table exists
+        cur.execute(f"SELECT to_regclass('{TABLE_NAME}');")
+        table_exists = cur.fetchone()[0] is not None
+
+        if not table_exists:
+            # If the main table doesn't exist, create it directly
+            cur.adbc_ingest(TABLE_NAME, table, mode="replace")
+            for batch in table.to_batches(max_chunksize=chunksize):
+                cur.adbc_ingest(TABLE_NAME, batch, mode="append")
+                pbar.update(batch.num_rows)
+        else:
+            # If the main table exists, create a temporary table for the new data
+            temp_table_name = f"{TABLE_NAME}_temp"
+            cur.execute(f"DROP TABLE IF EXISTS {temp_table_name}")
+            cur.adbc_ingest(temp_table_name, table, mode="replace")
+
+            for batch in table.to_batches(max_chunksize=chunksize):
+                cur.adbc_ingest(temp_table_name, batch, mode="append")
+                pbar.update(batch.num_rows)
+
+            # Add all columns from the temporary table to the main table
+            cur.execute(
+                f"""
+                SELECT column_name, data_type
+                FROM information_schema.columns
+                WHERE table_name = '{temp_table_name}'
+                """
+            )
+            temp_columns = cur.fetchall()
+            temp_columns = [c for c in temp_columns if c[0] != "hex_id"]
+
+            for column, column_type in temp_columns:
+                try:
+                    cur.execute(
+                        f"ALTER TABLE {TABLE_NAME} ADD COLUMN {column} {column_type}"
+                    )
+                except Exception as e:
+                    print(f"Could not add column '{column}': {e}")
+
+            # Update the main table using the temporary table
+            update_columns = ", ".join(
+                [f"{col} = {temp_table_name}.{col}" for col, _ in temp_columns]
+            )
+            cur.execute(
+                f"""
+                UPDATE {TABLE_NAME}
+                SET {update_columns}
+                FROM {temp_table_name}
+                WHERE {TABLE_NAME}.hex_id = {temp_table_name}.hex_id
+                """
+            )
+
+            # Clean up by dropping the temporary table
+            cur.execute(f"DROP TABLE IF EXISTS {temp_table_name}")
+
         conn.commit()

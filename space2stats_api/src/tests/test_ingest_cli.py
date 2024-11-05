@@ -63,8 +63,8 @@ def create_stac_catalog(catalog_file, collection_file):
         json.dump(stac_catalog, f)
 
 
-def test_load_command(tmpdir, database):
-    connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
+def test_load_command(tmpdir, clean_database):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
     parquet_file = tmpdir.join("local.parquet")
     catalog_file = tmpdir.join("catalog.json")
     collection_file = tmpdir.join("collection.json")
@@ -93,8 +93,8 @@ def test_load_command(tmpdir, database):
     assert "Loading data into PostgreSQL" in result.stdout
 
 
-def test_load_command_column_mismatch(tmpdir, database):
-    connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
+def test_load_command_column_mismatch(tmpdir, clean_database):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
     parquet_file = tmpdir.join("local.parquet")
     catalog_file = tmpdir.join("catalog.json")
     collection_file = tmpdir.join("collection.json")
