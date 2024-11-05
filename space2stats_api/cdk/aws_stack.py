@@ -1,4 +1,4 @@
-from aws_cdk import Duration, Stack, CfnOutput
+from aws_cdk import CfnOutput, Duration, Stack
 from aws_cdk import aws_apigatewayv2 as apigatewayv2
 from aws_cdk import aws_apigatewayv2_integrations as integrations
 from aws_cdk import aws_certificatemanager as acm
@@ -57,9 +57,9 @@ class Space2StatsStack(Stack):
         )
 
         CfnOutput(
-            self, 
-            'ApiGatewayUrl',
-            key='ApiGatewayUrl',
+            self,
+            "ApiGatewayUrl",
+            key="ApiGatewayUrl",
             value=http_api.url,
         )
 
