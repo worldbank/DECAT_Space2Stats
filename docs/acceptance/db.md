@@ -54,31 +54,14 @@ You can use the CLI tool for data ingestion. First, ensure you have the required
 poetry install
 ```
 
-To download the Parquet file from S3 and load it into the database, run the following command:
+To load a Parquet file it into the database, run the following command:
 
 ```bash
-poetry run space2stats-ingest download-and-load \
-    "s3://<bucket>/space2stats.parquet" \
+poetry run space2stats-ingest load \
     "postgresql://username:password@localhost:5439/postgres" \
-    "<path>/space2stats.json" \
-    --parquet-file "local.parquet"
+    "<item_path>" \
+    "local.parquet"
 ```
-
-Alternatively, you can run the `download` and `load` commands separately:
-
-1. **Download the Parquet file**:
-   ```bash
-   poetry run space2stats-ingest download "s3://<bucket>/space2stats.parquet" --local-path "local.parquet"
-   ```
-
-2. **Load the Parquet file into the database**:
-   ```bash
-   poetry run space2stats-ingest download-and-load \
-    "s3://<bucket>/space2stats.parquet" \
-    "postgresql://username:password@localhost:5439/postgres" \
-    "<path>/space2stats.json" \
-    --parquet-file "local.parquet"  
-   ```
 
 ### Database Configuration
 
@@ -110,3 +93,28 @@ SELECT sum_pop_2020 FROM space2stats WHERE hex_id IN ('86beabd8fffffff', '86beab
 ### Conclusion
 
 Ensure all steps are followed to verify the ETL process, database setup, and data ingestion pipeline. Reach out to the development team for any further assistance or troubleshooting.
+
+
+#### Updating test
+
+- Spin up database with docker:
+```
+docker-compose up
+```
+- Download initial dataset:
+```
+aws s3 cp s3://wbg-geography01/Space2Stats/parquet/GLOBAL/space2stats.parquet .
+download: s3://wbg-geography01/Space2Stats/parquet/GLOBAL/space2stats.parquet to ./space2stats.parquet
+```
+- Upload initial dataset:
+```
+space2stats-ingest postgresql://username:password@localhost:5439/postgres ./space2stats_ingest/METADATA/stac/space2stats/space2stats_population_2020/space2stats_population_2020.json space2stats.parquet
+```
+- Generate second dataset:
+```
+python space2stats_ingest/METADATA/generate_test_data.py 
+```
+- Upload second dataset:
+```
+space2stats-ingest postgresql://username:password@localhost:5439/postgres ./space2stats_ingest/METADATA/stac/space2stats/space2stats_population_2020/space2stats_reupload_test.json space2stats_test.parquet 
+```

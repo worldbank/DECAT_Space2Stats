@@ -2,9 +2,6 @@ version: '3'
 
 services:
   database:
-    # at time of writing this, ARM64 is not supported so we make sure to use
-    # a supported platform: https://github.com/postgis/docker-postgis/issues/216
-    # Could possibly switch to https://github.com/vincentsarago/containers
     platform: linux/amd64
     image: postgis/postgis:15-3.4
     environment:
@@ -13,6 +10,13 @@ services:
       - POSTGRES_DB=postgis
     ports:
       - 5439:5432
-    command: postgres -N 500
+    command: >
+      postgres -N 500
+      -c max_wal_size=2GB
+      -c checkpoint_timeout=30min
+      -c synchronous_commit=off
+      -c wal_level=minimal
+      -c maintenance_work_mem=256MB
+      -c max_wal_senders=0
     volumes:
       - ./.pgdata:/var/lib/postgresql/data

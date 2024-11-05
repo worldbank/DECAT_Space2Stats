@@ -61,13 +61,12 @@ def load_parquet_to_db(
     stac_item_path: str,
     chunksize: int = 64_000,
 ):
-    """Loads and updates Parquet data in PostgreSQL, creating the table if it does not exist."""
+    """Loads and updates Parquet data in PostgreSQL, merging columns if the table exists or creating it if it does not."""
     validate_stac_item(stac_item_path)
     verify_columns(parquet_file, stac_item_path)
 
     table = read_parquet_file(parquet_file)
 
-    # Connect to the database
     with (
         pg.connect(connection_string) as conn,
         conn.cursor() as cur,
@@ -78,54 +77,69 @@ def load_parquet_to_db(
         table_exists = cur.fetchone()[0] is not None
 
         if not table_exists:
-            # If the main table doesn't exist, create it directly
-            cur.adbc_ingest(TABLE_NAME, table, mode="replace")
+            # If the main table doesn't exist, create it and load data directly
+            cur.adbc_ingest(TABLE_NAME, table.slice(0, 0), mode="replace")
             for batch in table.to_batches(max_chunksize=chunksize):
                 cur.adbc_ingest(TABLE_NAME, batch, mode="append")
                 pbar.update(batch.num_rows)
+
+            # Create an index on hex_id for faster future joins
+            cur.execute(
+                f"CREATE INDEX idx_{TABLE_NAME}_hex_id ON {TABLE_NAME} (hex_id)"
+            )
+
         else:
-            # If the main table exists, create a temporary table for the new data
+            # Use a temporary table for staging the new data
             temp_table_name = f"{TABLE_NAME}_temp"
             cur.execute(f"DROP TABLE IF EXISTS {temp_table_name}")
-            cur.adbc_ingest(temp_table_name, table, mode="replace")
+            cur.adbc_ingest(temp_table_name, table.slice(0, 0), mode="replace")
 
             for batch in table.to_batches(max_chunksize=chunksize):
                 cur.adbc_ingest(temp_table_name, batch, mode="append")
                 pbar.update(batch.num_rows)
 
-            # Add all columns from the temporary table to the main table
+            # Optimize join by indexing hex_id in the temp table
+            cur.execute(
+                f"CREATE INDEX idx_{temp_table_name}_hex_id ON {temp_table_name} (hex_id)"
+            )
+
+            # Fetch the columns from temp excluding 'hex_id'
+            cur.execute(
+                f"SELECT column_name FROM information_schema.columns WHERE table_name = '{temp_table_name}' AND column_name != 'hex_id'"
+            )
+            temp_columns = [row[0] for row in cur.fetchall()]
+
+            # Construct the SELECT clause excluding 'hex_id' from temp
+            temp_columns_select = ", ".join([f"temp.{col}" for col in temp_columns])
+            select_query = (
+                f"main.*, {temp_columns_select}" if temp_columns_select else "main.*"
+            )
+
+            # Create the new joined table with columns from both main and temp
+            new_table_name = f"{TABLE_NAME}_new"
+
+            print("Joining new columns to space2stats table.")
+
+            # SQL command to create a new joined table
             cur.execute(
                 f"""
-                SELECT column_name, data_type
-                FROM information_schema.columns
-                WHERE table_name = '{temp_table_name}'
+                CREATE TABLE {new_table_name} AS
+                SELECT {select_query}
+                FROM {TABLE_NAME} AS main
+                LEFT JOIN {temp_table_name} AS temp ON main.hex_id = temp.hex_id
                 """
             )
-            temp_columns = cur.fetchall()
-            temp_columns = [c for c in temp_columns if c[0] != "hex_id"]
 
-            for column, column_type in temp_columns:
-                try:
-                    cur.execute(
-                        f"ALTER TABLE {TABLE_NAME} ADD COLUMN {column} {column_type}"
-                    )
-                except Exception as e:
-                    print(f"Could not add column '{column}': {e}")
+            # Drop the old table and rename the new table to the original name
+            cur.execute(f"DROP TABLE IF EXISTS {TABLE_NAME}")
+            cur.execute(f"ALTER TABLE {new_table_name} RENAME TO {TABLE_NAME}")
 
-            # Update the main table using the temporary table
-            update_columns = ", ".join(
-                [f"{col} = {temp_table_name}.{col}" for col, _ in temp_columns]
-            )
+            # Recreate index on hex_id
             cur.execute(
-                f"""
-                UPDATE {TABLE_NAME}
-                SET {update_columns}
-                FROM {temp_table_name}
-                WHERE {TABLE_NAME}.hex_id = {temp_table_name}.hex_id
-                """
+                f"CREATE INDEX IF NOT EXISTS idx_{TABLE_NAME}_hex_id ON {TABLE_NAME} (hex_id)"
             )
 
-            # Clean up by dropping the temporary table
+            # Clean up by dropping the temporary tables
             cur.execute(f"DROP TABLE IF EXISTS {temp_table_name}")
 
         conn.commit()
