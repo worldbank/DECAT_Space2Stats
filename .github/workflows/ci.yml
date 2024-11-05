@@ -55,6 +55,7 @@ jobs:
     with:
       environment: Space2Stats API Dev
       stage: pr-${{ github.event.pull_request.number }}
+      pr_number: ${{ github.event.pull_request.number }}
     secrets: inherit
 
   deploy-to-production:
@@ -66,59 +67,11 @@ jobs:
       stage: prod
     secrets: inherit
 
-  post-url-to-slack:
-    needs: deploy-to-dev
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    steps:
-      - name: Find Comment
-        uses: peter-evans/find-comment@v3
-        id: find-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "github-actions[bot]"
-          body-includes: "PR Deployment Details:"
-
-      - name: Create or update comment with URL
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          body: |
-            PR Deployment Details:
-            🚀 PR deployed to ${{ needs.deploy-to-dev.outputs.api_url }}
-          edit-mode: replace
-
   destroy-pr-preview:
     if: ${{ github.event.action == 'closed' }}
     uses: "./.github/workflows/deploy.yml"
     with:
       environment: Space2Stats API Dev
       stage: pr-${{ github.event.pull_request.number }}
+
     secrets: inherit
-
-  post-cleanup-message-to-slack:
-    needs: destroy-pr-preview
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    steps:
-      - name: Find Comment
-        uses: peter-evans/find-comment@v3
-        id: find-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "github-actions[bot]"
-          body-includes: "PR Deployment Details:"
-
-      - name: Create or update comment with URL
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          body: |
-            Removed PR Preview Environment.
-          edit-mode: append

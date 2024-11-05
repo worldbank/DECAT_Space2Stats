@@ -6,13 +6,17 @@ on:
       environment:
         type: string
         required: true
-      stage: 
+      stage:
         type: string
         required: true
+      pr-number:
+        type: number
+        required: false
 
 permissions:
   id-token: write
   contents: read
+  pull-requests: write
 
 jobs:
   build:
@@ -32,24 +36,43 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::017820688988:role/Space2Stats-Deploy-Role
           aws-region: ${{ vars.CDK_DEFAULT_REGION }}
-    
+
       - name: Install CDK dependencies
         working-directory: ./space2stats_api/cdk
         run: |
-          pip install -r requirements-cdk.txt 
+          pip install -r requirements-cdk.txt
 
       - name: Deploy CDK stack to staging
         working-directory: ./space2stats_api/cdk
         env:
-            STAGE: ${{ inputs.stage }}
-            PGHOST: ${{ secrets.PGHOST }}
-            PGPORT: ${{ secrets.PGPORT }}
-            PGDATABASE: ${{ secrets.PGDATABASE }}
-            PGUSER: ${{ secrets.PGUSER }}
-            PGPASSWORD: ${{ secrets.PGPASSWORD }}
-            PGTABLENAME: ${{ secrets.PGTABLENAME }}
-            CDK_CERTIFICATE_ARN: ${{ vars.CDK_CERTIFICATE_ARN }}  
-            CDK_DEFAULT_ACCOUNT: ${{ vars.CDK_DEFAULT_ACCOUNT }}  
-            CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
-            CDK_DOMAIN_NAME: ${{ vars.CDK_DOMAIN_NAME }} 
+          STAGE: ${{ inputs.stage }}
+          PGHOST: ${{ secrets.PGHOST }}
+          PGPORT: ${{ secrets.PGPORT }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          PGTABLENAME: ${{ secrets.PGTABLENAME }}
+          CDK_CERTIFICATE_ARN: ${{ vars.CDK_CERTIFICATE_ARN }}
+          CDK_DEFAULT_ACCOUNT: ${{ vars.CDK_DEFAULT_ACCOUNT }}
+          CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
+          CDK_DOMAIN_NAME: ${{ vars.CDK_DOMAIN_NAME }}
         run: cdk destroy --require-approval never
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        if: ${{ inputs.pr-number }}
+        with:
+          issue-number: ${{ inputs.pr-number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "PR Deployment Details:"
+
+      - name: Create or update comment with URL
+        uses: peter-evans/create-or-update-comment@v4
+        if: ${{ inputs.pr-number }}
+        with:
+          issue-number: ${{ inputs.pr-number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          body: |
+            Removed PR Preview Environment.
+          edit-mode: append
