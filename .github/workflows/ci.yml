@@ -54,7 +54,7 @@ jobs:
           S3_BUCKET_NAME: test-bucket
 
   deploy-to-dev:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
     uses: "./.github/workflows/deploy.yml"
     needs: test
     with:
