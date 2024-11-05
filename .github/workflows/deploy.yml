@@ -62,5 +62,6 @@ jobs:
 
       - name: Get API Urls
         id: get_api_url
+        working-directory: ./space2stats_api/cdk
         run: |
           echo "api_url=$(jq -r '."Space2Stats-${{ inputs.stage }}".ApiGatewayUrl' outputs.json)" >> $GITHUB_OUTPUT
