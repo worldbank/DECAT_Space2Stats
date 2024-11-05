@@ -66,6 +66,7 @@ jobs:
 
   post-url-to-slack:
     needs: deploy-to-dev
+    runs-on: ubuntu-latest
     steps: 
       - name: Create or update comment with URL
         uses: peter-evans/create-or-update-comment@v4
