@@ -52,7 +52,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' && github.base_ref == 'main' }}
     with:
       environment: Space2Stats API Dev
-      stage: dev
+      stage: pr-${{ github.event.pull_request.number }}
     secrets: inherit
 
   deploy-to-production:
@@ -63,3 +63,16 @@ jobs:
       environment: Space2Stats API Prod
       stage: prod
     secrets: inherit
+
+  post-url-to-slack:
+    needs: deploy-to-dev
+    steps: 
+      - name: Create or update comment with URL
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🚀 PR deployed to ${{ needs.deploy-to-dev.outputs.get_api_url }}
+          edit-mode: replace
+
+  # TODO: When PR is merged, destroy CDK Stack for PR Preview

@@ -9,12 +9,18 @@ on:
       stage: 
         type: string
         required: true
+    outputs:
+      api_url:
+        description: "The URL of the API Gateway"
+        value: ${{ jobs.build.outputs.api_url }}
 
 jobs:
   build:
     concurrency: ${{ inputs.environment }}
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
+    outputs:
+      api_url: ${{ steps.get_api_url.outputs.api_url }}
 
     steps:
       - name: Check out repository code
@@ -48,4 +54,9 @@ jobs:
             CDK_DEFAULT_ACCOUNT: ${{ vars.CDK_DEFAULT_ACCOUNT }}  
             CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
             CDK_DOMAIN_NAME: ${{ vars.CDK_DOMAIN_NAME }} 
-        run: cdk deploy --require-approval never
+        run: cdk deploy --require-approval never --outputs-file outputs.json
+
+      - name: Get API Urls
+        id: get_api_url
+        run: |
+          echo "api_url=$(jq -r '."Space2Stats-${{ inputs.stage }}".ApiGatewayUrl' outputs.json)" >> $GITHUB_OUTPUT
