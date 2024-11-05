@@ -78,5 +78,5 @@ jobs:
     with:
       environment: Space2Stats API Dev
       stage: pr-${{ github.event.pull_request.number }}
-
+      pr-number: ${{ github.event.pull_request.number }}
     secrets: inherit
