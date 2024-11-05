@@ -1,4 +1,4 @@
-import os
+import json
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -13,54 +13,77 @@ def create_mock_parquet_file(parquet_file, columns):
     pq.write_table(table, parquet_file)
 
 
-def test_download_command(tmpdir, s3_mock):
-    s3_path = "s3://mybucket/myfile.parquet"
-    parquet_file = tmpdir.join("local.parquet")
+def create_stac_item(item_file, columns, item_id="space2stats_population_2020"):
+    stac_item = {
+        "type": "Feature",
+        "stac_version": "1.0.0",
+        "id": item_id,
+        "properties": {
+            "table:columns": [{"name": col[0], "type": col[1]} for col in columns],
+            "datetime": "2024-10-07T11:21:25.944150Z",
+        },
+        "geometry": None,
+        "bbox": [-180, -90, 180, 90],
+        "links": [],
+        "assets": {},
+    }
+    with open(item_file, "w") as f:
+        json.dump(stac_item, f)
 
-    s3_mock.put_object(
-        Bucket="mybucket", Key="myfile.parquet", Body=b"mock_parquet_data"
-    )
 
-    result = runner.invoke(
-        app, ["download", s3_path, "--local-path", str(parquet_file)]
-    )
-    print(result.output)
+def create_stac_collection(collection_file, item_file):
+    stac_collection = {
+        "type": "Collection",
+        "stac_version": "1.0.0",
+        "id": "space2stats-collection",
+        "description": "Test collection for Space2Stats.",
+        "license": "CC-BY-4.0",
+        "extent": {
+            "spatial": {"bbox": [[-180, -90, 180, 90]]},
+            "temporal": {"interval": [["2020-01-01T00:00:00Z", None]]},
+        },
+        "links": [{"rel": "item", "href": str(item_file), "type": "application/json"}],
+    }
+    with open(collection_file, "w") as f:
+        json.dump(stac_collection, f)
 
-    assert result.exit_code == 0
-    assert "Starting download from S3" in result.stdout
-    assert "Download complete" in result.stdout
-    assert os.path.exists(parquet_file)
+
+def create_stac_catalog(catalog_file, collection_file):
+    stac_catalog = {
+        "type": "Catalog",
+        "stac_version": "1.0.0",
+        "id": "space2stats-catalog",
+        "description": "Test catalog for Space2Stats.",
+        "license": "CC-BY-4.0",
+        "links": [
+            {"rel": "child", "href": str(collection_file), "type": "application/json"}
+        ],
+    }
+    with open(catalog_file, "w") as f:
+        json.dump(stac_catalog, f)
 
 
 def test_load_command(tmpdir, database):
     connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
     parquet_file = tmpdir.join("local.parquet")
-    stac_metadata_file = tmpdir.join("stac_metadata.json")
+    catalog_file = tmpdir.join("catalog.json")
+    collection_file = tmpdir.join("collection.json")
+    item_file = tmpdir.join("space2stats_population_2020.json")
 
     create_mock_parquet_file(
         parquet_file, [("hex_id", pa.string()), ("mock_column", pa.float64())]
     )
 
-    with open(stac_metadata_file, "w") as f:
-        f.write("""
-        {
-            "type": "Feature",
-            "properties": {
-                "table:columns": [
-                    {"name": "hex_id", "type": "string"},
-                    {"name": "mock_column", "type": "float64"}
-                ]
-            }
-        }
-        """)
+    create_stac_item(item_file, [("hex_id", "string"), ("mock_column", "float64")])
+
+    create_stac_collection(collection_file, item_file)
+    create_stac_catalog(catalog_file, collection_file)
 
     result = runner.invoke(
         app,
         [
-            "load",
             connection_string,
-            str(stac_metadata_file),
-            "--parquet-file",
+            str(item_file),
             str(parquet_file),
         ],
     )
@@ -73,29 +96,22 @@ def test_load_command(tmpdir, database):
 def test_load_command_column_mismatch(tmpdir, database):
     connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
     parquet_file = tmpdir.join("local.parquet")
-    stac_metadata_file = tmpdir.join("stac_metadata.json")
+    catalog_file = tmpdir.join("catalog.json")
+    collection_file = tmpdir.join("collection.json")
+    item_file = tmpdir.join("space2stats_population_2020.json")
 
     create_mock_parquet_file(parquet_file, [("different_column", pa.float64())])
 
-    with open(stac_metadata_file, "w") as f:
-        f.write("""
-        {
-            "type": "Feature",
-            "properties": {
-                "table:columns": [
-                    {"name": "mock_column", "type": "float64"}
-                ]
-            }
-        }
-        """)
+    create_stac_item(item_file, [("mock_column", "float64")])
+
+    create_stac_collection(collection_file, item_file)
+    create_stac_catalog(catalog_file, collection_file)
 
     result = runner.invoke(
         app,
         [
-            "load",
             connection_string,
-            str(stac_metadata_file),
-            "--parquet-file",
+            str(item_file),
             str(parquet_file),
         ],
     )
@@ -103,47 +119,3 @@ def test_load_command_column_mismatch(tmpdir, database):
 
     assert result.exit_code != 0
     assert "Column mismatch" in result.stdout
-
-
-def test_download_and_load_command(tmpdir, database, s3_mock):
-    s3_path = "s3://mybucket/myfile.parquet"
-    parquet_file = tmpdir.join("local.parquet")
-    stac_metadata_file = tmpdir.join("stac_metadata.json")
-    connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
-
-    create_mock_parquet_file(
-        parquet_file, [("hex_id", pa.string()), ("mock_column", pa.float64())]
-    )
-
-    with open(parquet_file, "rb") as f:
-        s3_mock.put_object(Bucket="mybucket", Key="myfile.parquet", Body=f.read())
-
-    with open(stac_metadata_file, "w") as f:
-        f.write("""
-        {
-            "type": "Feature",
-            "properties": {
-                "table:columns": [
-                    {"name": "hex_id", "type": "string"},
-                    {"name": "mock_column", "type": "float64"}
-                ]
-            }
-        }
-        """)
-
-    result = runner.invoke(
-        app,
-        [
-            "download-and-load",
-            s3_path,
-            connection_string,
-            str(stac_metadata_file),
-            "--parquet-file",
-            str(parquet_file),
-        ],
-    )
-    print(result.output)
-
-    assert result.exit_code == 0
-    assert "Starting download from S3" in result.stdout
-    assert "Loading data into PostgreSQL" in result.stdout
