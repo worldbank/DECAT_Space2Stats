@@ -12,6 +12,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ${{ github.event.action != 'closed' }}
 
     steps:
       - name: Checkout code
