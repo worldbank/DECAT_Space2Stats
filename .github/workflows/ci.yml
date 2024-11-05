@@ -74,7 +74,7 @@ jobs:
 
   destroy-pr-preview:
     if: ${{ github.event.action == 'closed' }}
-    uses: "./.github/workflows/deploy.yml"
+    uses: "./.github/workflows/destroy.yml"
     with:
       environment: Space2Stats API Dev
       stage: pr-${{ github.event.pull_request.number }}

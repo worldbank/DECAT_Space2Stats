@@ -42,7 +42,7 @@ jobs:
         run: |
           pip install -r requirements-cdk.txt
 
-      - name: Deploy CDK stack to staging
+      - name: Tear down CDK stack
         working-directory: ./space2stats_api/cdk
         env:
           STAGE: ${{ inputs.stage }}
@@ -67,7 +67,7 @@ jobs:
           comment-author: "github-actions[bot]"
           body-includes: "PR Deployment Details:"
 
-      - name: Create or update comment with URL
+      - name: Create or update comment with removal confirmation
         uses: peter-evans/create-or-update-comment@v4
         if: ${{ inputs.pr-number }}
         with:
