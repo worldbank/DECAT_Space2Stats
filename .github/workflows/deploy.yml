@@ -10,7 +10,7 @@ on:
 jobs:
   deploy-to-dev:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' && github.event.action != 'closed' }}
-    uses: "./.github/workflows/reusable/deploy.yml"
+    uses: "./.github/workflows/reusable-deploy.yml"
     needs: test
     with:
       environment: Space2Stats API Dev
@@ -20,7 +20,7 @@ jobs:
 
   deploy-to-production:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event_name == 'push' && github.ref_name == 'main' }}
-    uses: "./.github/workflows/reusable/deploy.yml"
+    uses: "./.github/workflows/reusable-deploy.yml"
     needs: test
     with:
       environment: Space2Stats API Prod
