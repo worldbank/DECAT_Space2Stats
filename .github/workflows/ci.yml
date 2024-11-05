@@ -91,4 +91,20 @@ jobs:
             🚀 PR deployed to ${{ needs.deploy-to-dev.outputs.api_url }}
           edit-mode: replace
 
-  # TODO: When PR is merged, destroy CDK Stack for PR Preview
+  destroy-pr-preview:
+    if: ${{ github.event.action == 'closed' }}
+    uses: "./.github/workflows/deploy.yml"
+    
+  post-cleanup-message-to-slack:
+    needs: destroy-pr-preview
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Create or update comment with URL
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Removed PR Preview Environment
