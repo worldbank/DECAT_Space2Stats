@@ -2,17 +2,17 @@ name: Run Tests
 
 on:
   push:
+    branches:
+      - main
   pull_request:
     types:
       - opened
       - synchronize
       - reopened
-      - closed
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.action != 'closed' }}
 
     steps:
       - name: Checkout code
@@ -53,31 +53,3 @@ jobs:
           PGPASSWORD: mypassword
           PGTABLENAME: space2stats
           S3_BUCKET_NAME: test-bucket
-
-  deploy-to-dev:
-    if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
-    uses: "./.github/workflows/deploy.yml"
-    needs: test
-    with:
-      environment: Space2Stats API Dev
-      stage: pr-${{ github.event.pull_request.number }}
-      pr-number: ${{ github.event.pull_request.number }}
-    secrets: inherit
-
-  deploy-to-production:
-    if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
-    uses: "./.github/workflows/deploy.yml"
-    needs: test
-    with:
-      environment: Space2Stats API Prod
-      stage: prod
-    secrets: inherit
-
-  destroy-pr-preview:
-    if: ${{ github.event.action == 'closed' }}
-    uses: "./.github/workflows/destroy.yml"
-    with:
-      environment: Space2Stats API Dev
-      stage: pr-${{ github.event.pull_request.number }}
-      pr-number: ${{ github.event.pull_request.number }}
-    secrets: inherit

@@ -1,9 +1,17 @@
-name: Destroy Preview Environment
+name: Deploy
 
 on:
-  pull_request:
-    types:
-      - closed
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      stage:
+        type: string
+        required: true
+      pr-number:
+        type: number
+        required: false
 
 permissions:
   id-token: write
@@ -34,7 +42,7 @@ jobs:
         run: |
           pip install -r requirements-cdk.txt
 
-      - name: Tear down CDK stack
+      - name: Deploy CDK stack to staging
         working-directory: ./space2stats_api/cdk
         env:
           STAGE: ${{ inputs.stage }}
@@ -48,7 +56,13 @@ jobs:
           CDK_DEFAULT_ACCOUNT: ${{ vars.CDK_DEFAULT_ACCOUNT }}
           CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
           CDK_DOMAIN_NAME: ${{ vars.CDK_DOMAIN_NAME }}
-        run: cdk destroy --require-approval never
+        run: cdk deploy --require-approval never --outputs-file outputs.json
+
+      - name: Get API URL
+        id: get-api-url
+        working-directory: ./space2stats_api/cdk
+        run: |
+          echo "api-url=$(jq -r '."Space2Stats-${{ inputs.stage }}".ApiGatewayUrl' outputs.json)" >> $GITHUB_OUTPUT
 
       - name: Find Comment
         uses: peter-evans/find-comment@v3
@@ -59,12 +73,13 @@ jobs:
           comment-author: "github-actions[bot]"
           body-includes: "PR Deployment Details:"
 
-      - name: Create or update comment with removal confirmation
+      - name: Create or update comment with URL
         uses: peter-evans/create-or-update-comment@v4
         if: ${{ inputs.pr-number }}
         with:
           issue-number: ${{ inputs.pr-number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           body: |
-            Removed PR Preview Environment.
-          edit-mode: append
+            PR Deployment Details:
+            🚀 PR deployed to ${{ steps.get-api-url.outputs.api-url }}
+          edit-mode: replace
