@@ -12,11 +12,21 @@ services:
       - 5439:5432
     command: >
       postgres -N 500
-      -c max_wal_size=2GB
       -c checkpoint_timeout=30min
       -c synchronous_commit=off
-      -c wal_level=minimal
-      -c maintenance_work_mem=256MB
       -c max_wal_senders=0
+      -c max_connections=8
+      -c shared_buffers=2GB
+      -c effective_cache_size=6GB
+      -c maintenance_work_mem=512MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=256MB
+      -c huge_pages=off
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
     volumes:
       - ./.pgdata:/var/lib/postgresql/data

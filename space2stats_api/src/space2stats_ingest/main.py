@@ -39,25 +39,46 @@ def validate_stac_item(stac_item_path: str) -> bool:
         raise STACValidationError(f"Expected valid STAC item, error: {e}")
 
 
-def verify_columns(parquet_file: str, stac_item_path: str) -> bool:
-    """Verifies that the Parquet file columns match the STAC item metadata columns
-    and ensures that 'hex_id' column is present."""
+def verify_columns(
+    parquet_file: str, stac_item_path: str, connection_string: str
+) -> bool:
+    """Verifies that the Parquet file columns match the STAC item metadata columns,
+    ensures that 'hex_id' column is present, and checks that new columns don't already exist in the database."""
+
+    # Read Parquet columns and STAC fields
     parquet_table = read_parquet_file(parquet_file)
     parquet_columns = set(parquet_table.column_names)
     stac_fields = get_stac_fields_from_item(stac_item_path)
 
     # Check if 'hex_id' is present in the Parquet columns
-    # We are not verifying the hex level as new hex ids will cause error on SQL Update
     if "hex_id" not in parquet_columns:
         raise ValueError("The 'hex_id' column is missing from the Parquet file.")
 
-    # Verify that columns in the Parquet file match the STAC item metadata columns
+    # Verify Parquet columns match the STAC fields
     if parquet_columns != stac_fields:
         extra_in_parquet = parquet_columns - stac_fields
         extra_in_stac = stac_fields - parquet_columns
         raise ValueError(
             f"Column mismatch: Extra in Parquet: {extra_in_parquet}, Extra in STAC: {extra_in_stac}"
         )
+
+    # Retrieve columns already present in the main table in the database
+    with pg.connect(connection_string) as conn:
+        with conn.cursor() as cur:
+            cur.execute(f"""
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_name = '{TABLE_NAME}'
+            """)
+            existing_columns = set(row[0] for row in cur.fetchall())
+
+    # Check for overlap in columns (excluding 'hex_id')
+    overlapping_columns = parquet_columns.intersection(existing_columns) - {"hex_id"}
+    if overlapping_columns:
+        raise ValueError(
+            f"Columns already exist in the database: {overlapping_columns}"
+        )
+
     return True
 
 
@@ -77,7 +98,7 @@ def load_parquet_to_db(
 ):
     """Main function to load and update data in PostgreSQL using Arrow in replace mode."""
     validate_stac_item(stac_item_path)
-    verify_columns(parquet_file, stac_item_path)
+    verify_columns(parquet_file, stac_item_path, connection_string)
 
     # Check if the table already exists in the database
     with pg.connect(connection_string) as conn:
@@ -142,7 +163,7 @@ def load_parquet_to_db(
 
         conn.commit()
 
-    print(f"Adding new columns: {new_columns}...")
+    print(f"Adding new columns: {[c[0] for c in new_columns]}...")
 
     # Update TABLE_NAME with data from temp_table based on matching hex_id
     print("Adding columns to dataset... All or nothing operation may take some time.")
