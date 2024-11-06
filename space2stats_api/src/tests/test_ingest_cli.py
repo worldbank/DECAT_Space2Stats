@@ -100,9 +100,10 @@ def test_load_command_column_mismatch(tmpdir, clean_database):
     collection_file = tmpdir.join("collection.json")
     item_file = tmpdir.join("space2stats_population_2020.json")
 
-    create_mock_parquet_file(parquet_file, [("different_column", pa.float64())])
-
-    create_stac_item(item_file, [("mock_column", "float64")])
+    create_mock_parquet_file(
+        parquet_file, [("hex_id", pa.string()), ("different_column", pa.float64())]
+    )
+    create_stac_item(item_file, [("hex_id", "string"), ("mock_column", "float64")])
 
     create_stac_collection(collection_file, item_file)
     create_stac_catalog(catalog_file, collection_file)
