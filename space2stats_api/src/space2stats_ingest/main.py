@@ -129,6 +129,7 @@ def load_parquet_to_db(
             conn.commit()
         return
 
+    # Load Parquet file into a temporary table
     parquet_table = read_parquet_file(parquet_file)
     temp_table = f"{TABLE_NAME}_temp"
     with pg.connect(connection_string) as conn, tqdm(
@@ -143,7 +144,7 @@ def load_parquet_to_db(
 
             conn.commit()
 
-    # Fetch columns to add to dataset
+    # Fetch columns to add to the main table
     with pg.connect(connection_string) as conn:
         with conn.cursor() as cur:
             cur.execute(f"""
@@ -156,33 +157,44 @@ def load_parquet_to_db(
             """)
             new_columns = cur.fetchall()
 
-            for column, column_type in new_columns:
-                cur.execute(
-                    f"ALTER TABLE {TABLE_NAME} ADD COLUMN IF NOT EXISTS {column} {column_type}"
+    # Add new columns and attempt to update in a transaction
+    try:
+        with pg.connect(connection_string) as conn:
+            with conn.cursor() as cur:
+                # Add new columns to the main table
+                for column, column_type in new_columns:
+                    cur.execute(
+                        f"ALTER TABLE {TABLE_NAME} ADD COLUMN IF NOT EXISTS {column} {column_type}"
+                    )
+
+                print(f"Adding new columns: {[c[0] for c in new_columns]}...")
+
+                # Construct the SET clause for the update query
+                update_columns = [
+                    f"{column} = temp.{column}" for column, _ in new_columns
+                ]
+                set_clause = ", ".join(update_columns)
+
+                # Update TABLE_NAME with data from temp_table based on matching hex_id
+                print(
+                    "Adding columns to dataset... All or nothing operation may take some time."
                 )
-
-        conn.commit()
-
-    print(f"Adding new columns: {[c[0] for c in new_columns]}...")
-
-    # Update TABLE_NAME with data from temp_table based on matching hex_id
-    print("Adding columns to dataset... All or nothing operation may take some time.")
-    with pg.connect(connection_string) as conn:
-        with conn.cursor() as cur:
-            update_columns = [f"{column} = temp.{column}" for column, _ in new_columns]
-
-            set_clause = ", ".join(update_columns)
-
-            cur.execute(f"""
+                cur.execute(f"""
                     UPDATE {TABLE_NAME} AS main
                     SET {set_clause}
                     FROM {temp_table} AS temp
                     WHERE main.hex_id = temp.hex_id
                 """)
 
-        conn.commit()
+            conn.commit()  # Commit transaction if all operations succeed
+    except Exception as e:
+        # Rollback if any error occurs during the update
+        print("An error occurred during update. Rolling back changes.")
+        conn.rollback()
+        raise e  # Re-raise the exception to alert calling code
 
+    # Drop the temporary table
     with pg.connect(connection_string) as conn:
         with conn.cursor() as cur:
-            cur.execute(f"DROP TABLE {temp_table}")
+            cur.execute(f"DROP TABLE IF EXISTS {temp_table}")
         conn.commit()

@@ -10,9 +10,6 @@ def test_load_parquet_to_db(clean_database, tmpdir):
     connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
 
     parquet_file = tmpdir.join("local.parquet")
-
-    catalog_file = tmpdir.join("catalog.json")
-    collection_file = tmpdir.join("collection.json")
     item_file = tmpdir.join("space2stats_population_2020.json")
 
     data = {
@@ -44,36 +41,6 @@ def test_load_parquet_to_db(clean_database, tmpdir):
 
     with open(item_file, "w") as f:
         json.dump(stac_item, f)
-
-    stac_collection = {
-        "type": "Collection",
-        "stac_version": "1.0.0",
-        "id": "space2stats-collection",
-        "description": "Test collection for Space2Stats.",
-        "license": "CC-BY-4.0",
-        "extent": {
-            "spatial": {"bbox": [[-180, -90, 180, 90]]},
-            "temporal": {"interval": [["2020-01-01T00:00:00Z", None]]},
-        },
-        "links": [{"rel": "item", "href": str(item_file), "type": "application/json"}],
-    }
-
-    with open(collection_file, "w") as f:
-        json.dump(stac_collection, f)
-
-    stac_catalog = {
-        "type": "Catalog",
-        "stac_version": "1.0.0",
-        "id": "space2stats-catalog",
-        "description": "Test catalog for Space2Stats.",
-        "license": "CC-BY-4.0",
-        "links": [
-            {"rel": "child", "href": str(collection_file), "type": "application/json"}
-        ],
-    }
-
-    with open(catalog_file, "w") as f:
-        json.dump(stac_catalog, f)
 
     load_parquet_to_db(str(parquet_file), connection_string, str(item_file))
 
@@ -168,3 +135,162 @@ def test_updating_table(clean_database, tmpdir):
             cur.execute("SELECT * FROM space2stats WHERE hex_id = 'hex_2'")
             result = cur.fetchone()
             assert result == ("hex_2", 200, 250, 20_000)
+
+
+def test_columns_already_exist_in_db(clean_database, tmpdir):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
+
+    parquet_file = tmpdir.join("local.parquet")
+    data = {
+        "hex_id": ["hex_1", "hex_2"],
+        "existing_column": [123, 456],  # Simulates an existing column in DB
+        "new_column": [789, 1011],
+    }
+    table = pa.table(data)
+    pq.write_table(table, parquet_file)
+
+    stac_item = {
+        "type": "Feature",
+        "stac_version": "1.0.0",
+        "id": "space2stats_population_2020",
+        "properties": {
+            "table:columns": [
+                {"name": "hex_id", "type": "string"},
+                {"name": "existing_column", "type": "int64"},
+                {"name": "new_column", "type": "int64"},
+            ],
+            "datetime": "2024-10-07T11:21:25.944150Z",
+        },
+        "geometry": None,
+        "bbox": [-180, -90, 180, 90],
+        "links": [],
+        "assets": {},
+    }
+
+    item_file = tmpdir.join("space2stats_population_2020.json")
+    with open(item_file, "w") as f:
+        json.dump(stac_item, f)
+
+    load_parquet_to_db(str(parquet_file), connection_string, str(item_file))
+
+    with psycopg.connect(connection_string) as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM space2stats WHERE hex_id = 'hex_1'")
+            result = cur.fetchone()
+            assert result == ("hex_1", 123, 789)  # Verify no duplicates
+
+
+def test_rollback_on_update_failure(clean_database, tmpdir):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
+
+    parquet_file = tmpdir.join("local.parquet")
+    data = {
+        "hex_id": ["hex_1", "hex_2"],
+        "sum_pop_f_10_2020": [100, 200],
+        "sum_pop_m_10_2020": [150, 250],
+    }
+    table = pa.table(data)
+    pq.write_table(table, parquet_file)
+
+    stac_item = {
+        "type": "Feature",
+        "stac_version": "1.0.0",
+        "id": "space2stats_population_2020",
+        "properties": {
+            "table:columns": [
+                {"name": "hex_id", "type": "string"},
+                {"name": "sum_pop_f_10_2020", "type": "int64"},
+                {"name": "sum_pop_m_10_2020", "type": "int64"},
+            ],
+            "datetime": "2024-10-07T11:21:25.944150Z",
+        },
+        "geometry": None,
+        "bbox": [-180, -90, 180, 90],
+        "links": [],
+        "assets": {},
+    }
+
+    item_file = tmpdir.join("space2stats_population_2020.json")
+    with open(item_file, "w") as f:
+        json.dump(stac_item, f)
+
+    load_parquet_to_db(str(parquet_file), connection_string, str(item_file))
+
+    # Invalid Parquet without `hex_id`
+    update_parquet_file = tmpdir.join("update_local.parquet")
+    update_data = {
+        "new_column": [1000, 2000],
+    }
+    update_table = pa.table(update_data)
+    pq.write_table(update_table, update_parquet_file)
+
+    update_item_file = tmpdir.join("update_item.json")
+    update_stac_item = {
+        "type": "Feature",
+        "stac_version": "1.0.0",
+        "id": "space2stats_population_2021",
+        "properties": {
+            "table:columns": [{"name": "new_column", "type": "int64"}],
+            "datetime": "2024-10-07T11:21:25.944150Z",
+        },
+        "geometry": None,
+        "bbox": [-180, -90, 180, 90],
+        "links": [],
+        "assets": {},
+    }
+
+    with open(update_item_file, "w") as f:
+        json.dump(update_stac_item, f)
+
+    try:
+        load_parquet_to_db(
+            str(update_parquet_file), connection_string, str(update_item_file)
+        )
+    except ValueError:
+        pass
+
+    with psycopg.connect(connection_string) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT column_name FROM information_schema.columns WHERE table_name = 'space2stats'"
+            )
+            columns = [row[0] for row in cur.fetchall()]
+            assert "new_column" not in columns  # Verify no unwanted columns were added
+
+
+def test_hex_id_column_mandatory(clean_database, tmpdir):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
+
+    parquet_file = tmpdir.join("missing_hex_id.parquet")
+    data = {
+        "sum_pop_f_10_2020": [100, 200],
+        "sum_pop_m_10_2020": [150, 250],
+    }
+    table = pa.table(data)
+    pq.write_table(table, parquet_file)
+
+    stac_item = {
+        "type": "Feature",
+        "stac_version": "1.0.0",
+        "id": "space2stats_population_2020",
+        "properties": {
+            "table:columns": [
+                {"name": "sum_pop_f_10_2020", "type": "int64"},
+                {"name": "sum_pop_m_10_2020", "type": "int64"},
+            ],
+            "datetime": "2024-10-07T11:21:25.944150Z",
+        },
+        "geometry": None,
+        "bbox": [-180, -90, 180, 90],
+        "links": [],
+        "assets": {},
+    }
+
+    item_file = tmpdir.join("space2stats_population_2020.json")
+    with open(item_file, "w") as f:
+        json.dump(stac_item, f)
+
+    try:
+        load_parquet_to_db(str(parquet_file), connection_string, str(item_file))
+    except ValueError as e:
+        assert "The 'hex_id' column is missing from the Parquet file." in str(e)
