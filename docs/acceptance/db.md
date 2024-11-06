@@ -108,7 +108,7 @@ download: s3://wbg-geography01/Space2Stats/parquet/GLOBAL/space2stats.parquet to
 ```
 - Upload initial dataset:
 ```
-space2stats-ingest postgresql://username:password@localhost:5439/postgres ./space2stats_ingest/METADATA/stac/space2stats/space2stats_population_2020/space2stats_population_2020.json space2stats.parquet
+space2stats-ingest <connection_string> ./space2stats_ingest/METADATA/stac/space2stats/space2stats_population_2020/space2stats_population_2020.json space2stats.parquet
 ```
 - Generate second dataset:
 ```
@@ -116,5 +116,5 @@ python space2stats_ingest/METADATA/generate_test_data.py
 ```
 - Upload second dataset:
 ```
-space2stats-ingest postgresql://username:password@localhost:5439/postgres ./space2stats_ingest/METADATA/stac/space2stats/space2stats_population_2020/space2stats_reupload_test.json space2stats_test.parquet 
+space2stats-ingest <connection_string> ./space2stats_ingest/METADATA/stac/space2stats/space2stats_population_2020/space2stats_reupload_test.json space2stats_test.parquet 
 ```
