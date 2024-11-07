@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy-to-dev:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' }}
     uses: "./.github/workflows/reusable-deploy.yml"
     with:
       environment: Space2Stats API Dev
@@ -17,7 +17,7 @@ jobs:
     secrets: inherit
 
   deploy-to-production:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event_name == 'push' && github.ref_name == 'main' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.ref_name == 'main' }}
     uses: "./.github/workflows/reusable-deploy.yml"
     with:
       environment: Space2Stats API Prod
