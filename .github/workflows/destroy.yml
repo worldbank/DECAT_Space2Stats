@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  destroy:
     concurrency: Space2Stats API Dev
     environment: Space2Stats API Dev
     runs-on: ubuntu-latest
