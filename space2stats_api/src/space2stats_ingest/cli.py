@@ -58,6 +58,7 @@ def download_and_load(
     s3_path: str,
     connection_string: str,
     stac_catalog_path: str,
+    item_name: str,
     parquet_file: str = typer.Option("local.parquet"),
     chunksize: int = 64_000,
 ):
@@ -71,6 +72,7 @@ def download_and_load(
     load(
         parquet_file=parquet_file,
         connection_string=connection_string,
+        item_name = item_name,
         stac_catalog_path=stac_catalog_path,  # Ensure this is passed along
         chunksize=chunksize,
     )

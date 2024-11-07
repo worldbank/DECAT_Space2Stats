@@ -13,7 +13,7 @@ from space2stats_ingest.main import (
 
 def test_get_all_stac_fields(stac_catalog_path):
     print(stac_catalog_path)
-    fields = get_all_stac_fields(stac_catalog_path)
+    fields = get_all_stac_fields(stac_catalog_path, "population_2020.json")
     print(fields)
     assert (
         len(fields) > 0 and len(fields) < 100
@@ -102,7 +102,7 @@ def test_load_parquet_to_db(database, tmpdir):
     with open(catalog_file, "w") as f:
         json.dump(stac_catalog, f)
 
-    load_parquet_to_db(str(parquet_file), connection_string, str(catalog_file))
+    load_parquet_to_db(str(parquet_file), connection_string, str(catalog_file), str(item_file))
 
     with psycopg.connect(connection_string) as conn:
         with conn.cursor() as cur:
