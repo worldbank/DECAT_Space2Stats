@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   deploy:
-    concurrency: ${{ inputs.environment }}
+    concurrency: ${{ inputs.stage }}
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
 
