@@ -48,6 +48,7 @@ pytest-benchmark = "^4.0.0"
 requests = "^2.32.3"
 types-requests = "^2.32.0.20240907"
 pyarrow = "^17.0.0"
+pandas = "*" 
 
 [tool.poetry.scripts]
 space2stats-ingest = "space2stats_ingest.cli:app"
