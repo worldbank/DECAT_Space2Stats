@@ -41,6 +41,7 @@ def clean_database(postgresql_proc):
     ) as jan:
         yield jan
 
+
 @pytest.fixture(scope="function")
 def database(postgresql_proc):
     """Set up a PostgreSQL database for testing and clean up afterwards."""

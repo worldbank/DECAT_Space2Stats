@@ -72,7 +72,7 @@ def download_and_load(
     load(
         parquet_file=parquet_file,
         connection_string=connection_string,
-        item_name = item_name,
+        item_name=item_name,
         stac_catalog_path=stac_catalog_path,  # Ensure this is passed along
         chunksize=chunksize,
     )

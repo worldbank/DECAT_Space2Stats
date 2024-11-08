@@ -40,7 +40,9 @@ def load_existing_collection(collection_path: str) -> Collection:
 
 
 # Function to create a new STAC item
-def create_new_item(sources: pd.DataFrame, source_name: str, column_types: dict, item_name: str) -> Item:
+def create_new_item(
+    sources: pd.DataFrame, source_name: str, column_types: dict, item_name: str
+) -> Item:
     # Define geometry and bounding box (you may want to customize these)
     geom = {
         "type": "Polygon",
@@ -127,7 +129,9 @@ def main():
     item_name = "space2stats_ntl_2013"
     collection_path = join(metadata_dir, "stac/space2stats-collection/collection.json")
     excel_path = join(metadata_dir, "Space2Stats Metadata Content.xlsx")
-    source_name = "Nighttime Lights" # This must correspond with the entry in the metadata excel
+    source_name = (
+        "Nighttime Lights"  # This must correspond with the entry in the metadata excel
+    )
     column_types_file = join(metadata_dir, "types.json")
 
     # Load metadata and column types
@@ -139,7 +143,9 @@ def main():
     collection = load_existing_collection(collection_path)
 
     # Create a new item
-    new_item = create_new_item(metadata["sources"], source_name, column_types, item_name)
+    new_item = create_new_item(
+        metadata["sources"], source_name, column_types, item_name
+    )
 
     # Add the new item to the collection
     collection.add_item(new_item, title="Space2Stats NTL 2013 Data Item")

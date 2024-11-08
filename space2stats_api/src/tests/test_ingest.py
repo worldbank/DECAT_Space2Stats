@@ -102,7 +102,9 @@ def test_load_parquet_to_db(clean_database, tmpdir):
     with open(catalog_file, "w") as f:
         json.dump(stac_catalog, f)
 
-    load_parquet_to_db(str(parquet_file), connection_string, str(catalog_file), str(item_file))
+    load_parquet_to_db(
+        str(parquet_file), connection_string, str(catalog_file), str(item_file)
+    )
 
     with psycopg.connect(connection_string) as conn:
         with conn.cursor() as cur:
