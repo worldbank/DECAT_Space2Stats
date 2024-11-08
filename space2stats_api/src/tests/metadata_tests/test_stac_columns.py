@@ -3,7 +3,7 @@ import json
 import pandas as pd
 
 
-def test_stac_columns_vs_types_json(stac_file_path, metadata_excel_file_path):
+def test_stac_columns_vs_metadata_xlsx(stac_file_path, metadata_excel_file_path):
     # Load the expected column types from the Metadata Content Excel
     feature_catalog = pd.read_excel(
         metadata_excel_file_path, sheet_name="Feature Catalog"
