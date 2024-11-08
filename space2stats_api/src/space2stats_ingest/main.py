@@ -7,7 +7,7 @@ import pyarrow.parquet as pq
 from pystac import Catalog
 from tqdm import tqdm
 
-TABLE_NAME = "NTL2013"
+TABLE_NAME = "space2stats"
 
 
 def read_parquet_file(file_path: str):

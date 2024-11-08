@@ -30,6 +30,18 @@ def aws_credentials():
 
 
 @pytest.fixture(scope="function")
+def clean_database(postgresql_proc):
+    with DatabaseJanitor(
+        user=postgresql_proc.user,
+        host=postgresql_proc.host,
+        port=postgresql_proc.port,
+        dbname="cleantestdb",
+        version=postgresql_proc.version,
+        password="password",
+    ) as jan:
+        yield jan
+
+@pytest.fixture(scope="function")
 def database(postgresql_proc):
     """Set up a PostgreSQL database for testing and clean up afterwards."""
     with DatabaseJanitor(

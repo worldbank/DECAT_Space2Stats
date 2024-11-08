@@ -33,8 +33,8 @@ def test_download_parquet_from_s3(s3_mock):
     assert os.path.exists(parquet_file)
 
 
-def test_load_parquet_to_db(database, tmpdir):
-    connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
+def test_load_parquet_to_db(clean_database, tmpdir):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
 
     parquet_file = tmpdir.join("local.parquet")
 
