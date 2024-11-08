@@ -1,8 +1,14 @@
 import json
+import os
 
 import pandas as pd
+import pytest
 
 
+@pytest.mark.skipif(
+    "GITHUB_ACTIONS" in os.environ,
+    reason="Skipping in GitHub Actions due to Pandas Dependency",
+)
 def test_stac_columns_vs_metadata_xlsx(stac_file_path, metadata_excel_file_path):
     # Load the expected column types from the Metadata Content Excel
     feature_catalog = pd.read_excel(
