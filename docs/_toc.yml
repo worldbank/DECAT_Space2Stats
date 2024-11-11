@@ -1,21 +1,26 @@
 format: jb-book
-root: README
+root: docs/readme.md
 
 parts:
   - caption: Concept Note
     numbered: False
     chapters:
-      - file: docs/Introduction.md    
-  - caption: Example summaries
+      - file: docs/Introduction.md
+      - file: docs/annexA.md    
+  - caption: S2S Sub-tasks
     numbered: False
     chapters:
-        - file: notebooks/Space2Stats_Comparing_H3_WBAdmin.ipynb
-        - file: notebooks/Space2Stats_RunZonal.ipynb
-        - file: notebooks/Space2Stats_RunZonal_HTI.ipynb
-  - caption: Food Security
+        - file: docs/sub_tasks/admin_bounds.md
+        - file: docs/sub_tasks/sub_national_poverty.md
+        - file: docs/sub_tasks/geest.md
+        - file: docs/sub_tasks/geo_enhancement.md
+  - caption: S2S Examples
     numbered: False
     chapters:
-        - file: notebooks/h3-food-security.ipynb
-  - caption: Additional Resources
+        - file: notebooks/user-docs/space2stats_py_package_demo.ipynb
+        - file: notebooks/user-docs/space2stats_api_demo.ipynb
+        - file: notebooks/user-docs/space2stats_api_demo_R.Rmd
+  - caption: S2S Python Documentation
+    numbered: False
     chapters:
-      - file: docs/annexA.md
+        - file: docs/api.rst
