@@ -1,0 +1,1191 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Access S2S via Python Library</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/user-docs/space2stats_py_package_demo';</script>
+    <link rel="canonical" href="https://github.com/worldbank/DECAT_Space2Stats/notebooks/user-docs/space2stats_py_package_demo.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Access S2S api directly" href="space2stats_api_demo.html" />
+    <link rel="prev" title="Geospatial Enhancement of Surveys" href="../../docs/sub_tasks/geo_enhancement.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Nov 10, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../docs/readme.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt=" - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt=" - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../docs/readme.html">
+                    Space2Stats
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Concept Note</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/Introduction.html">Project Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/annexA.html">Annex A: S2S Datasets</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">S2S Sub-tasks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/sub_tasks/admin_bounds.html">Official World Bank Boundaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/sub_tasks/geest.html">GEEST - Assessing women’s employment opportunities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/sub_tasks/geo_enhancement.html">Geospatial Enhancement of Surveys</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">S2S Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Access S2S via Python Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="space2stats_api_demo.html">Access S2S api directly</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">S2S Python Documentation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/api.html">API Reference</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/worldbank/DECAT_Space2Stats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/worldbank/DECAT_Space2Stats/edit/main/notebooks/user-docs/space2stats_py_package_demo.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/worldbank/DECAT_Space2Stats/issues/new?title=Issue%20on%20page%20%2Fnotebooks/user-docs/space2stats_py_package_demo.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/user-docs/space2stats_py_package_demo.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Access S2S via Python Library</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="access-s2s-via-python-library">
+<h1>Access S2S via Python Library<a class="headerlink" href="#access-s2s-via-python-library" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">shape</span>
+<span class="kn">from</span> <span class="nn">lonboard</span> <span class="kn">import</span> <span class="n">Map</span><span class="p">,</span> <span class="n">ScatterplotLayer</span>
+<span class="kn">from</span> <span class="nn">geojson_pydantic</span> <span class="kn">import</span> <span class="n">Feature</span><span class="p">,</span> <span class="n">Polygon</span>
+
+<span class="kn">from</span> <span class="nn">space2stats</span> <span class="kn">import</span> <span class="n">StatsTable</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Expected environment variables to be set</strong> from dotenv file</p>
+<div class="highlight-.env notranslate"><div class="highlight"><pre><span></span>PGHOST=
+PGPORT=
+PGDATABASE=
+PGUSER=
+PGPASSWORD=
+PGTABLENAME=space2stats
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">load_dotenv</span><span class="p">(</span><span class="s2">&quot;../../space2stats_api/db.env&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">StatsTable</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">stats_table</span><span class="p">:</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="n">stats_table</span><span class="o">.</span><span class="n">fields</span><span class="p">()</span>
+
+<span class="n">fields</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;sum_pop_2020&#39;,
+ &#39;ogc_fid&#39;,
+ &#39;sum_pop_f_0_2020&#39;,
+ &#39;sum_pop_f_10_2020&#39;,
+ &#39;sum_pop_f_15_2020&#39;,
+ &#39;sum_pop_f_1_2020&#39;,
+ &#39;sum_pop_f_20_2020&#39;,
+ &#39;sum_pop_f_25_2020&#39;,
+ &#39;sum_pop_f_30_2020&#39;,
+ &#39;sum_pop_f_35_2020&#39;,
+ &#39;sum_pop_f_40_2020&#39;,
+ &#39;sum_pop_f_45_2020&#39;,
+ &#39;sum_pop_f_50_2020&#39;,
+ &#39;sum_pop_f_55_2020&#39;,
+ &#39;sum_pop_f_5_2020&#39;,
+ &#39;sum_pop_f_60_2020&#39;,
+ &#39;sum_pop_f_65_2020&#39;,
+ &#39;sum_pop_f_70_2020&#39;,
+ &#39;sum_pop_f_75_2020&#39;,
+ &#39;sum_pop_f_80_2020&#39;,
+ &#39;sum_pop_m_0_2020&#39;,
+ &#39;sum_pop_m_10_2020&#39;,
+ &#39;sum_pop_m_15_2020&#39;,
+ &#39;sum_pop_m_1_2020&#39;,
+ &#39;sum_pop_m_20_2020&#39;,
+ &#39;sum_pop_m_25_2020&#39;,
+ &#39;sum_pop_m_30_2020&#39;,
+ &#39;sum_pop_m_35_2020&#39;,
+ &#39;sum_pop_m_40_2020&#39;,
+ &#39;sum_pop_m_45_2020&#39;,
+ &#39;sum_pop_m_50_2020&#39;,
+ &#39;sum_pop_m_55_2020&#39;,
+ &#39;sum_pop_m_5_2020&#39;,
+ &#39;sum_pop_m_60_2020&#39;,
+ &#39;sum_pop_m_65_2020&#39;,
+ &#39;sum_pop_m_70_2020&#39;,
+ &#39;sum_pop_m_75_2020&#39;,
+ &#39;sum_pop_m_80_2020&#39;,
+ &#39;sum_pop_m_2020&#39;,
+ &#39;sum_pop_f_2020&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">AOIModel</span> <span class="o">=</span> <span class="n">Feature</span><span class="p">[</span><span class="n">Polygon</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]</span>
+
+<span class="c1"># ~kenya</span>
+<span class="n">aoi</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">[</span>
+                <span class="p">[</span><span class="mf">33.78593974945852</span><span class="p">,</span> <span class="mf">5.115816884114494</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">33.78593974945852</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.725410543134203</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">41.94362577283266</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.725410543134203</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">41.94362577283266</span><span class="p">,</span> <span class="mf">5.115816884114494</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">33.78593974945852</span><span class="p">,</span> <span class="mf">5.115816884114494</span><span class="p">]</span>
+            <span class="p">]</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Updated AOI&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+          
+  
+
+<span class="n">feat</span> <span class="o">=</span> <span class="n">AOIModel</span><span class="p">(</span><span class="o">**</span><span class="n">aoi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">StatsTable</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">stats_table</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">stats_table</span><span class="o">.</span><span class="n">summaries</span><span class="p">(</span><span class="n">aoi</span><span class="o">=</span><span class="n">feat</span><span class="p">,</span> <span class="n">spatial_join_method</span><span class="o">=</span><span class="s2">&quot;centroid&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=</span><span class="s2">&quot;point&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hex_id</th>
+      <th>geometry</th>
+      <th>sum_pop_2020</th>
+      <th>ogc_fid</th>
+      <th>sum_pop_f_0_2020</th>
+      <th>sum_pop_f_10_2020</th>
+      <th>sum_pop_f_15_2020</th>
+      <th>sum_pop_f_1_2020</th>
+      <th>sum_pop_f_20_2020</th>
+      <th>sum_pop_f_25_2020</th>
+      <th>...</th>
+      <th>sum_pop_m_50_2020</th>
+      <th>sum_pop_m_55_2020</th>
+      <th>sum_pop_m_5_2020</th>
+      <th>sum_pop_m_60_2020</th>
+      <th>sum_pop_m_65_2020</th>
+      <th>sum_pop_m_70_2020</th>
+      <th>sum_pop_m_75_2020</th>
+      <th>sum_pop_m_80_2020</th>
+      <th>sum_pop_m_2020</th>
+      <th>sum_pop_f_2020</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>866a4a017ffffff</td>
+      <td>{'type': 'Point', 'coordinates': (38.494790325...</td>
+      <td>676.912804</td>
+      <td>6157254</td>
+      <td>8.924362</td>
+      <td>49.524105</td>
+      <td>36.898296</td>
+      <td>32.985901</td>
+      <td>28.963400</td>
+      <td>33.645473</td>
+      <td>...</td>
+      <td>6.732327</td>
+      <td>4.131749</td>
+      <td>53.380043</td>
+      <td>3.240541</td>
+      <td>2.475817</td>
+      <td>0.702667</td>
+      <td>0.399492</td>
+      <td>0.129285</td>
+      <td>336.082180</td>
+      <td>340.830624</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>866a4a01fffffff</td>
+      <td>{'type': 'Point', 'coordinates': (40.094390450...</td>
+      <td>347.182722</td>
+      <td>6157255</td>
+      <td>4.515680</td>
+      <td>24.773327</td>
+      <td>19.462585</td>
+      <td>16.690670</td>
+      <td>15.832314</td>
+      <td>16.429201</td>
+      <td>...</td>
+      <td>3.445144</td>
+      <td>2.752507</td>
+      <td>25.548544</td>
+      <td>1.827761</td>
+      <td>1.524122</td>
+      <td>0.585427</td>
+      <td>0.381080</td>
+      <td>0.209030</td>
+      <td>171.759225</td>
+      <td>175.423497</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>866a4a04fffffff</td>
+      <td>{'type': 'Point', 'coordinates': (34.462341228...</td>
+      <td>285.943490</td>
+      <td>6157260</td>
+      <td>3.642580</td>
+      <td>19.623219</td>
+      <td>16.698730</td>
+      <td>13.463530</td>
+      <td>14.255625</td>
+      <td>12.501910</td>
+      <td>...</td>
+      <td>2.827743</td>
+      <td>3.055085</td>
+      <td>18.765499</td>
+      <td>1.711561</td>
+      <td>1.571700</td>
+      <td>0.762171</td>
+      <td>0.533085</td>
+      <td>0.349744</td>
+      <td>140.698267</td>
+      <td>145.245222</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>866a4a057ffffff</td>
+      <td>{'type': 'Point', 'coordinates': (41.436122880...</td>
+      <td>279.463912</td>
+      <td>6157261</td>
+      <td>3.560037</td>
+      <td>19.178549</td>
+      <td>16.320332</td>
+      <td>13.158442</td>
+      <td>13.932587</td>
+      <td>12.218613</td>
+      <td>...</td>
+      <td>2.763665</td>
+      <td>2.985856</td>
+      <td>18.340267</td>
+      <td>1.672776</td>
+      <td>1.536084</td>
+      <td>0.744900</td>
+      <td>0.521005</td>
+      <td>0.341818</td>
+      <td>137.509998</td>
+      <td>141.953914</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>866a4a05fffffff</td>
+      <td>{'type': 'Point', 'coordinates': (41.251660148...</td>
+      <td>235.258474</td>
+      <td>6157262</td>
+      <td>2.996913</td>
+      <td>16.144897</td>
+      <td>13.738791</td>
+      <td>11.077046</td>
+      <td>11.728739</td>
+      <td>10.285879</td>
+      <td>...</td>
+      <td>2.326510</td>
+      <td>2.513555</td>
+      <td>15.439214</td>
+      <td>1.408177</td>
+      <td>1.293108</td>
+      <td>0.627072</td>
+      <td>0.438593</td>
+      <td>0.287750</td>
+      <td>115.758746</td>
+      <td>119.499727</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 42 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">geom</span><span class="p">:</span> <span class="n">shape</span><span class="p">(</span><span class="n">geom</span><span class="p">))</span>
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">)</span>
+<span class="n">gdf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hex_id</th>
+      <th>geometry</th>
+      <th>sum_pop_2020</th>
+      <th>ogc_fid</th>
+      <th>sum_pop_f_0_2020</th>
+      <th>sum_pop_f_10_2020</th>
+      <th>sum_pop_f_15_2020</th>
+      <th>sum_pop_f_1_2020</th>
+      <th>sum_pop_f_20_2020</th>
+      <th>sum_pop_f_25_2020</th>
+      <th>...</th>
+      <th>sum_pop_m_50_2020</th>
+      <th>sum_pop_m_55_2020</th>
+      <th>sum_pop_m_5_2020</th>
+      <th>sum_pop_m_60_2020</th>
+      <th>sum_pop_m_65_2020</th>
+      <th>sum_pop_m_70_2020</th>
+      <th>sum_pop_m_75_2020</th>
+      <th>sum_pop_m_80_2020</th>
+      <th>sum_pop_m_2020</th>
+      <th>sum_pop_f_2020</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>866a4a017ffffff</td>
+      <td>POINT (38.49479 -0.20685)</td>
+      <td>676.912804</td>
+      <td>6157254</td>
+      <td>8.924362</td>
+      <td>49.524105</td>
+      <td>36.898296</td>
+      <td>32.985901</td>
+      <td>28.963400</td>
+      <td>33.645473</td>
+      <td>...</td>
+      <td>6.732327</td>
+      <td>4.131749</td>
+      <td>53.380043</td>
+      <td>3.240541</td>
+      <td>2.475817</td>
+      <td>0.702667</td>
+      <td>0.399492</td>
+      <td>0.129285</td>
+      <td>336.082180</td>
+      <td>340.830624</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>866a4a01fffffff</td>
+      <td>POINT (40.09439 0.52663)</td>
+      <td>347.182722</td>
+      <td>6157255</td>
+      <td>4.515680</td>
+      <td>24.773327</td>
+      <td>19.462585</td>
+      <td>16.690670</td>
+      <td>15.832314</td>
+      <td>16.429201</td>
+      <td>...</td>
+      <td>3.445144</td>
+      <td>2.752507</td>
+      <td>25.548544</td>
+      <td>1.827761</td>
+      <td>1.524122</td>
+      <td>0.585427</td>
+      <td>0.381080</td>
+      <td>0.209030</td>
+      <td>171.759225</td>
+      <td>175.423497</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>866a4a04fffffff</td>
+      <td>POINT (34.46234 5.05804)</td>
+      <td>285.943490</td>
+      <td>6157260</td>
+      <td>3.642580</td>
+      <td>19.623219</td>
+      <td>16.698730</td>
+      <td>13.463530</td>
+      <td>14.255625</td>
+      <td>12.501910</td>
+      <td>...</td>
+      <td>2.827743</td>
+      <td>3.055085</td>
+      <td>18.765499</td>
+      <td>1.711561</td>
+      <td>1.571700</td>
+      <td>0.762171</td>
+      <td>0.533085</td>
+      <td>0.349744</td>
+      <td>140.698267</td>
+      <td>145.245222</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>866a4a057ffffff</td>
+      <td>POINT (41.43612 -4.68139)</td>
+      <td>279.463912</td>
+      <td>6157261</td>
+      <td>3.560037</td>
+      <td>19.178549</td>
+      <td>16.320332</td>
+      <td>13.158442</td>
+      <td>13.932587</td>
+      <td>12.218613</td>
+      <td>...</td>
+      <td>2.763665</td>
+      <td>2.985856</td>
+      <td>18.340267</td>
+      <td>1.672776</td>
+      <td>1.536084</td>
+      <td>0.744900</td>
+      <td>0.521005</td>
+      <td>0.341818</td>
+      <td>137.509998</td>
+      <td>141.953914</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>866a4a05fffffff</td>
+      <td>POINT (41.25166 -0.09407)</td>
+      <td>235.258474</td>
+      <td>6157262</td>
+      <td>2.996913</td>
+      <td>16.144897</td>
+      <td>13.738791</td>
+      <td>11.077046</td>
+      <td>11.728739</td>
+      <td>10.285879</td>
+      <td>...</td>
+      <td>2.326510</td>
+      <td>2.513555</td>
+      <td>15.439214</td>
+      <td>1.408177</td>
+      <td>1.293108</td>
+      <td>0.627072</td>
+      <td>0.438593</td>
+      <td>0.287750</td>
+      <td>115.758746</td>
+      <td>119.499727</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>25801</th>
+      <td>86969ed97ffffff</td>
+      <td>POINT (36.22291 0.63262)</td>
+      <td>196.448391</td>
+      <td>8710025</td>
+      <td>4.108127</td>
+      <td>14.176966</td>
+      <td>11.835453</td>
+      <td>15.015658</td>
+      <td>8.398741</td>
+      <td>6.313566</td>
+      <td>...</td>
+      <td>1.962373</td>
+      <td>1.294143</td>
+      <td>16.514441</td>
+      <td>1.084920</td>
+      <td>0.696495</td>
+      <td>0.607390</td>
+      <td>0.353109</td>
+      <td>0.295762</td>
+      <td>96.252689</td>
+      <td>100.195702</td>
+    </tr>
+    <tr>
+      <th>25802</th>
+      <td>86969ed9fffffff</td>
+      <td>POINT (36.93237 -1.31051)</td>
+      <td>296.740893</td>
+      <td>8710026</td>
+      <td>6.205442</td>
+      <td>21.414711</td>
+      <td>17.877789</td>
+      <td>22.681580</td>
+      <td>12.686538</td>
+      <td>9.536821</td>
+      <td>...</td>
+      <td>2.964221</td>
+      <td>1.954840</td>
+      <td>24.945534</td>
+      <td>1.638802</td>
+      <td>1.052075</td>
+      <td>0.917481</td>
+      <td>0.533381</td>
+      <td>0.446756</td>
+      <td>145.392433</td>
+      <td>151.348460</td>
+    </tr>
+    <tr>
+      <th>25803</th>
+      <td>86969eda7ffffff</td>
+      <td>POINT (37.92797 0.89329)</td>
+      <td>154.818453</td>
+      <td>8710027</td>
+      <td>3.237562</td>
+      <td>11.172684</td>
+      <td>9.327369</td>
+      <td>11.833648</td>
+      <td>6.618940</td>
+      <td>4.975640</td>
+      <td>...</td>
+      <td>1.546521</td>
+      <td>1.019898</td>
+      <td>13.014819</td>
+      <td>0.855011</td>
+      <td>0.548899</td>
+      <td>0.478677</td>
+      <td>0.278281</td>
+      <td>0.233086</td>
+      <td>75.855508</td>
+      <td>78.962945</td>
+    </tr>
+    <tr>
+      <th>25804</th>
+      <td>86969edafffffff</td>
+      <td>POINT (39.02185 -1.07532)</td>
+      <td>157.875350</td>
+      <td>8710028</td>
+      <td>3.301488</td>
+      <td>11.393290</td>
+      <td>9.511538</td>
+      <td>12.067303</td>
+      <td>6.749631</td>
+      <td>5.073884</td>
+      <td>...</td>
+      <td>1.577057</td>
+      <td>1.040035</td>
+      <td>13.271797</td>
+      <td>0.871894</td>
+      <td>0.559737</td>
+      <td>0.488128</td>
+      <td>0.283775</td>
+      <td>0.237688</td>
+      <td>77.353279</td>
+      <td>80.522071</td>
+    </tr>
+    <tr>
+      <th>25805</th>
+      <td>86969edb7ffffff</td>
+      <td>POINT (36.5281 3.44777)</td>
+      <td>236.127331</td>
+      <td>8710029</td>
+      <td>4.937892</td>
+      <td>17.040451</td>
+      <td>14.225995</td>
+      <td>18.048544</td>
+      <td>10.095131</td>
+      <td>7.588790</td>
+      <td>...</td>
+      <td>2.358737</td>
+      <td>1.555536</td>
+      <td>19.850052</td>
+      <td>1.304053</td>
+      <td>0.837174</td>
+      <td>0.730072</td>
+      <td>0.424430</td>
+      <td>0.355500</td>
+      <td>115.693951</td>
+      <td>120.433380</td>
+    </tr>
+  </tbody>
+</table>
+<p>25806 rows × 42 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define custom breaks and corresponding RGBA colors</span>
+<span class="n">breaks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">,</span> <span class="mi">200000</span><span class="p">,</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;sum_pop_2020&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mi">211</span><span class="p">,</span> <span class="mi">211</span><span class="p">,</span> <span class="mi">211</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>  <span class="c1"># Light gray for 0</span>
+    <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>    <span class="c1"># Yellow for 1-1000</span>
+    <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>    <span class="c1"># Orange for 1000-10000</span>
+    <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>      <span class="c1"># Red for 10000-50000</span>
+    <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>    <span class="c1"># Purple for 50000-100000</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>      <span class="c1"># Blue for 100000-200000</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">139</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>      <span class="c1"># Dark blue for 200000+</span>
+<span class="p">])</span>
+
+<span class="c1"># Function to assign colors based on custom bins</span>
+<span class="k">def</span> <span class="nf">assign_color</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">breaks</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">breaks</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">breaks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">breaks</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># In case value exceeds all breaks</span>
+
+<span class="c1"># Map sum_pop_2020 values to colors using the custom function</span>
+<span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;sum_pop_2020&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">assign_color</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">breaks</span><span class="p">,</span> <span class="n">colors</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+<span class="c1"># Create the scatterplot layer with the assigned colors</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">ScatterplotLayer</span><span class="o">.</span><span class="n">from_geopandas</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">get_radius</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">get_fill_color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+<span class="n">m</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e472e297d8dc4c5582193eab628f4d44", "version_major": 2, "version_minor": 1}</script></div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks\user-docs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../../docs/sub_tasks/geo_enhancement.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Geospatial Enhancement of Surveys</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="space2stats_api_demo.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Access S2S api directly</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By World Bank
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Nov 10, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    <b>All content (unless otherwise specified) is subject to the <a href="https://raw.githubusercontent.com/worldbank/template/main/LICENSE">World Bank Master Community License Agreement.</a></b>
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

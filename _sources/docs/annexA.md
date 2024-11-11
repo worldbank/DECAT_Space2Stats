@@ -1,4 +1,4 @@
-# Annex A: Datasets to be Summarized
+# Annex A: S2S Datasets
 |Phase|Category|Variable Name|Source|
 |:----|:----|:----|:----|
 |1|Access|Distance to airport  |Global Friction Surface 2019|
