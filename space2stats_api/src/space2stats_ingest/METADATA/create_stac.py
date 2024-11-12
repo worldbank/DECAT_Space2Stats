@@ -38,9 +38,6 @@ def load_metadata(file: str) -> Dict[str, pd.DataFrame]:
     nada = pd.read_excel(file, sheet_name="NADA", index_col="Field")
     feature_catalog = pd.read_excel(file, sheet_name="Feature Catalog")
     sources = pd.read_excel(file, sheet_name="Sources")
-    sources["Variables"] = sources.apply(
-        lambda x: ast.literal_eval(x["Variables"]), axis=1
-    )
     return {
         "overview": overview,
         "nada": nada,
@@ -84,7 +81,6 @@ def create_stac_collection(overview: pd.DataFrame) -> Collection:
             "Title": overview.loc["Title"].values[0],
             "Description": overview.loc["Description Resource"].values[0],
             "Keywords": ["space2stats", "sub-national", "h3", "hexagons", "global"],
-            # "License": overview.loc["License"].values[0],
             "summaries": {"datetime": {"min": "2020-01-01T00:00:00Z", "max": None}},
             "providers": [
                 {
@@ -112,11 +108,21 @@ def create_stac_item(column_types: dict, metadata: pd.DataFrame) -> Item:
     data_dict = []
 
     feature_catalog = metadata["feature_catalog"]
+    feature_catalog.set_index('variable', inplace=True)
+    try:
+        feature_catalog = feature_catalog.loc[column_types.keys()]
+    except KeyError as e:
+        raise KeyError(f"Column '{e}' not found in the metadata feature catalog sheet")
+    item_ids = feature_catalog['item'].unique()
+    item_id = [id for id in item_ids if id != 'all']
+    if len(item_id) != 1:
+        raise ValueError(f"Expected one item name, got {len(item_id)}")
+    item_id = item_id[0]
 
     for column, dtype in column_types.items():
         description = feature_catalog.loc[
-            feature_catalog["variable"] == column, "description"
-        ].values[0]
+            column, "description"
+        ]
         data_dict.append(
             {
                 "name": column,
@@ -151,27 +157,27 @@ def create_stac_item(column_types: dict, metadata: pd.DataFrame) -> Item:
     ]
 
     sources = metadata["sources"]
-    pop_metadata = sources[sources["Name"] == "Population"].iloc[0]
+    src_metadata = sources[sources["Item"] == item_id].iloc[0]
     item = Item(
-        id="space2stats_population_2020",
+        id=item_id,
         geometry=geom,
         bbox=bbox,
         datetime=datetime.now(),
         properties={
-            "name": pop_metadata["Name"],
-            "description": pop_metadata["Description"],
-            "methodological_notes": pop_metadata["Methodological Notes"],
-            "source_data": pop_metadata["Source Data"],
-            "sci:citation": pop_metadata["Citation source"],
-            "organization": pop_metadata["Organization"],
-            "method": pop_metadata["Method"],
-            "resolution": pop_metadata["Resolution"],
+            "name": src_metadata["Name"],
+            "description": src_metadata["Description"],
+            "methodological_notes": src_metadata["Methodological Notes"],
+            "source_data": src_metadata["Source Data"],
+            "sci:citation": src_metadata["Citation source"],
+            "organization": src_metadata["Organization"],
+            "method": src_metadata["Method"],
+            "resolution": src_metadata["Resolution"],
             "table:primary_geometry": "geometry",
             "table:columns": data_dict,
             "vector:layers": {
                 "space2stats": column_types_with_geometry,
             },
-            "themes": pop_metadata["Theme"],
+            "themes": src_metadata["Theme"],
         },
         stac_extensions=[
             "https://stac-extensions.github.io/table/v1.2.0/schema.json",
@@ -247,7 +253,7 @@ def main():
     catalog.add_child(collection, title="Space2Stats Collection")
 
     # Add the item to the collection
-    collection.add_item(item, title="Space2Stats Population Data Item")
+    collection.add_item(item, title=item.properties["name"])
 
     # Save the catalog
     save_stac_catalog(catalog, join(git_root, metadata_dir, "stac"))

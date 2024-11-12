@@ -9,12 +9,50 @@ import git
 import pandas as pd
 from pystac import Asset, CatalogType, Collection, Item
 from pystac.extensions.table import TableExtension
+from pyarrow.parquet import ParquetFile
+import pyarrow as pa 
+import argparse
 
+argParser = argparse.ArgumentParser()
+argParser.add_argument("-i", "--input_parquet", type=str, help="Path of new parquet data", required=True)
 
 # Function to get the root of the git repository
 def get_git_root() -> str:
     git_repo = git.Repo(os.getcwd(), search_parent_directories=True)
     return git_repo.git.rev_parse("--show-toplevel")
+
+
+# Function to get column types from a given parquet file, ignore hex_id (optional).
+def get_types(parquet_file: str):
+    pf = ParquetFile(parquet_file)
+    first_ten_rows = next(pf.iter_batches(batch_size = 10))
+    df = pa.Table.from_batches([first_ten_rows]).to_pandas()
+
+    # Get the column names and their types
+    column_types = {col: str(df[col].dtype) for col in df.columns if col != 'hex_id'}
+    return column_types
+
+
+# Function to save an updated dictionary of column types. Will not be used for now.
+def save_parquet_types_to_json(parquet_file: str):
+    git_root = get_git_root()
+    json_file = join(
+        git_root, "space2stats_api/src/space2stats_ingest/METADATA/types.json"
+    )
+    df = pd.read_parquet(parquet_file, nrow=10)
+
+    # Get the column names and their types
+    column_types = {col: str(df[col].dtype) for col in df.columns}
+
+    # Save the column types to a JSON file
+    with open(json_file, "r+") as f:
+        data_types = json.load(f)         # Read the existing data
+        data_types.update(column_types)    # Update with new columns
+        f.seek(0)                          # Move to the start of the file
+        json.dump(data_types, f, indent=4) # Write updated data
+        f.truncate()
+    
+    print(f"Column types saved to {json_file}")
 
 
 # Function to load metadata from the Excel file
@@ -23,9 +61,6 @@ def load_metadata(file: str) -> Dict[str, pd.DataFrame]:
     nada = pd.read_excel(file, sheet_name="NADA", index_col="Field")
     feature_catalog = pd.read_excel(file, sheet_name="Feature Catalog")
     sources = pd.read_excel(file, sheet_name="Sources")
-    sources["Variables"] = sources.apply(
-        lambda x: ast.literal_eval(x["Variables"]), axis=1
-    )
     return {
         "overview": overview,
         "nada": nada,
@@ -41,8 +76,8 @@ def load_existing_collection(collection_path: str) -> Collection:
 
 # Function to create a new STAC item
 def create_new_item(
-    sources: pd.DataFrame, source_name: str, column_types: dict, item_name: str
-) -> Item:
+    sources: pd.DataFrame, column_types: dict, item_id: str
+) -> tuple[Item, str]:
     # Define geometry and bounding box (you may want to customize these)
     geom = {
         "type": "Polygon",
@@ -64,11 +99,11 @@ def create_new_item(
     ]
 
     # Get metadata for the new item
-    src_metadata = sources[sources["Name"] == source_name].iloc[0]
+    src_metadata = sources[sources["Item"] == item_id].iloc[0]
 
     # Define the item
     item = Item(
-        id=item_name,
+        id=item_id,
         geometry=geom,
         bbox=bbox,
         datetime=datetime.now(),
@@ -106,7 +141,7 @@ def create_new_item(
         ),
     )
 
-    return item
+    return (item, src_metadata["Name"])
 
 
 # Function to add the new item to the existing collection
@@ -122,33 +157,44 @@ def save_collection(collection: Collection, collection_path: str):
 
 # Main function
 def main():
+    args = argParser.parse_args()
+    input_parquet = args.input_parquet
+    if not os.path.exists(input_parquet):
+        raise FileNotFoundError(f"File not found: {input_parquet}")
     git_root = get_git_root()
     metadata_dir = join(git_root, "space2stats_api/src/space2stats_ingest/METADATA")
 
     # Paths and metadata setup
-    item_name = "space2stats_ntl_2013"
     collection_path = join(metadata_dir, "stac/space2stats-collection/collection.json")
     excel_path = join(metadata_dir, "Space2Stats Metadata Content.xlsx")
-    source_name = (
-        "Nighttime Lights"  # This must correspond with the entry in the metadata excel
-    )
-    column_types_file = join(metadata_dir, "types.json")
+    column_types = get_types(input_parquet)
 
     # Load metadata and column types
     metadata = load_metadata(excel_path)
-    with open(column_types_file, "r") as f:
-        column_types = json.load(f)
+    feature_catalog = metadata["feature_catalog"]
+
+    # Find item name and metadata based on column names
+    feature_catalog.set_index('variable', inplace=True)
+    try:
+        feature_catalog = feature_catalog.loc[column_types.keys()]
+    except KeyError as e:
+        raise KeyError(f"Column '{e}' not found in the metadata feature catalog sheet")
+    item_ids = feature_catalog['item'].unique()
+    item_id = [id for id in item_ids if id != 'all']
+    if len(item_id) != 1:
+        raise ValueError(f"Expected one item name, found {len(item_id)}")
+    item_id = item_id[0]
 
     # Load existing collection
     collection = load_existing_collection(collection_path)
 
     # Create a new item
-    new_item = create_new_item(
-        metadata["sources"], source_name, column_types, item_name
+    new_item, item_title = create_new_item(
+        metadata["sources"], column_types, item_id
     )
 
     # Add the new item to the collection
-    collection.add_item(new_item, title="Space2Stats NTL 2013 Data Item")
+    collection.add_item(new_item, title=item_title)
 
     # Save the updated collection
     save_collection(collection, collection_path)

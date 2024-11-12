@@ -18,15 +18,15 @@
     },
     {
       "rel": "item",
-      "href": "./space2stats_population_2020/space2stats_population_2020.json",
+      "href": "./population-2020/population-2020.json",
       "type": "application/json",
-      "title": "Space2Stats Population Data Item"
+      "title": "Population"
     },
     {
       "rel": "item",
-      "href": "./space2stats_ntl_2013/space2stats_ntl_2013.json",
+      "href": "./flood-exposure-15cm-1in100/flood-exposure-15cm-1in100.json",
       "type": "application/json",
-      "title": "Space2Stats NTL 2013 Data Item"
+      "title": "Population Exposed to Floods"
     }
   ],
   "Title": "Space2Stats Database",
