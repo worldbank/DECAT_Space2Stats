@@ -1,4 +1,3 @@
-import ast
 import json
 import os
 from datetime import datetime
@@ -108,21 +107,19 @@ def create_stac_item(column_types: dict, metadata: pd.DataFrame) -> Item:
     data_dict = []
 
     feature_catalog = metadata["feature_catalog"]
-    feature_catalog.set_index('variable', inplace=True)
+    feature_catalog.set_index("variable", inplace=True)
     try:
         feature_catalog = feature_catalog.loc[column_types.keys()]
     except KeyError as e:
         raise KeyError(f"Column '{e}' not found in the metadata feature catalog sheet")
-    item_ids = feature_catalog['item'].unique()
-    item_id = [id for id in item_ids if id != 'all']
+    item_ids = feature_catalog["item"].unique()
+    item_id = [id for id in item_ids if id != "all"]
     if len(item_id) != 1:
         raise ValueError(f"Expected one item name, got {len(item_id)}")
     item_id = item_id[0]
 
     for column, dtype in column_types.items():
-        description = feature_catalog.loc[
-            column, "description"
-        ]
+        description = feature_catalog.loc[column, "description"]
         data_dict.append(
             {
                 "name": column,

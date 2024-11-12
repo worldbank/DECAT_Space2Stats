@@ -1,4 +1,4 @@
-import ast
+import argparse
 import json
 import os
 from datetime import datetime
@@ -7,14 +7,16 @@ from typing import Dict
 
 import git
 import pandas as pd
+import pyarrow as pa
+from pyarrow.parquet import ParquetFile
 from pystac import Asset, CatalogType, Collection, Item
 from pystac.extensions.table import TableExtension
-from pyarrow.parquet import ParquetFile
-import pyarrow as pa 
-import argparse
 
 argParser = argparse.ArgumentParser()
-argParser.add_argument("-i", "--input_parquet", type=str, help="Path of new parquet data", required=True)
+argParser.add_argument(
+    "-i", "--input_parquet", type=str, help="Path of new parquet data", required=True
+)
+
 
 # Function to get the root of the git repository
 def get_git_root() -> str:
@@ -25,11 +27,11 @@ def get_git_root() -> str:
 # Function to get column types from a given parquet file, ignore hex_id (optional).
 def get_types(parquet_file: str):
     pf = ParquetFile(parquet_file)
-    first_ten_rows = next(pf.iter_batches(batch_size = 10))
+    first_ten_rows = next(pf.iter_batches(batch_size=10))
     df = pa.Table.from_batches([first_ten_rows]).to_pandas()
 
     # Get the column names and their types
-    column_types = {col: str(df[col].dtype) for col in df.columns if col != 'hex_id'}
+    column_types = {col: str(df[col].dtype) for col in df.columns if col != "hex_id"}
     return column_types
 
 
@@ -46,12 +48,12 @@ def save_parquet_types_to_json(parquet_file: str):
 
     # Save the column types to a JSON file
     with open(json_file, "r+") as f:
-        data_types = json.load(f)         # Read the existing data
-        data_types.update(column_types)    # Update with new columns
-        f.seek(0)                          # Move to the start of the file
-        json.dump(data_types, f, indent=4) # Write updated data
+        data_types = json.load(f)  # Read the existing data
+        data_types.update(column_types)  # Update with new columns
+        f.seek(0)  # Move to the start of the file
+        json.dump(data_types, f, indent=4)  # Write updated data
         f.truncate()
-    
+
     print(f"Column types saved to {json_file}")
 
 
@@ -174,13 +176,13 @@ def main():
     feature_catalog = metadata["feature_catalog"]
 
     # Find item name and metadata based on column names
-    feature_catalog.set_index('variable', inplace=True)
+    feature_catalog.set_index("variable", inplace=True)
     try:
         feature_catalog = feature_catalog.loc[column_types.keys()]
     except KeyError as e:
         raise KeyError(f"Column '{e}' not found in the metadata feature catalog sheet")
-    item_ids = feature_catalog['item'].unique()
-    item_id = [id for id in item_ids if id != 'all']
+    item_ids = feature_catalog["item"].unique()
+    item_id = [id for id in item_ids if id != "all"]
     if len(item_id) != 1:
         raise ValueError(f"Expected one item name, found {len(item_id)}")
     item_id = item_id[0]
@@ -189,9 +191,7 @@ def main():
     collection = load_existing_collection(collection_path)
 
     # Create a new item
-    new_item, item_title = create_new_item(
-        metadata["sources"], column_types, item_id
-    )
+    new_item, item_title = create_new_item(metadata["sources"], column_types, item_id)
 
     # Add the new item to the collection
     collection.add_item(new_item, title=item_title)
