@@ -5,7 +5,7 @@
     "https://stac-extensions.github.io/table/v1.2.0/schema.json",
     "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
   ],
-  "id": "population-2020",
+  "id": "space2stats_population_2020",
   "geometry": {
     "type": "Polygon",
     "coordinates": [
@@ -297,7 +297,7 @@
       }
     },
     "themes": "Demographics",
-    "datetime": "2024-11-12T14:04:10.410714Z"
+    "datetime": "2024-11-12T15:57:43.803354Z"
   },
   "links": [
     {

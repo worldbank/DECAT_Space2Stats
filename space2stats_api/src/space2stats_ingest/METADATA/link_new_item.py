@@ -101,7 +101,10 @@ def create_new_item(
     ]
 
     # Get metadata for the new item
-    src_metadata = sources[sources["Item"] == item_id].iloc[0]
+    try:
+        src_metadata = sources[sources["Item"] == item_id].iloc[0]
+    except IndexError:
+        raise IndexError(f"Item '{item_id}' not found in the metadata sources sheet")
 
     # Define the item
     item = Item(

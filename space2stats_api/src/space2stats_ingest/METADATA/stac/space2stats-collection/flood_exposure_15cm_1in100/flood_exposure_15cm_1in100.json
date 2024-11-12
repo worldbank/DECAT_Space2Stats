@@ -5,7 +5,7 @@
     "https://stac-extensions.github.io/table/v1.2.0/schema.json",
     "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
   ],
-  "id": "flood-exposure-15cm-1in100",
+  "id": "flood_exposure_15cm_1in100",
   "geometry": {
     "type": "Polygon",
     "coordinates": [
@@ -47,7 +47,7 @@
     "sci:citation": "Wing et al. (2024) A 30 m Global Flood Inundation Model for Any Climate Scenario. https://doi.org/10.1029/2023WR036460",
     "method": "sum of intersect",
     "resolution": "30 mts and 100 mts",
-    "themes": "Exposure",
+    "themes": "Climate",
     "table:columns": [
       {
         "name": "pop",
@@ -62,7 +62,7 @@
         "type": "float64"
       }
     ],
-    "datetime": "2024-11-12T14:06:32.146249Z"
+    "datetime": "2024-11-12T16:00:41.760032Z"
   },
   "links": [
     {
