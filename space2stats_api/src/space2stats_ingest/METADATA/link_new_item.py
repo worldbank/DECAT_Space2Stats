@@ -78,7 +78,7 @@ def load_existing_collection(collection_path: str) -> Collection:
 
 # Function to create a new STAC item
 def create_new_item(
-    sources: pd.DataFrame, column_types: dict, item_id: str
+    sources: pd.DataFrame, column_types: dict, item_id: str, feature_catalog: pd.DataFrame
 ) -> tuple[Item, str]:
     # Define geometry and bounding box (you may want to customize these)
     geom = {
@@ -132,7 +132,7 @@ def create_new_item(
     TableExtension.add_to(item)
     table_extension = TableExtension.ext(item, add_if_missing=True)
     table_extension.columns = [
-        {"name": col, "type": dtype} for col, dtype in column_types.items()
+        {"name": col, "description": feature_catalog.loc[col, "description"],"type": dtype} for col, dtype in column_types.items()
     ]
 
     # Add asset
@@ -194,7 +194,7 @@ def main():
     collection = load_existing_collection(collection_path)
 
     # Create a new item
-    new_item, item_title = create_new_item(metadata["sources"], column_types, item_id)
+    new_item, item_title = create_new_item(metadata["sources"], column_types, item_id, feature_catalog)
 
     # Add the new item to the collection
     collection.add_item(new_item, title=item_title)

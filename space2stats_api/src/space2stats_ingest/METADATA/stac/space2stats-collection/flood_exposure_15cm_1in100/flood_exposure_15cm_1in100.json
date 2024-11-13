@@ -51,18 +51,21 @@
     "table:columns": [
       {
         "name": "pop",
+        "description": "Sum of Gridded Population, 2020",
         "type": "float32"
       },
       {
         "name": "pop_flood",
+        "description": "Sum of population exposed to floods greater than 15 cm, 1 in 100 return period",
         "type": "float64"
       },
       {
         "name": "pop_flood_pct",
+        "description": "Percent of population exposed to floods greater than 15 cm, 1 in 100 return period",
         "type": "float64"
       }
     ],
-    "datetime": "2024-11-12T16:00:41.760032Z"
+    "datetime": "2024-11-13T10:20:46.833394Z"
   },
   "links": [
     {
