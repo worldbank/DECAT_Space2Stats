@@ -15,7 +15,7 @@ html:
   extra_navbar: ""
   use_edit_page_button: true
   use_repository_button: true
-  use_issues_button: true
+  use_issues_button: false
   baseurl: https://github.com/worldbank/DECAT_Space2Stats
   extra_footer: |
     <div>
@@ -34,8 +34,8 @@ execute:
 sphinx:
   config:
     html_show_copyright: false
-    html_last_updated_fmt: "%b %d, %Y"
-    apidoc_module_dir: ../space2stats_api/src
+    html_last_updated_fmt: "%Y-%m-%d"
+    apidoc_module_dir: space2stats_api/src
   extra_extensions:
   - 'sphinx.ext.autodoc'
   - sphinx.ext.napoleon
