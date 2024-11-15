@@ -27,6 +27,12 @@
       "href": "./flood_exposure_15cm_1in100/flood_exposure_15cm_1in100.json",
       "type": "application/json",
       "title": "Population Exposed to Floods"
+    },
+    {
+      "rel": "item",
+      "href": "./nighttime_lights_2013/nighttime_lights_2013.json",
+      "type": "application/json",
+      "title": "Nighttime Lights"
     }
   ],
   "Title": "Space2Stats Database",
