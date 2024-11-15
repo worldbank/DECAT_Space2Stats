@@ -31,7 +31,7 @@ def get_types(parquet_file: str):
     df = pa.Table.from_batches([first_ten_rows]).to_pandas()
 
     # Get the column names and their types
-    column_types = {col: str(df[col].dtype) for col in df.columns if col != "hex_id"}
+    column_types = {col: str(df[col].dtype) for col in df.columns}
     return column_types
 
 

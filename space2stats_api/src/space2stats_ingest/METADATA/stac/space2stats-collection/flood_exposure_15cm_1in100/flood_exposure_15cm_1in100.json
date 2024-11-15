@@ -50,6 +50,11 @@
     "themes": "Climate",
     "table:columns": [
       {
+        "name": "hex_id",
+        "description": "H3 unique identifier",
+        "type": "object"
+      },
+      {
         "name": "pop",
         "description": "Sum of Gridded Population, 2020",
         "type": "float32"
@@ -65,7 +70,7 @@
         "type": "float64"
       }
     ],
-    "datetime": "2024-11-13T10:20:46.833394Z"
+    "datetime": "2024-11-15T08:51:18.821600Z"
   },
   "links": [
     {
