@@ -37,6 +37,14 @@ pyarrow = "^17.0.0"
 adbc-driver-postgresql = "^1.2.0"
 tqdm = "^4.66.5"
 
+
+[tool.poetry.group.notebook.dependencies]
+pandas = "*"
+jupyter = "*"
+geopandas = "*"
+shapely = "*"
+lonboard = "*"
+
 [tool.poetry.group.test.dependencies]
 pre-commit = "*"
 pytest = "*"
