@@ -1,0 +1,54 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "VNL_npp_2023_global_vcmslcfg_v2_c202402081600.average.dat.tif",
+  "properties": {
+    "doi": "TBD",
+    "description": "TBD",
+    "link": "",
+    "title": "",
+    "datetime": "2024-07-22T18:36:00.644772Z"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -180.00208333335,
+          -65.00208445335001
+        ],
+        [
+          180.00208621335,
+          -65.00208445335001
+        ],
+        [
+          180.00208621335,
+          75.00208333335
+        ],
+        [
+          -180.00208333335,
+          75.00208333335
+        ],
+        [
+          -180.00208333335,
+          -65.00208445335001
+        ]
+      ]
+    ]
+  },
+  "links": [],
+  "assets": {
+    "asset": {
+      "href": "C:/WBG/Work/data/NTL/VNL_npp_2023_global_vcmslcfg_v2_c202402081600.average.dat.tif",
+      "type": "image/tiff; application=geotiff",
+      "roles": []
+    }
+  },
+  "bbox": [
+    -180.00208333335,
+    -65.00208445335001,
+    180.00208621335,
+    75.00208333335
+  ],
+  "stac_extensions": []
+}

@@ -7,8 +7,6 @@ from urllib.request import urlopen
 import contextily as ctx
 import folium
 import geopandas as gpd
-import GOSTRocks.ntlMisc as ntl
-import GOSTRocks.rasterMisc as rMisc
 import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -16,7 +14,7 @@ import numpy as np
 import pandas as pd
 import rasterio
 import shapely
-from GOSTRocks.misc import tPrint
+
 from h3 import h3
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from rasterio.crs import CRS
@@ -25,6 +23,9 @@ from shapely.ops import unary_union
 from tqdm import tqdm
 
 import h3_helper
+import GOSTrocks.rasterMisc as rMisc
+import GOSTrocks.ntlMisc as ntl
+from GOSTrocks.misc import tPrint
 
 
 def calculate_value(
