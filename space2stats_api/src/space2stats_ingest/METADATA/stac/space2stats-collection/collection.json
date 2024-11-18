@@ -33,6 +33,12 @@
       "href": "./nighttime_lights_2013/nighttime_lights_2013.json",
       "type": "application/json",
       "title": "Nighttime Lights"
+    },
+    {
+      "rel": "item",
+      "href": "./urbanization_ghssmod/urbanization_ghssmod.json",
+      "type": "application/json",
+      "title": "Urbanization by population and by area"
     }
   ],
   "Title": "Space2Stats Database",
