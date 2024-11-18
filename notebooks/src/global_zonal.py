@@ -5,6 +5,7 @@ import boto3
 import geopandas as gpd
 import GOSTrocks.ntlMisc as ntl
 import GOSTrocks.rasterMisc as rMisc
+import h3_helper
 import numpy as np
 import pandas as pd
 from GOSTrocks.misc import tPrint
@@ -13,8 +14,6 @@ from rasterio.crs import CRS
 from shapely.geometry import Point, Polygon, mapping
 from shapely.ops import unary_union
 from tqdm import tqdm
-
-import h3_helper
 
 
 def get_global_table_from_s3(

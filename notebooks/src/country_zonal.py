@@ -9,6 +9,7 @@ import folium
 import geopandas as gpd
 import GOSTRocks.ntlMisc as ntl
 import GOSTRocks.rasterMisc as rMisc
+import h3_helper
 import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -23,8 +24,6 @@ from rasterio.crs import CRS
 from shapely.geometry import Point, Polygon, mapping
 from shapely.ops import unary_union
 from tqdm import tqdm
-
-import h3_helper
 
 
 def calculate_value(

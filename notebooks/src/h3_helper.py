@@ -22,6 +22,7 @@ from shapely.geometry import Polygon, mapping
 from shapely.ops import unary_union
 from tqdm import tqdm
 
+
 def generate_h3_gdf(in_gdf, h3_level=7):
     """Generate a GeoDataFrame of h3 grid cells from an input geodataframe
 
@@ -325,4 +326,3 @@ def static_map_h3(sub, map_epsg=3857, legend_loc="upper right"):
     )  # zorder=-10, 'EPSG:4326'
     ax = ax.set_axis_off()
     return ax
-
