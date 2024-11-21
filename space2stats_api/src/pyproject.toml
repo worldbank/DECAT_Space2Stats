@@ -9,9 +9,7 @@ readme = "README.md"
 python = ">=3.10,<3.13"
 orjson = "*"
 fastapi = ">=0.112.0"
-pandas = "*" 
 shapely = "*"
-h3 = "*"
 psycopg = { version = "*", extras = ["binary", "pool"] }
 httpx = "*"
 geojson-pydantic = "*"
@@ -22,7 +20,7 @@ mangum = "*"
 asgi-s3-response-middleware = "^0.0.4"
 boto3 = "^1.35.11"
 numpy = "^1.24.0"
-h3ronpy = "^0.21.0"
+h3ronpy = "^0.21.1"
 
 [tool.poetry.group.lambda.dependencies]
 mangum = "*"
@@ -36,7 +34,6 @@ boto3 = "^1.35.25"
 pyarrow = "^17.0.0"
 adbc-driver-postgresql = "^1.2.0"
 tqdm = "^4.66.5"
-
 
 [tool.poetry.group.notebook.dependencies]
 pandas = "*"
