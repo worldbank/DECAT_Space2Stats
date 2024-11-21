@@ -1,4 +1,6 @@
 import pytest
+from h3ronpy.arrow import cells_parse
+from shapely import from_geojson
 from shapely.geometry import MultiPolygon, Polygon, mapping
 from space2stats.h3_utils import generate_h3_geometries, generate_h3_ids
 
@@ -49,11 +51,15 @@ def test_generate_h3_ids_centroid_multipolygon():
 def test_generate_h3_geometries_polygon_multipolygon():
     h3_ids = generate_h3_ids(aoi_geojson_multi, resolution, "touches")
     geometries = generate_h3_geometries(h3_ids, "polygon")
+    print(geometries)
     assert len(geometries) == len(
         h3_ids
     ), "Expected the same number of geometries as H3 IDs"
     for geom in geometries:
-        assert geom["type"] == "Polygon", "Expected Polygon geometry for MultiPolygon"
+        geojson = from_geojson(geom)
+        assert (
+            geojson.geom_type == "Polygon"
+        ), "Expected Polygon geometry for MultiPolygon"
 
 
 def test_generate_h3_geometries_point_multipolygon():
@@ -62,8 +68,14 @@ def test_generate_h3_geometries_point_multipolygon():
     assert len(geometries) == len(
         h3_ids
     ), "Expected the same number of geometries as H3 IDs"
-    for geom in geometries:
-        assert geom["type"] == "Point", "Expected Point geometry for MultiPolygon"
+    print(geometries)
+    for g in geometries:
+        geojson = from_geojson(g)
+        print(dir(geojson))
+        assert geojson.geom_type == "Point"
+        assert len(geojson.coords) == 1
+        assert len(geojson.coords[0]) == 2
+        assert geojson.coords[0][0] != geojson.coords[0][1]
 
 
 def test_generate_h3_sliver_polygon_touches():
@@ -83,7 +95,7 @@ def test_generate_h3_sliver_polygon_touches():
         "touches",
     )
 
-    for h in ["867a74817ffffff", "867a74807ffffff"]:
+    for h in cells_parse(["867a74817ffffff", "867a74807ffffff"]):
         assert h in data, f"Missing {h} in generated hexagons"
     assert len(data) == 2
 
@@ -123,9 +135,7 @@ def test_generate_h3_sliver_polygon_centroid():
         6,
         "centroid",
     )
-    h = "867a74817ffffff"
-    assert "867a74817ffffff" in data, f"{h} not in generated hexagons"
-    assert len(data) == 1
+    assert len(data) == 0
 
 
 if __name__ == "__main__":

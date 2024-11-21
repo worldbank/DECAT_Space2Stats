@@ -1,145 +1,51 @@
-from typing import Any, Dict, Iterable, List, Literal, Optional, Set
+from typing import Any, Dict, List, Literal
 
-import h3
-from shapely.geometry import MultiPolygon, Point, Polygon, mapping, shape
+from arro3.core import Array
+from h3ronpy import ContainmentMode
+from h3ronpy.vector import cells_to_wkb_points, cells_to_wkb_polygons, geometry_to_cells
+from shapely import from_wkb, to_geojson
+from shapely.geometry import shape
 
-# https://h3geo.org/docs/core-library/restable
-MAX_RESOLUTION = 15
-
-
-def _recursive_polyfill(
-    aoi_geojson: Dict[str, Any], resolution: int, original_resolution: int
-) -> Set[str]:
-    # Attempt to get H3 IDs at the current resolution
-    h3_ids = h3.polyfill(aoi_geojson, resolution, geo_json_conformant=True)
-
-    # If valid H3 IDs are found, return them
-    if h3_ids:
-        return {h3.h3_to_parent(h3_id, original_resolution) for h3_id in h3_ids}
-
-    # If we haven't reached the maximum resolution, try the next higher resolution
-    if resolution < MAX_RESOLUTION:
-        return _recursive_polyfill(aoi_geojson, resolution + 1, original_resolution)
-
-    return set()
-
-
-def _find_within(aoi_geojson: Dict[str, Any], h3_ids: Iterable[str]) -> Set[str]:
-    # Convert AOI GeoJSON to Shapely geometry
-    aoi_shape = shape(aoi_geojson)
-
-    # Find H3 IDs that are within the polygon
-    contained_h3_ids = [
-        h3_id
-        for h3_id in h3_ids
-        if aoi_shape.contains(Polygon(h3.h3_to_geo_boundary(h3_id, geo_json=True)))
-    ]
-
-    return set(contained_h3_ids)
-
-
-def _find_touches(aoi_geojson: Dict[str, Any], h3_ids: Iterable[str]) -> Set[str]:
-    aoi_shape = shape(aoi_geojson)
-
-    neighbors = set()
-    for h3_id in h3_ids:
-        parent_id = h3.h3_to_parent(h3_id, h3.h3_get_resolution(h3_id) - 1)
-
-        for n_h3_id in h3.h3_to_children(
-            parent_id, h3.h3_get_resolution(parent_id) + 1
-        ):
-            boundary = Polygon(h3.h3_to_geo_boundary(n_h3_id, geo_json=True))
-            if h3.h3_indexes_are_neighbors(h3_id, n_h3_id) and aoi_shape.intersects(
-                boundary
-            ):
-                neighbors.add(n_h3_id)
-
-    return neighbors.union(h3_ids)
-
-
-def _generate_h3_ids(
-    aoi_geojson: Dict[str, Any],
-    resolution: int,
-    spatial_join_method: Literal["touches", "within", "centroid"],
-) -> Set[str]:
-    if spatial_join_method not in ["touches", "within", "centroid"]:
-        raise ValueError(f"Invalid spatial join method: {spatial_join_method}")
-
-    # Generate H3 hexagons covering the AOI
-    # Polyfill defines containment based on centroid:
-    # https://h3geo.org/docs/3.x/api/regions/#polyfill
-    h3_ids = _recursive_polyfill(aoi_geojson, resolution, resolution)
-
-    if spatial_join_method == "within":
-        h3_ids = _find_within(aoi_geojson, h3_ids)
-
-    if spatial_join_method == "touches":
-        h3_ids = _find_touches(aoi_geojson, h3_ids)
-
-    return h3_ids
+CONTAINMENT_MODE_MAP = {
+    "centroid": ContainmentMode.ContainsCentroid,
+    "touches": ContainmentMode.IntersectsBoundary,
+    "within": ContainmentMode.ContainsBoundary,
+}
 
 
 def generate_h3_ids(
     aoi_geojson: Dict[str, Any],
     resolution: int,
-    spatial_join_method: Literal["touches", "within", "centroid"],
-) -> Set[str]:
+    spatial_join_method: Literal["touches", "within", "centroid"] = "centroid",
+) -> Array:
     """
-    Generate H3 hexagon IDs for a given AOI GeoJSON object, supporting both Polygon and MultiPolygon.
-
-    Parameters:
-        aoi_geojson (Dict[str, Any]): The AOI GeoJSON object.
-        resolution (int): The H3 resolution.
-        spatial_join_method (str): The spatial join method to use.
-
-    Returns:
-        Set[str]: A set of H3 hexagon IDs.
+    Generate H3 IDs using h3ronpy's geometry_to_cells with the correct containment mode.
+    Returns the H3 IDs in uint64 format for geometry creation.
     """
-    if spatial_join_method not in ["touches", "within", "centroid"]:
-        raise ValueError("Invalid spatial join method")
+    geom = shape(aoi_geojson)
+    containment_mode = CONTAINMENT_MODE_MAP.get(spatial_join_method)
 
-    aoi_shape = shape(aoi_geojson)
+    if containment_mode is None:
+        raise ValueError(f"Invalid spatial join method: {spatial_join_method}")
 
-    if isinstance(aoi_shape, MultiPolygon):
-        h3_ids = set()
-        for geom in aoi_shape.geoms:
-            # Convert each geometry to GeoJSON
-            geom_geojson = mapping(geom)
-            h3_ids.update(
-                _generate_h3_ids(geom_geojson, resolution, spatial_join_method)
-            )
-    else:
-        # Single polygon case
-        h3_ids = _generate_h3_ids(aoi_geojson, resolution, spatial_join_method)
+    # Generate H3 IDs as uint64
+    h3_ids_uint64 = geometry_to_cells(
+        geom, resolution, containment_mode=containment_mode
+    )
 
-    return h3_ids
+    return h3_ids_uint64
 
 
 def generate_h3_geometries(
-    h3_ids: List[str], geometry_type: Optional[str]
-) -> List[Dict[str, Any]]:
-    """
-    Generate geometries (polygon or point) for a list of H3 hexagon IDs.
+    h3_ids_uint64: List[int], geometry_type: Literal["polygon", "point"] = "polygon"
+) -> List[Dict]:
+    if geometry_type == "polygon":
+        wkb_geometries = cells_to_wkb_polygons(h3_ids_uint64)
+    elif geometry_type == "point":
+        wkb_geometries = cells_to_wkb_points(h3_ids_uint64)
+    else:
+        raise ValueError(
+            f"Invalid geometry type. Use 'polygon' or 'point', not {geometry_type}"
+        )
 
-    Parameters:
-        h3_ids (List[str]): A list of H3 hexagon IDs.
-        geometry_type (Optional[str]):
-            The type of geometry to generate ('polygon' or 'point').
-
-    Returns:
-        List[Dict[str, Any]]: A list of geometries in GeoJSON format.
-    """
-    if geometry_type not in ["polygon", "point"]:
-        raise ValueError("Invalid geometry type")
-
-    geometries = []
-    for h3_id in h3_ids:
-        if geometry_type == "polygon":
-            hex_boundary = h3.h3_to_geo_boundary(h3_id, geo_json=True)
-            geometries.append(mapping(Polygon(hex_boundary)))
-        elif geometry_type == "point":
-            # h3_to_geo does not have geo_json parameter to invert order of coords
-            x, y = h3.h3_to_geo(h3_id)
-            geometries.append(mapping(Point(y, x)))
-
-    return geometries
+    return to_geojson(from_wkb(wkb_geometries))
