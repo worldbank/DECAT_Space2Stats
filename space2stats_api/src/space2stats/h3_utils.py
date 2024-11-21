@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Literal
 
+from arro3.core import Array
 from h3ronpy import ContainmentMode
 from h3ronpy.vector import cells_to_wkb_points, cells_to_wkb_polygons, geometry_to_cells
 from shapely import from_wkb, to_geojson
@@ -16,7 +17,7 @@ def generate_h3_ids(
     aoi_geojson: Dict[str, Any],
     resolution: int,
     spatial_join_method: Literal["touches", "within", "centroid"] = "centroid",
-) -> List[int]:
+) -> Array:
     """
     Generate H3 IDs using h3ronpy's geometry_to_cells with the correct containment mode.
     Returns the H3 IDs in uint64 format for geometry creation.
