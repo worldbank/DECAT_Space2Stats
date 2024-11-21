@@ -1295,8 +1295,9 @@ version = "0.21.1"
 description = "Data science toolkit for the H3 geospatial grid"
 optional = false
 python-versions = "*"
-files = []
-develop = false
+files = [
+    {file = "h3ronpy-0.21.1-cp39-abi3-linux_x86_64.whl", hash = "sha256:071536141bc3039fe589a1b2d965ce6292d5ff93873fa35c0b7818bcd602aedc"},
+]
 
 [package.dependencies]
 arro3-core = ">=0.4"
@@ -1308,11 +1309,8 @@ polars = ["polars (>=1)"]
 test = ["h3 (<4)", "pyarrow (>=15)", "pytest (>=6)", "pytest-benchmark", "rasterio (>=1.4)", "shapely (>=1.7)"]
 
 [package.source]
-type = "git"
-url = "https://github.com/nmandery/h3ronpy.git"
-reference = "main"
-resolved_reference = "ae3d0c9fe4c70c0165983e2bba2b8c0274dd7f43"
-subdirectory = "h3ronpy"
+type = "url"
+url = "https://temp-wheels-cdk.s3.us-east-1.amazonaws.com/h3ronpy-0.21.1-cp39-abi3-linux_x86_64.whl"
 
 [[package]]
 name = "httpcore"
@@ -4282,4 +4280,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "977f5b82b9d7971cf10517dc2fdfaba52fcd2a99d8f2e2ae7d8e39bf6f43885b"
+content-hash = "1cb3521e71698dcbc60e8a67325b04248eb07ec887f647d86be0170f11da3347"
