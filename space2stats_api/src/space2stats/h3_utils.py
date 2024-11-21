@@ -1,11 +1,7 @@
 from typing import Any, Dict, List, Literal
 
 from h3ronpy import ContainmentMode
-from h3ronpy.arrow.vector import (  # Import cells_to_coordinates for point geometries
-    cells_to_wkb_points,
-    cells_to_wkb_polygons,
-    geometry_to_cells,
-)
+from h3ronpy.vector import cells_to_wkb_points, cells_to_wkb_polygons, geometry_to_cells
 from shapely import from_wkb, to_geojson
 from shapely.geometry import shape
 
