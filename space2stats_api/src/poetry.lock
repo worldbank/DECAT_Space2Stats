@@ -1295,23 +1295,24 @@ version = "0.21.1"
 description = "Data science toolkit for the H3 geospatial grid"
 optional = false
 python-versions = "*"
-files = [
-    {file = "h3ronpy-0.21.1-cp38-abi3-macosx_10_14_x86_64.whl", hash = "sha256:c0bc8b87da6de7f83c783581fae72a41af560bbb924b7f18c103fa9e73196781"},
-    {file = "h3ronpy-0.21.1-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:6b3f15b86652c3fafdbaaaf977962317d7367176a1c1b13e688daff8c5e0c964"},
-    {file = "h3ronpy-0.21.1-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:109c2424685096354c1390cec3842b65ea9fe8b4afb956ce918b604b7a68ad6b"},
-    {file = "h3ronpy-0.21.1-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f69297204daf93875882692ff0c6cd253de0da5f94835598a54d01abb5be740b"},
-    {file = "h3ronpy-0.21.1-cp38-abi3-win_amd64.whl", hash = "sha256:613bdee812ca31d27f2750ef0d453a6257461465adc4bd891a43db70226ad6be"},
-]
+files = []
+develop = false
 
 [package.dependencies]
-numpy = "<2"
-pyarrow = ">=10.0"
-Shapely = ">=1.7"
+arro3-core = ">=0.4"
+numpy = "*"
 
 [package.extras]
-pandas = ["fiona (<1.10)", "geopandas (>=0.10)"]
-polars = ["polars (>=1.0)"]
-test = ["h3 (>=3.7)", "pytest (>=6)", "pytest-benchmark", "rasterio"]
+pandas = ["geopandas (>=1)"]
+polars = ["polars (>=1)"]
+test = ["h3 (<4)", "pyarrow (>=15)", "pytest (>=6)", "pytest-benchmark", "rasterio (>=1.4)", "shapely (>=1.7)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/nmandery/h3ronpy.git"
+reference = "main"
+resolved_reference = "ae3d0c9fe4c70c0165983e2bba2b8c0274dd7f43"
+subdirectory = "h3ronpy"
 
 [[package]]
 name = "httpcore"
@@ -4281,4 +4282,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "3d334cb5d906e4cdf5f0e4a522cea3139f24d7965f1dd5b128f8e9cd30239e48"
+content-hash = "977f5b82b9d7971cf10517dc2fdfaba52fcd2a99d8f2e2ae7d8e39bf6f43885b"
