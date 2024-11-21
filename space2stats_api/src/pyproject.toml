@@ -34,6 +34,7 @@ boto3 = "^1.35.25"
 pyarrow = "^17.0.0"
 adbc-driver-postgresql = "^1.2.0"
 tqdm = "^4.66.5"
+pystac = "^1.11.0"
 
 [tool.poetry.group.notebook.dependencies]
 pandas = "*"
