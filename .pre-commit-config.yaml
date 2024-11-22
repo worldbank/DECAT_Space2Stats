@@ -23,3 +23,23 @@ repos:
         exclude: ^space2stats/env/
         additional_dependencies:
           - types-requests
+  
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.8.7
+    hooks:
+      - id: nbqa-ruff
+        args: ["--fix"]
+        # Match all `.ipynb` files under `notebooks/user-docs/`
+        files: ^notebooks/user-docs/.*\.ipynb$
+      - id: nbqa-isort
+        args: ["--profile=black"]
+        additional_dependencies: [isort==5.6.4]
+        # Match all `.ipynb` files under `notebooks/user-docs/`
+        files: ^notebooks/user-docs/.*\.ipynb$
+      - id: nbqa-black
+        # Match all `.ipynb` files under `notebooks/user-docs/`
+        files: ^notebooks/user-docs/.*\.ipynb$
+      - id: nbqa-pyupgrade
+        args: ["--py37-plus"]
+        # Match all `.ipynb` files under `notebooks/user-docs/`
+        files: ^notebooks/user-docs/.*\.ipynb$

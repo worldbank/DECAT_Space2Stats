@@ -31,7 +31,7 @@ class Space2StatsStack(Stack):
             self,
             "Space2StatsFunction",
             entry="../src",
-            runtime=_lambda.Runtime.PYTHON_3_11,
+            runtime=_lambda.Runtime.PYTHON_3_10,
             index="space2stats/api/handler.py",
             timeout=Duration.seconds(120),
             handler="handler",

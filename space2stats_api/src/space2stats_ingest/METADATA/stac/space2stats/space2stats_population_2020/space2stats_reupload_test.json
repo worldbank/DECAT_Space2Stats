@@ -1,0 +1,30 @@
+{
+    "type": "Feature",
+    "stac_version": "1.0.0",
+    "id": "space2stats_test",
+    "properties": {
+      "table:columns": [
+        {
+          "name": "hex_id",
+          "type": "string",
+          "description": "Unique identifier for hexagonal regions."
+        },
+        {
+          "name": "test_column",
+          "type": "float",
+          "description": "Random test values for validation of re-upload capabilities."
+        }
+      ],
+      "datetime": "2024-11-05T00:00:00Z"
+    },
+    "geometry": null,
+    "bbox": [-180, -90, 180, 90],
+    "links": [],
+    "assets": {
+      "data": {
+        "href": "s3://your-bucket/path/to/space2stats.parquet",
+        "title": "Space2Stats Parquet File",
+        "type": "application/x-parquet"
+      }
+    }
+  }
