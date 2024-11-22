@@ -1,4 +1,4 @@
-from aws_cdk import Duration, Stack
+from aws_cdk import CfnOutput, Duration, Stack
 from aws_cdk import aws_apigatewayv2 as apigatewayv2
 from aws_cdk import aws_apigatewayv2_integrations as integrations
 from aws_cdk import aws_certificatemanager as acm
@@ -10,11 +10,16 @@ from settings import AppSettings, DeploymentSettings
 
 
 class Space2StatsStack(Stack):
-    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
+    def __init__(
+        self,
+        scope: Construct,
+        id: str,
+        deployment_settings: DeploymentSettings,
+        **kwargs,
+    ) -> None:
         super().__init__(scope, id, **kwargs)
 
         app_settings = AppSettings(_env_file="./aws_app.env")
-        deployment_settings = DeploymentSettings(_env_file="./aws_deployment.env")
 
         bucket = s3.Bucket(
             self,
@@ -26,7 +31,7 @@ class Space2StatsStack(Stack):
             self,
             "Space2StatsFunction",
             entry="../src",
-            runtime=_lambda.Runtime.PYTHON_3_11,
+            runtime=_lambda.Runtime.PYTHON_3_10,
             index="space2stats/api/handler.py",
             timeout=Duration.seconds(120),
             handler="handler",
@@ -43,13 +48,6 @@ class Space2StatsStack(Stack):
             self, "Certificate", deployment_settings.CDK_CERTIFICATE_ARN
         )
 
-        domain_name = apigatewayv2.DomainName(
-            self,
-            "DomainName",
-            domain_name=deployment_settings.CDK_DOMAIN_NAME,
-            certificate=certificate,
-        )
-
         http_api = apigatewayv2.HttpApi(
             self,
             "Space2StatsHttpApi",
@@ -58,10 +56,24 @@ class Space2StatsStack(Stack):
             ),
         )
 
-        apigatewayv2.ApiMapping(
+        CfnOutput(
             self,
-            "ApiMapping",
-            api=http_api,
-            domain_name=domain_name,
-            stage=http_api.default_stage,
+            "ApiGatewayUrl",
+            key="ApiGatewayUrl",
+            value=http_api.url,
         )
+
+        if deployment_settings.CDK_DOMAIN_NAME:
+            domain_name = apigatewayv2.DomainName(
+                self,
+                "DomainName",
+                domain_name=deployment_settings.CDK_DOMAIN_NAME,
+                certificate=certificate,
+            )
+            apigatewayv2.ApiMapping(
+                self,
+                "ApiMapping",
+                api=http_api,
+                domain_name=domain_name,
+                stage=http_api.default_stage,
+            )

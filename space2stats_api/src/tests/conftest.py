@@ -124,19 +124,3 @@ def aoi_example():
         },
         properties={},
     )
-
-
-@pytest.fixture
-def stac_catalog_path():
-    return "./space2stats_ingest/METADATA/stac/catalog.json"
-
-
-@pytest.fixture
-def stac_item_path():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.abspath(os.path.join(current_dir, "../../.."))
-    json_file_path = os.path.join(
-        root_dir,
-        "space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/space2stats_population_2020/space2stats_population_2020.json",
-    )
-    return json_file_path

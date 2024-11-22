@@ -48,8 +48,11 @@ class StatsTable:
             """
         ).format(pg.sql.SQL(", ").join(cols), pg.sql.Identifier(self.table_name))
 
-        # Convert h3_ids to a list to ensure compatibility with psycopg
-        h3_ids = list(h3_ids)
+        # Convert h3_ids to integers to ensure compatibility with psycopg
+        h3_ids = [
+            scalar.as_py() if hasattr(scalar, "as_py") else scalar for scalar in h3_ids
+        ]
+
         with self.conn.cursor() as cur:
             cur.execute(
                 sql_query,
@@ -89,15 +92,13 @@ class StatsTable:
             return []
 
         # Get Summaries from H3 ids
-        rows, colnames = self._get_summaries(fields=fields, h3_ids=list(h3_ids))
+        rows, colnames = self._get_summaries(fields=fields, h3_ids=h3_ids)
         if not rows:
             return []
 
         # Format Summaries
         summaries: List[Dict] = []
-        geometries = (
-            generate_h3_geometries(list(h3_ids), geometry) if geometry else None
-        )
+        geometries = generate_h3_geometries(h3_ids, geometry) if geometry else None
 
         for idx, row in enumerate(rows):
             summary = {"hex_id": row[0]}
@@ -156,6 +157,11 @@ class StatsTable:
             )
         )
 
+        # Convert H3 scalar objects to integers
+        h3_ids = [
+            scalar.as_py() if hasattr(scalar, "as_py") else scalar for scalar in h3_ids
+        ]
+
         if not h3_ids:
             return {}
 
@@ -172,8 +178,6 @@ class StatsTable:
             pg.sql.Identifier(self.table_name),
         )
 
-        # Convert h3_ids to a list to ensure compatibility with psycopg
-        h3_ids = list(h3_ids)
         with self.conn.cursor() as cur:
             cur.execute(
                 sql_query,
