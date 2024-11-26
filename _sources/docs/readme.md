@@ -5,7 +5,7 @@ The Space2Stats program is designed to provide academics, statisticians, and oth
 
 The Space2Stats program is funded by the World Bank's [Global Data Facility](https://www.worldbank.org/en/programs/global-data-facility), which is a World-Bank hosted global funding instrument for the world's most critical data impact opportunities.
 
-```{image} images/GDF_logo.jpg
+```{image} images/GDF_logo.png
 ---
 :alt: GDF
 ---
