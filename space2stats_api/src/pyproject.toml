@@ -20,7 +20,7 @@ mangum = "*"
 asgi-s3-response-middleware = "^0.0.4"
 boto3 = "^1.35.11"
 numpy = "^1.24.0"
-h3ronpy = { url = "https://temp-wheels-cdk.s3.us-east-1.amazonaws.com/h3ronpy-0.21.1-cp39-abi3-linux_x86_64.whl" }
+h3ronpy = "0.22.0"
 
 [tool.poetry.group.lambda.dependencies]
 mangum = "*"
