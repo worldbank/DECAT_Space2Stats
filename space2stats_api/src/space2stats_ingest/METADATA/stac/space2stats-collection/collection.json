@@ -20,7 +20,25 @@
       "rel": "item",
       "href": "./space2stats_population_2020/space2stats_population_2020.json",
       "type": "application/json",
-      "title": "Space2Stats Population Data Item"
+      "title": "Population"
+    },
+    {
+      "rel": "item",
+      "href": "./flood_exposure_15cm_1in100/flood_exposure_15cm_1in100.json",
+      "type": "application/json",
+      "title": "Population Exposed to Floods"
+    },
+    {
+      "rel": "item",
+      "href": "./nighttime_lights_2013/nighttime_lights_2013.json",
+      "type": "application/json",
+      "title": "Nighttime Lights"
+    },
+    {
+      "rel": "item",
+      "href": "./urbanization_ghssmod/urbanization_ghssmod.json",
+      "type": "application/json",
+      "title": "Urbanization by population and by area"
     }
   ],
   "Title": "Space2Stats Database",
@@ -32,32 +50,6 @@
     "hexagons",
     "global"
   ],
-  "summaries": {
-    "datetime": {
-      "min": "2020-01-01T00:00:00Z",
-      "max": null
-    }
-  },
-  "providers": [
-    {
-      "name": "World Bank",
-      "roles": [
-        "producer",
-        "licensor"
-      ],
-      "url": "https://www.worldbank.org/"
-    }
-  ],
-  "assets": {
-    "documentation": {
-      "href": "https://space2stats.ds.io/docs",
-      "type": "text/html",
-      "title": "API Documentation",
-      "roles": [
-        "metadata"
-      ]
-    }
-  },
   "title": "Space2Stats Collection",
   "extent": {
     "spatial": {
@@ -79,5 +71,31 @@
       ]
     }
   },
-  "license": "CC-BY-4.0"
+  "license": "CC-BY-4.0",
+  "providers": [
+    {
+      "name": "World Bank",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://www.worldbank.org/"
+    }
+  ],
+  "summaries": {
+    "datetime": {
+      "min": "2020-01-01T00:00:00Z",
+      "max": null
+    }
+  },
+  "assets": {
+    "documentation": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  }
 }

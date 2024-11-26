@@ -124,3 +124,18 @@ def aoi_example():
         },
         properties={},
     )
+
+
+@pytest.fixture
+def stac_catalog_path():
+    return "./space2stats_ingest/METADATA/stac/catalog.json"
+
+
+@pytest.fixture
+def pop_stac_item_path():
+    return "./space2stats_ingest/METADATA/stac/space2stats-collection/space2stats_population_2020/space2stats_population_2020.json"
+
+
+@pytest.fixture
+def metadata_excel_file_path():
+    return "./space2stats_ingest/METADATA/Space2Stats Metadata Content.xlsx"
