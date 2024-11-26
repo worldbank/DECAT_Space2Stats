@@ -3,7 +3,7 @@ from typing import Dict, List, Literal, Optional
 
 import psycopg as pg
 from geojson_pydantic import Feature
-from h3ronpy.arrow import cells_to_string
+from h3ronpy import cells_to_string
 from psycopg import Connection
 
 from .h3_utils import generate_h3_geometries, generate_h3_ids

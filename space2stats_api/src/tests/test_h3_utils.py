@@ -1,5 +1,5 @@
 import pytest
-from h3ronpy.arrow import cells_parse
+from h3ronpy import cells_parse
 from shapely import from_geojson
 from shapely.geometry import MultiPolygon, Polygon, mapping
 from space2stats.h3_utils import generate_h3_geometries, generate_h3_ids
