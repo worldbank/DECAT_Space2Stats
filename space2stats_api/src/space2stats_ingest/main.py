@@ -55,7 +55,7 @@ def verify_columns(
         raise ValueError("The 'hex_id' column is missing from the Parquet file.")
 
     # Verify Parquet columns match the STAC fields
-    if parquet_columns != stac_fields:
+    if parquet_columns - {"hex_id"} != stac_fields:
         extra_in_parquet = parquet_columns - stac_fields
         extra_in_stac = stac_fields - parquet_columns
         raise ValueError(
