@@ -1,0 +1,161 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
+  ],
+  "id": "urbanization_ghssmod",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
+  "properties": {
+    "name": "Urbanization by population and by area",
+    "description": "Urbanization is analyzed using the GHS-SMOD dataset, including comparisons with population",
+    "methodological_notes": "Global raster files are processed for each hexagonal grid using zonal statistics.",
+    "source_data": "Global Human Settlement Layer (https://human-settlement.emergency.copernicus.eu/degurbaDefinitions.php)",
+    "sci:citation": "Pesaresi M., Ehrlich D., Ferri S., Florczyk A.J., Freire S., Halkia S., Julea A.M., Kemper T., Soille P. and V. Syrris. Operating procedure for the production of the Global Human Settlement Layer from Landsat data of the epochs 1975, 1990, 2000, and 2014. Publications Office of the European Union, EUR 27741 EN, 2016. doi: 10.2788/253582.",
+    "method": "sum",
+    "resolution": "1000m",
+    "themes": "Urbanization",
+    "table:columns": [
+      {
+        "name": "11_POP",
+        "description": "Total population in very low density areas",
+        "type": "float64"
+      },
+      {
+        "name": "12_POP",
+        "description": "Total population in low density rural areas",
+        "type": "float64"
+      },
+      {
+        "name": "13_POP",
+        "description": "Total population in rural areas",
+        "type": "float64"
+      },
+      {
+        "name": "21_POP",
+        "description": "Total population in suburban grid cells",
+        "type": "float64"
+      },
+      {
+        "name": "22_POP",
+        "description": "Total population in semi-dense urban clusters",
+        "type": "float64"
+      },
+      {
+        "name": "23_POP",
+        "description": "Total population in dense urban clusters",
+        "type": "float64"
+      },
+      {
+        "name": "30_POP",
+        "description": "Total population in urban centres",
+        "type": "float64"
+      },
+      {
+        "name": "TOTAL_POP",
+        "description": "Total population based on GHS-Pop population",
+        "type": "float64"
+      },
+      {
+        "name": "COUNT_11",
+        "description": "Total number of cells in very low density areas",
+        "type": "int64"
+      },
+      {
+        "name": "COUNT_12",
+        "description": "Total number of cells in low density rural areas",
+        "type": "int64"
+      },
+      {
+        "name": "COUNT_13",
+        "description": "Total number of cells in rural areas",
+        "type": "int64"
+      },
+      {
+        "name": "COUNT_21",
+        "description": "Total number of cells in suburban grid cells",
+        "type": "int64"
+      },
+      {
+        "name": "COUNT_22",
+        "description": "Total number of cells in semi-dense urban clusters",
+        "type": "int64"
+      },
+      {
+        "name": "COUNT_23",
+        "description": "Total number of cells in dense urban clusters",
+        "type": "int64"
+      },
+      {
+        "name": "COUNT_30",
+        "description": "Total number of cells in urban centres",
+        "type": "int64"
+      }
+    ],
+    "datetime": "2024-11-18T15:57:45.826391Z"
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    }
+  ],
+  "assets": {
+    "api-docs": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "collection": "space2stats-collection"
+}

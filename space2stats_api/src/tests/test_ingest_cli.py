@@ -1,5 +1,4 @@
 import json
-import os
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -64,27 +63,8 @@ def create_stac_catalog(catalog_file, collection_file):
         json.dump(stac_catalog, f)
 
 
-def test_download_command(tmpdir, s3_mock):
-    s3_path = "s3://mybucket/myfile.parquet"
-    parquet_file = tmpdir.join("local.parquet")
-
-    s3_mock.put_object(
-        Bucket="mybucket", Key="myfile.parquet", Body=b"mock_parquet_data"
-    )
-
-    result = runner.invoke(
-        app, ["download", s3_path, "--local-path", str(parquet_file)]
-    )
-    print(result.output)
-
-    assert result.exit_code == 0
-    assert "Starting download from S3" in result.stdout
-    assert "Download complete" in result.stdout
-    assert os.path.exists(parquet_file)
-
-
-def test_load_command(tmpdir, database):
-    connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
+def test_load_command(tmpdir, clean_database):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
     parquet_file = tmpdir.join("local.parquet")
     catalog_file = tmpdir.join("catalog.json")
     collection_file = tmpdir.join("collection.json")
@@ -102,10 +82,8 @@ def test_load_command(tmpdir, database):
     result = runner.invoke(
         app,
         [
-            "load",
             connection_string,
-            str(catalog_file),
-            "--parquet-file",
+            str(item_file),
             str(parquet_file),
         ],
     )
@@ -115,16 +93,17 @@ def test_load_command(tmpdir, database):
     assert "Loading data into PostgreSQL" in result.stdout
 
 
-def test_load_command_column_mismatch(tmpdir, database):
-    connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
+def test_load_command_column_mismatch(tmpdir, clean_database):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
     parquet_file = tmpdir.join("local.parquet")
     catalog_file = tmpdir.join("catalog.json")
     collection_file = tmpdir.join("collection.json")
     item_file = tmpdir.join("space2stats_population_2020.json")
 
-    create_mock_parquet_file(parquet_file, [("different_column", pa.float64())])
-
-    create_stac_item(item_file, [("mock_column", "float64")])
+    create_mock_parquet_file(
+        parquet_file, [("hex_id", pa.string()), ("different_column", pa.float64())]
+    )
+    create_stac_item(item_file, [("hex_id", "string"), ("mock_column", "float64")])
 
     create_stac_collection(collection_file, item_file)
     create_stac_catalog(catalog_file, collection_file)
@@ -132,10 +111,8 @@ def test_load_command_column_mismatch(tmpdir, database):
     result = runner.invoke(
         app,
         [
-            "load",
             connection_string,
-            str(catalog_file),
-            "--parquet-file",
+            str(item_file),
             str(parquet_file),
         ],
     )
@@ -143,41 +120,3 @@ def test_load_command_column_mismatch(tmpdir, database):
 
     assert result.exit_code != 0
     assert "Column mismatch" in result.stdout
-
-
-def test_download_and_load_command(tmpdir, database, s3_mock):
-    s3_path = "s3://mybucket/myfile.parquet"
-    parquet_file = tmpdir.join("local.parquet")
-    catalog_file = tmpdir.join("catalog.json")
-    collection_file = tmpdir.join("collection.json")
-    item_file = tmpdir.join("space2stats_population_2020.json")
-    connection_string = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
-
-    create_mock_parquet_file(
-        parquet_file, [("hex_id", pa.string()), ("mock_column", pa.float64())]
-    )
-
-    create_stac_item(item_file, [("hex_id", "string"), ("mock_column", "float64")])
-
-    create_stac_collection(collection_file, item_file)
-    create_stac_catalog(catalog_file, collection_file)
-
-    with open(parquet_file, "rb") as f:
-        s3_mock.put_object(Bucket="mybucket", Key="myfile.parquet", Body=f.read())
-
-    result = runner.invoke(
-        app,
-        [
-            "download-and-load",
-            s3_path,
-            connection_string,
-            str(catalog_file),
-            "--parquet-file",
-            str(parquet_file),
-        ],
-    )
-    print(result.output)
-
-    assert result.exit_code == 0
-    assert "Starting download from S3" in result.stdout
-    assert "Loading data into PostgreSQL" in result.stdout

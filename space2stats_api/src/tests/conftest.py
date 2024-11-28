@@ -30,6 +30,19 @@ def aws_credentials():
 
 
 @pytest.fixture(scope="function")
+def clean_database(postgresql_proc):
+    with DatabaseJanitor(
+        user=postgresql_proc.user,
+        host=postgresql_proc.host,
+        port=postgresql_proc.port,
+        dbname="cleantestdb",
+        version=postgresql_proc.version,
+        password="password",
+    ) as jan:
+        yield jan
+
+
+@pytest.fixture(scope="function")
 def database(postgresql_proc):
     """Set up a PostgreSQL database for testing and clean up afterwards."""
     with DatabaseJanitor(
@@ -119,21 +132,10 @@ def stac_catalog_path():
 
 
 @pytest.fixture
-def stac_file_path():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.abspath(os.path.join(current_dir, "../../.."))
-    json_file_path = os.path.join(
-        root_dir,
-        "space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/space2stats_population_2020/space2stats_population_2020.json",
-    )
-    return json_file_path
+def pop_stac_item_path():
+    return "./space2stats_ingest/METADATA/stac/space2stats-collection/space2stats_population_2020/space2stats_population_2020.json"
 
 
 @pytest.fixture
-def types_json_file_path():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.abspath(os.path.join(current_dir, "../../.."))
-    types_json_file_path = os.path.join(
-        root_dir, "space2stats_api/src/space2stats_ingest/METADATA/types.json"
-    )
-    return types_json_file_path
+def metadata_excel_file_path():
+    return "./space2stats_ingest/METADATA/Space2Stats Metadata Content.xlsx"

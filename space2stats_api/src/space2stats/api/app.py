@@ -62,8 +62,8 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
                 body.fields,
                 body.geometry,
             )
-        except pg.errors.UndefinedColumn as e:
-            raise HTTPException(status_code=400, detail=e.diag.message_primary) from e
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
 
     @app.post("/aggregate", response_model=Dict[str, float])
     def get_aggregate(body: AggregateRequest, table: StatsTable = Depends(stats_table)):
