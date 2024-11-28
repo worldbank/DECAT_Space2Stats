@@ -5,9 +5,9 @@ The Global Administrative Boundaries subtask (P501733) of the Space2Stats progra
 
 To illustrate the difference between the high and medium resolution products, the following images show the high resolution Administrative 2 boundaries (in blue, digitized at a 1:250,000 scale) and medium resolution (in red, digitized at a 1:1,000,000 scale). While acceptable for regional or global mapping, medium resolution is of substantively lower quality when viewing a small area.  This is especially noteworthy when summarizing other global datasets by administrative area, as the lower-resolution boundaries can significantly affect the results.  
 
-```{image} ../images/boundary_comparison_VNM.png
+```{figure} ../images/boundary_comparison_VNM.png
 ---
-:alt: Boundary comparison 
+alt: Boundary comparison 
 ---
 Differences in administrative boundary resolution around Hanoi, Vietnam. High resolution is blue and medium is red
 ```

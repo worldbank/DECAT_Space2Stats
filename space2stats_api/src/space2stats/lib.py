@@ -20,10 +20,10 @@ class StatsTable:
         """
         Helper method to connect to the database and return a StatsTable instance.
 
-        ```py
-        with StatsTable.connect() as stats_table:
-            stats_table.fields()
-        ```
+        .. code-block:: python
+
+            with StatsTable.connect() as stats_table:
+                stats_table.fields()
         """
         settings = settings or Settings(**kwargs, _extra="forbid")
         conn = pg.connect(settings.DB_CONNECTION_STRING)
@@ -68,7 +68,33 @@ class StatsTable:
         fields: List[str],
         geometry: Optional[Literal["polygon", "point"]] = None,
     ):
-        """Retrieve Statistics from a GeoJSON feature."""
+        """Retrieve Statistics from a GeoJSON feature.
+
+        Parameters
+        ----------
+        aoi : GeoJSON Feature
+            The Area of Interest, either as a `Feature` or an instance of `AoiModel`
+
+        spatial_join_method : ["touches", "centroid", "within"]
+            The method to use for performing the spatial join between the AOI and H3 cells
+                - "touches": Includes H3 cells that touch the AOI
+                - "centroid": Includes H3 cells where the centroid falls within the AOI
+                - "within": Includes H3 cells entirely within the AOI
+
+        fields : List[str]
+            A list of field names to retrieve from the statistics table.
+
+        geometry : Optional["polygon", "point"]
+            Specifies if the H3 geometries should be included in the response. It can be either "polygon" or "point". If None, geometries are not included
+
+        Returns
+        -------
+        List[Dict]
+            A list of dictionaries containing statistical summaries for each H3 cell. Each dictionary contains:
+                - "hex_id": The H3 cell identifier
+                - "geometry" (optional): The geometry of the H3 cell, if geometry is specified.
+                - Other fields from the statistics table, based on the specified `fields`
+        """
         if not isinstance(aoi, Feature):
             aoi = AoiModel.model_validate(aoi)
 

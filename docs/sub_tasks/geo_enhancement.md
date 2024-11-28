@@ -9,9 +9,9 @@ Data generation for specific surveys. All the required documentation about each 
 
 Spatial anonymization. As you will note from the survey geo-enhancement process, the survey coordinates need to be anonymized first before they are used in the ge-enhancement process and the associated geovariables publicly disseminated. As such, the work covered in this repository included development of tools for robust spatial anonymization. A Python package: [spatial-anoanonymization] (worldbank/Spatial-Anonymization) for this prupose is being developed. In this regard, information about this package and other tools for spatial anonymization and bets practices will also be provided.
 
-```{image} ../images/geo-enhancement-pipeline.png
+```{figure} ../images/geo-enhancement-pipeline.png
 ---
-:alt: Geo-enhancement process
+alt: Geo-enhancement process
 ---
 Geo-enhancement workflow
 ```

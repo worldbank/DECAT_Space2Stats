@@ -7,6 +7,6 @@ The Space2Stats program is funded by the World Bank's [Global Data Facility](htt
 
 ```{image} images/GDF_logo.png
 ---
-:alt: GDF
+alt: GDF
 ---
 ```

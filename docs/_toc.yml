@@ -1,19 +1,19 @@
 format: jb-book
-root: docs/readme.md
+root: readme.md
 
 parts:
   - caption: Concept Note
     numbered: False
     chapters:
-      - file: docs/Introduction.md
-      - file: docs/annexA.md    
+      - file: Introduction.md
+      - file: annexA.md    
   - caption: S2S Sub-tasks
     numbered: False
     chapters:
-        - file: docs/sub_tasks/admin_bounds.md
-        - file: docs/sub_tasks/sub_national_welfare.md
-        - file: docs/sub_tasks/geest.md
-        - file: docs/sub_tasks/geo_enhancement.md
+        - file: sub_tasks/admin_bounds.md
+        - file: sub_tasks/sub_national_welfare.md
+        - file: sub_tasks/geest.md
+        - file: sub_tasks/geo_enhancement.md
   - caption: S2S Examples
     numbered: False
     chapters:
@@ -23,4 +23,4 @@ parts:
   - caption: S2S Python Documentation
     numbered: False
     chapters:
-        - file: docs/api.rst
+        - file: api.rst

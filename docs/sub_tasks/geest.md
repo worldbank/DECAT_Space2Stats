@@ -5,9 +5,9 @@ With support from the [Canada Clean Energy and Forest Climate Facility (CCEFCFy)
 
 In addition to the methodology, the project has generated an geospatial open-source, QGIS tool for implementing the methodology. For more details, visit the GEEST project directly.
 
-```{image} ../images/WEE_PNG.png
+```{figure} ../images/WEE_PNG.png
 ---
-:alt: GEEST score
+alt: GEEST score
 ---
 GEEST was used to calculate the enabling score in Comoros, Dominican Republic, and Papua New Guinea
 ```

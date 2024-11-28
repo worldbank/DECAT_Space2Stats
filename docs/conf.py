@@ -19,18 +19,18 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_design",
     "sphinx_book_theme",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
-    "sphinxcontrib.apidoc",
     "sphinx_jupyterbook_latex",
     "sphinx_multitoc_numbering",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
 ]
 external_toc_exclude_missing = True
 external_toc_path = "_toc.yml"
+extra_extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
 html_baseurl = "https://github.com/worldbank/DECAT_Space2Stats"
 html_favicon = ""
 html_last_updated_fmt = "%b %d, %Y"
-html_logo = "docs/images/logo.png"
+html_logo = "images/logo.png"
 html_show_copyright = False
 html_sourcelink_suffix = ""
 html_theme = "sphinx_book_theme"
@@ -42,6 +42,7 @@ html_theme_options = {
         "jupyterhub_url": "",
         "thebe": False,
         "colab_url": "",
+        "deepnote_url": "",
     },
     "path_to_docs": "",
     "repository_url": "https://github.com/worldbank/DECAT_Space2Stats",
@@ -49,12 +50,16 @@ html_theme_options = {
     "extra_footer": '<div>\n    <b>All content (unless otherwise specified) is subject to the <a href="https://raw.githubusercontent.com/worldbank/template/main/LICENSE">World Bank Master Community License Agreement.</a></b>\n</div>\n',
     "home_page_in_toc": True,
     "announcement": "",
-    "analytics": {"google_analytics_id": ""},
+    "analytics": {
+        "google_analytics_id": "",
+        "plausible_analytics_domain": "",
+        "plausible_analytics_url": "https://plausible.io/js/script.js",
+    },
     "use_repository_button": True,
     "use_edit_page_button": True,
-    "use_issues_button": True,
+    "use_issues_button": False,
 }
-html_title = ""
+html_title = "DECAT Space2Stats"
 latex_engine = "pdflatex"
 myst_enable_extensions = [
     "colon_fence",
@@ -64,9 +69,9 @@ myst_enable_extensions = [
     "tasklist",
 ]
 myst_url_schemes = ["mailto", "http", "https"]
-nb_execution_allow_errors = True
+nb_execution_allow_errors = False
 nb_execution_cache_path = ""
-nb_execution_excludepatterns = ["notebooks/*.ipynb"]
+nb_execution_excludepatterns = []
 nb_execution_in_temp = False
 nb_execution_mode = "off"
 nb_execution_timeout = 30

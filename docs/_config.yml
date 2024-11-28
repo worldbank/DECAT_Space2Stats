@@ -1,7 +1,7 @@
 # Book settings
-title:
+title: DECAT Space2Stats
 author: World Bank
-logo: docs/images/logo.png
+logo: images/logo.png
 only_build_toc_files: true
 
 repository:
@@ -25,9 +25,14 @@ html:
 # Execution settings
 execute:
   execute_notebooks: off
-  allow_errors: true
-  exclude_patterns:
-    - notebooks/*.ipynb
 
-####################################################################################### 
-
+#######################################################################################
+# Sphinx settings
+sphinx:
+  config:
+    html_show_copyright: false
+    html_last_updated_fmt: "%b %d, %Y"
+    apidoc_module_dir: ../space2stats_api/src
+    extra_extensions:
+      - sphinx.ext.autodoc
+      - sphinx.ext.napoleon
