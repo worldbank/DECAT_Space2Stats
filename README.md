@@ -217,9 +217,15 @@ To build the documentation locally, run the following command:
 sphinx-build docs _build/html -b html
 ```
 
+To remove the generated files:
+
+```bash
+jupyter-book clean .
+```
+
 ### Contributing
 
-A Github Action is used to automatically build and deploy the documentation to Github Pages. To contribute to the documentation, please follow the steps below:
+A Github Action is used to automatically build and deploy the documentation to Github Pages. To contribute to the documentation, follow the steps below:
 
 1. Create a new branch from the latest `main`.
 
@@ -238,3 +244,9 @@ A Github Action is used to automatically build and deploy the documentation to G
     ```
 
 The site will be updated automatically once the branch is merged to main.
+
+Note that the sphinx build command uses the conf.py file. If we need to make changes to _conf.yml, then rebuild the conf.py file by running:
+
+```bash
+jupyter-book config sphinx docs
+```
