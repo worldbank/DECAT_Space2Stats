@@ -17,9 +17,9 @@ parts:
   - caption: S2S Examples
     numbered: False
     chapters:
-        - file: notebooks/user-docs/space2stats_py_package_demo.ipynb
-        - file: notebooks/user-docs/space2stats_api_demo.ipynb
-        - file: notebooks/user-docs/space2stats_api_demo_R.Rmd
+        - file: user-docs/space2stats_py_package_demo.ipynb
+        - file: user-docs/space2stats_api_demo.ipynb
+        - file: user-docs/space2stats_api_demo_R.Rmd
   - caption: S2S Python Documentation
     numbered: False
     chapters:

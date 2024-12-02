@@ -1,30 +1,44 @@
 name: Publish to GitHub Pages
-
 on:
   push:
     branches:
       - main
 
 jobs:
-  build:
+  build-book:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: "pip"
-      - name: Dependencies
+      - name: Install Dependencies
+        working-directory: space2stats_api/src
         run: |
-          if [ -f docs/requirements.txt ]; then pip install -r docs/requirements.txt; fi
-      - name: Build Jupyter Book
+          if [ -f pyproject.toml ]; then
+            pip install poetry && poetry install --with docs
+          fi
+      - name: Build Jupyter Book using Sphinx
         run: |
-          jupyter-book build . --config docs/_config.yml --toc docs/_toc.yml
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/main' && job.status == 'success'
+          sphinx-build docs _build/html -b html
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        if: job.status == 'success'
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_build/html
-          enable_jekyll: false
+          path: "_build/html"
+
+  deploy-book:
+    needs: build-book
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
