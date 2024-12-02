@@ -15,14 +15,13 @@ jobs:
           python-version: "3.11"
           cache: "pip"
       - name: Install Dependencies
-        working-directory: space2stats_api/src
         run: |
-          if [ -f pyproject.toml ]; then
-            python3 -m venv book
-            source book/bin/activate
-            pip install poetry
-            poetry install --with docs
-          fi
+          python3 -m venv book
+          source book/bin/activate
+          cd space2stats_api/src
+          pip install poetry
+          poetry install --with docs
+          cd ../../
       - name: Build Jupyter Book using Sphinx
         run: |
           source book/bin/activate
