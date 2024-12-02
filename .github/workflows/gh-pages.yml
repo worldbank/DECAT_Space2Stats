@@ -22,6 +22,7 @@ jobs:
           fi
       - name: Build Jupyter Book using Sphinx
         run: |
+          source $(poetry env info --path)/bin/activate
           sphinx-build docs _build/html -b html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
