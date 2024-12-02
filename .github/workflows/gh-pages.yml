@@ -18,10 +18,14 @@ jobs:
         working-directory: space2stats_api/src
         run: |
           if [ -f pyproject.toml ]; then
-            pip install poetry && poetry install --with docs
+            python3 -m venv book
+            source book/bin/activate
+            pip install poetry
+            poetry install --with docs
           fi
       - name: Build Jupyter Book using Sphinx
         run: |
+          source book/bin/activate
           sphinx-build docs _build/html -b html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
