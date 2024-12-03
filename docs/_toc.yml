@@ -10,17 +10,21 @@ parts:
   - caption: S2S Sub-tasks
     numbered: False
     chapters:
-        - file: sub_tasks/admin_bounds.md
-        - file: sub_tasks/sub_national_welfare.md
-        - file: sub_tasks/geest.md
-        - file: sub_tasks/geo_enhancement.md
+      - file: sub_tasks/admin_bounds.md
+      - file: sub_tasks/sub_national_welfare.md
+      - file: sub_tasks/geest.md
+      - file: sub_tasks/geo_enhancement.md
   - caption: S2S Examples
     numbered: False
     chapters:
-        - file: user-docs/space2stats_py_package_demo.ipynb
-        - file: user-docs/space2stats_api_demo.ipynb
-        - file: user-docs/space2stats_api_demo_R.Rmd
+      - file: user-docs/space2stats_py_package_demo.ipynb
+      - file: user-docs/space2stats_api_demo.ipynb
+      - file: user-docs/space2stats_api_demo_R.Rmd
   - caption: S2S Python Documentation
     numbered: False
     chapters:
-        - file: api.rst
+      - file: temp.md
+        sections:
+          - file: api.rst
+          - url: https://tinyurl.com/s2s-stac
+            title: STAC Metadata
