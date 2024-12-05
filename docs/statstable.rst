@@ -1,5 +1,5 @@
-API Reference
-=============
+Python Package
+==============
 
 .. automodule:: space2stats.lib
     :members:
