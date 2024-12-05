@@ -2,7 +2,15 @@ format: jb-book
 root: readme.md
 
 parts:
-  - caption: Concept Note
+  - caption: Getting Started
+    numbered: False
+    chapters:
+        - url: https://tinyurl.com/s2s-stac
+          title: STAC Metadata
+        - url: https://space2stats.ds.io/docs
+          title: API Docs
+        - file: statstable.rst
+  - caption: Project Overview
     numbered: False
     chapters:
       - file: Introduction.md
@@ -10,17 +18,13 @@ parts:
   - caption: S2S Sub-tasks
     numbered: False
     chapters:
-        - file: sub_tasks/admin_bounds.md
-        - file: sub_tasks/sub_national_welfare.md
-        - file: sub_tasks/geest.md
-        - file: sub_tasks/geo_enhancement.md
-  - caption: S2S Examples
+      - file: sub_tasks/admin_bounds.md
+      - file: sub_tasks/sub_national_welfare.md
+      - file: sub_tasks/geest.md
+      - file: sub_tasks/geo_enhancement.md
+  - caption: Notebook Examples
     numbered: False
     chapters:
-        - file: user-docs/space2stats_py_package_demo.ipynb
-        - file: user-docs/space2stats_api_demo.ipynb
-        - file: user-docs/space2stats_api_demo_R.Rmd
-  - caption: S2S Python Documentation
-    numbered: False
-    chapters:
-        - file: api.rst
+      - file: user-docs/space2stats_py_package_demo.ipynb
+      - file: user-docs/space2stats_api_demo.ipynb
+      - file: user-docs/space2stats_api_demo_R.Rmd
