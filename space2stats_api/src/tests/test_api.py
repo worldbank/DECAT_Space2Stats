@@ -20,7 +20,7 @@ aoi = {
 
 
 def test_read_root(client):
-    response = client.get("/", allow_redirects=False)
+    response = client.get("/", follow_redirects=False)
     assert response.status_code in [
         302,
         307,
@@ -31,7 +31,7 @@ def test_read_root(client):
 
 
 def test_metadata_redirect(client):
-    response = client.get("/metadata", allow_redirects=False)
+    response = client.get("/metadata", follow_redirects=False)
     assert response.status_code in [
         302,
         307,
