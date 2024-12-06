@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from textwrap import dedent
 from typing import Any, Dict, List, Optional
 
 import boto3
@@ -9,7 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse, RedirectResponse
 from starlette.requests import Request
 from starlette_cramjam.middleware import CompressionMiddleware
-from textwrap import dedent
 
 from .. import __version__
 from ..lib import StatsTable
