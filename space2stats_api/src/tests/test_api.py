@@ -21,18 +21,27 @@ aoi = {
 
 def test_read_root(client):
     response = client.get("/", allow_redirects=False)
-    assert response.status_code in [302, 307], f"Unexpected status code: {response.status_code}"
-    assert response.headers["Location"] == "https://worldbank.github.io/DECAT_Space2Stats"
+    assert response.status_code in [
+        302,
+        307,
+    ], f"Unexpected status code: {response.status_code}"
+    assert (
+        response.headers["Location"] == "https://worldbank.github.io/DECAT_Space2Stats"
+    )
 
 
 def test_metadata_redirect(client):
     response = client.get("/metadata", allow_redirects=False)
-    assert response.status_code in [302, 307], f"Unexpected status code: {response.status_code}"
+    assert response.status_code in [
+        302,
+        307,
+    ], f"Unexpected status code: {response.status_code}"
     assert response.headers["Location"] == (
-    "https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/"
-    "worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/"
-    "METADATA/stac/catalog.json"
-)
+        "https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/"
+        "worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/"
+        "METADATA/stac/catalog.json"
+    )
+
 
 def test_get_summary(client):
     request_payload = {
