@@ -41,7 +41,10 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
             The Space2Stats program is designed to provide academics, statisticians, and data 
             scientists with easier access to regularly requested geospatial aggregate data.
 
-            For more information, see the [Space2Stats docs](https://worldbank.github.io/DECAT_Space2Stats/readme.html).
+            Geographic variables were generated at the hexagon (h3) level 6 and this API enables 
+            users to query the data by area of interest and generate aggregate statistics efficiently.
+
+            For more information on the datasets available and usage examples, see the [Space2Stats docs](https://worldbank.github.io/DECAT_Space2Stats/readme.html).
             """
         ),
         contact={
