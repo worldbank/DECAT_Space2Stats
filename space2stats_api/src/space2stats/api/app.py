@@ -45,7 +45,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
             """
         ),
         contact={
-            "name": "Ben Stewart (Task Leader), Development Data Group (DECDG), Worldbank",
+            "name": "Benjamin Stewart (Task Leader), Development Data Group (DECDG), Worldbank",
             "url": "https://data.worldbank.org",
             "email": "bstewart@worldbankgroup.org",
         },
