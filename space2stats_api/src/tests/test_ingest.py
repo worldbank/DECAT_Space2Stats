@@ -336,10 +336,10 @@ def test_case_sensitivity_in_columns(clean_database, tmpdir):
     # Validate the data was inserted correctly
     with psycopg.connect(connection_string) as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM space2stats WHERE \"Hex_ID\" = 'hex_1'")
+            cur.execute("SELECT * FROM space2stats WHERE hex_id = 'hex_1'")
             result = cur.fetchone()
             assert result == ("hex_1", 100)
 
-            cur.execute("SELECT * FROM space2stats WHERE \"Hex_ID\" = 'hex_2'")
+            cur.execute("SELECT * FROM space2stats WHERE hex_id = 'hex_2'")
             result = cur.fetchone()
             assert result == ("hex_2", 200)
