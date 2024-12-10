@@ -1,6 +1,8 @@
 ---
 title: "Space2Stats API Demo in R"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -47,6 +49,11 @@ print(unlist(available_fields))
 ## Define Area of Interest (AOI)
 
 ```{r}
+minx <- 29.038924
+miny <- -4.468958
+maxx <- 30.850461
+maxy <- -2.310523
+
 # Define Area of Interest (AOI) with NULL for properties to ensure it's treated as a valid dictionary
 aoi <- list(
   type = "Feature",
@@ -55,11 +62,11 @@ aoi <- list(
     type = "Polygon",
     coordinates = list(
       list(
-        c(33.78593974945852, 5.115816884114494),
-        c(33.78593974945852, -4.725410543134203),
-        c(41.94362577283266, -4.725410543134203),
-        c(41.94362577283266, 5.115816884114494),
-        c(33.78593974945852, 5.115816884114494)
+        c(minx, maxy),
+        c(minx, miny),
+        c(maxx, miny),
+        c(maxx, maxy),
+        c(minx, maxy)
       )
     )
   )
@@ -88,11 +95,14 @@ resp <- req |> req_perform()
 summary_data <- resp |> resp_body_string() |> fromJSON(flatten = TRUE)
 
 # Extract coordinates and convert to a spatial data frame (sf object)
-summary_data$x <- sapply(summary_data$geometry.coordinates, function(x) unlist(x)[1])
-summary_data$y <- sapply(summary_data$geometry.coordinates, function(x) unlist(x)[2])
+summary_data <- summary_data %>%
+  mutate(
+    x = sapply(geometry, function(g) fromJSON(g)$coordinates[1]),
+    y = sapply(geometry, function(g) fromJSON(g)$coordinates[2])
+  )
 
 # Convert to sf, drop extra geometry fields
-gdf <- st_as_sf(summary_data, coords = c("x", "y"), crs = 4326)[, c(1, 2, 5)]
+gdf <- st_as_sf(summary_data, coords = c("x", "y"), crs = 4326)
 ```
 
 ## Visualization
@@ -121,6 +131,5 @@ leaflet(gdf) %>%
   addLegend(
     pal = custom_pal, values = gdf$sum_pop_2020, title = "Population 2020 (Custom Binned Scale)",
     opacity = 1
-  ) %>%
-  setView(lng = 37.5, lat = 0, zoom = 6)  # Center the map based on AOI
+  )
 ```

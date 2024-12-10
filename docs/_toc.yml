@@ -25,6 +25,6 @@ parts:
   - caption: Notebook Examples
     numbered: False
     chapters:
-      - file: user-docs/space2stats_py_package_demo.ipynb
       - file: user-docs/space2stats_api_demo.ipynb
-      - file: user-docs/space2stats_api_demo_R.Rmd
+      - url: user-docs/space2stats_api_demo_R.html
+      - file: user-docs/space2stats_py_package_demo.ipynb
