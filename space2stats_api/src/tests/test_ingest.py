@@ -294,3 +294,52 @@ def test_hex_id_column_mandatory(clean_database, tmpdir):
         load_parquet_to_db(str(parquet_file), connection_string, str(item_file))
     except ValueError as e:
         assert "The 'hex_id' column is missing from the Parquet file." in str(e)
+
+
+def test_case_sensitivity_in_columns(clean_database, tmpdir):
+    connection_string = f"postgresql://{clean_database.user}:{clean_database.password}@{clean_database.host}:{clean_database.port}/{clean_database.dbname}"
+
+    # Create Parquet file with a column name that includes capitalization
+    parquet_file = tmpdir.join("case_sensitivity.parquet")
+    data = {
+        "Hex_ID": ["hex_1", "hex_2"],  # Capitalized column name
+        "Sum_Pop": [100, 200],
+    }
+    table = pa.table(data)
+    pq.write_table(table, parquet_file)
+
+    # Create corresponding STAC item with matching capitalization
+    stac_item = {
+        "type": "Feature",
+        "stac_version": "1.0.0",
+        "id": "space2stats_case_sensitivity",
+        "properties": {
+            "table:columns": [
+                {"name": "Hex_ID", "type": "string"},
+                {"name": "Sum_Pop", "type": "int64"},
+            ],
+            "datetime": "2024-10-07T11:21:25.944150Z",
+        },
+        "geometry": None,
+        "bbox": [-180, -90, 180, 90],
+        "links": [],
+        "assets": {},
+    }
+
+    item_file = tmpdir.join("case_sensitivity.json")
+    with open(item_file, "w") as f:
+        json.dump(stac_item, f)
+
+    # Attempt to load into the database
+    load_parquet_to_db(str(parquet_file), connection_string, str(item_file))
+
+    # Validate the data was inserted correctly
+    with psycopg.connect(connection_string) as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM space2stats WHERE \"Hex_ID\" = 'hex_1'")
+            result = cur.fetchone()
+            assert result == ("hex_1", 100)
+
+            cur.execute("SELECT * FROM space2stats WHERE \"Hex_ID\" = 'hex_2'")
+            result = cur.fetchone()
+            assert result == ("hex_2", 200)
