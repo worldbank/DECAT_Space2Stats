@@ -26,5 +26,6 @@ parts:
     numbered: False
     chapters:
       - file: user-docs/space2stats_api_demo.ipynb
-      - url: user-docs/space2stats_api_demo_R.html
+      - file: user-docs/space2stats_api_demo_R.md
+      - file: user-docs/space2stats_floods.ipynb
       - file: user-docs/space2stats_py_package_demo.ipynb

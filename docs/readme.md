@@ -245,7 +245,7 @@ The expected response is a JSON containing the hexagon ID and the requested fiel
 
 ### `/aggregate`
 
-The summary endpoint is very similar to the summary endpoint, but it returns an aggregate statistic for the entire area, based on an additional `aggregation type` function ('sum', 'avg', 'count', 'max' or 'min'). The request body is the same as the summary endpoint, with the addition of the `aggregation_type` field. 
+The aggregate endpoint is very similar to the summary endpoint, but it returns an aggregate statistic for the entire area, based on an additional `aggregation type` function ('sum', 'avg', 'count', 'max' or 'min'). The request body is the same as the summary endpoint, with the addition of the `aggregation_type` field. 
 
 This example uses an admin-1 province boundary from GeoBoundaries, retrieved as a `geopandas geodataframe` or `simple feature` (r).
 
@@ -352,9 +352,15 @@ The expected response is a JSON containing the requested aggregate statistic for
 {'sum_pop_2020': 1374175.833772784}
 ```
 
+## Notebook Examples
+
+- [**API Demo (Python)**](user-docs/space2stats_api_demo.ipynb)
+- [**API Demo (R)**](user-docs/space2stats_api_demo_R.md)
+- [**Exploring Flood Exposure (Python Functions)**](user-docs/space2stats_floods.ipynb)
+
 ## StatsTable Python Package
 
-In addition to the API, the `StatsTable` python package is being developed to enable faster database queries and scale research applications. The package currently supports a similar set of functions as the API (_fields_, _summaries_, and _aggregate_).
+In addition to the API, the `StatsTable` python package provides the API's underlying functionality as a set of functions (_fields_, _summaries_, and _aggregate_). The package enables researchers to work with the Space2Stats database directly and conduct faster queries and scale research applications.
 
 ```{note}
 This package is still under development. Currently, users need to set credential parameters to connect to the database. Reach out to gost@worldbank.org to request credentials.

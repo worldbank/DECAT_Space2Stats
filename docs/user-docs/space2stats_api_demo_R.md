@@ -6,7 +6,7 @@ output:
 ---
 # R Example
 
-```{r setup, include=FALSE}
+```R name="setup" tags=["remove_cell"]
 knitr::opts_chunk$set(echo = TRUE)
 library(httr2)
 library(jsonlite)
@@ -18,7 +18,7 @@ library(viridis)
 
 ## Set Up API Endpoints
 
-```{r}
+```R
 base_url <- "https://space2stats.ds.io"
 fields_endpoint <- paste0(base_url, "/fields")
 summary_endpoint <- paste0(base_url, "/summary")
@@ -26,7 +26,7 @@ summary_endpoint <- paste0(base_url, "/summary")
 
 ## Fetch Available Fields
 
-```{r}
+```R
 # Set up the request to fetch available fields
 req <- request(base_url) |>
   req_url_path_append("fields")  # Append the correct endpoint
@@ -49,7 +49,7 @@ print(unlist(available_fields))
 
 ## Define Area of Interest (AOI)
 
-```{r}
+```R
 minx <- 29.038924
 miny <- -4.468958
 maxx <- 30.850461
@@ -76,7 +76,7 @@ aoi <- list(
 
 ## Request Summary Data
 
-```{r}
+```R
 request_payload <- list(
     aoi = aoi,
     spatial_join_method = "centroid",
@@ -108,7 +108,7 @@ gdf <- st_as_sf(summary_data, coords = c("x", "y"), crs = 4326)
 
 ## Visualization
 
-```{r}
+```R
 
 # Replace NA values in sum_pop_2020 with 0
 gdf$sum_pop_2020[is.na(gdf$sum_pop_2020)] <- 0
