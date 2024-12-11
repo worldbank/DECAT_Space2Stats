@@ -21,12 +21,12 @@ def read_parquet_file(file_path: str) -> pa.Table:
             table = pq.read_table(tmp_file.name)
     else:
         table = pq.read_table(file_path)
-    return table
+    return table.rename_columns([col.lower() for col in table.column_names])
 
 
 def get_stac_fields_from_item(stac_item_path: str) -> Set[str]:
     item = Item.from_file(stac_item_path)
-    columns = [c["name"] for c in item.properties.get("table:columns")]
+    columns = [c["name"].lower() for c in item.properties.get("table:columns")]
     return set(columns)
 
 
@@ -55,8 +55,6 @@ def verify_columns(
         raise ValueError("The 'hex_id' column is missing from the Parquet file.")
 
     # Verify Parquet columns match the STAC fields
-    # TODO: Standarize the hex_id in the parquet files/STAC items.
-    # if parquet_columns - {"hex_id"} != stac_fields:
     if parquet_columns != stac_fields:
         extra_in_parquet = parquet_columns - stac_fields
         extra_in_stac = stac_fields - parquet_columns
@@ -72,7 +70,7 @@ def verify_columns(
                 FROM information_schema.columns
                 WHERE table_name = '{TABLE_NAME}'
             """)
-            existing_columns = set(row[0] for row in cur.fetchall())
+            existing_columns = set(row[0].lower() for row in cur.fetchall())
 
     # Check for overlap in columns (excluding 'hex_id')
     overlapping_columns = parquet_columns.intersection(existing_columns) - {"hex_id"}
@@ -154,7 +152,7 @@ def load_parquet_to_db(
                 FROM information_schema.columns
                 WHERE table_name = '{temp_table}'
                 AND column_name NOT IN (
-                    SELECT column_name FROM information_schema.columns WHERE table_name = '{TABLE_NAME}'
+                    SELECT LOWER(column_name) FROM information_schema.columns WHERE table_name = '{TABLE_NAME}'
                 )
             """)
             new_columns = cur.fetchall()
@@ -166,14 +164,15 @@ def load_parquet_to_db(
                 # Add new columns to the main table
                 for column, column_type in new_columns:
                     cur.execute(
-                        f"ALTER TABLE {TABLE_NAME} ADD COLUMN IF NOT EXISTS {column} {column_type}"
+                        f"ALTER TABLE {TABLE_NAME} ADD COLUMN IF NOT EXISTS {column.lower()} {column_type}"
                     )
 
                 print(f"Adding new columns: {[c[0] for c in new_columns]}...")
 
                 # Construct the SET clause for the update query
                 update_columns = [
-                    f"{column} = temp.{column}" for column, _ in new_columns
+                    f"{column.lower()} = temp.{column.lower()}"
+                    for column, _ in new_columns
                 ]
                 set_clause = ", ".join(update_columns)
 
