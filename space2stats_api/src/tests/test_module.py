@@ -1,5 +1,6 @@
 import pytest
 from geojson_pydantic import Feature
+from h3ronpy import cells_parse
 from space2stats.lib import Settings, StatsTable
 
 
@@ -157,3 +158,35 @@ def test_aggregate_invalid_field(mock_env, database, aoi_example):
                 fields=["invalid_field"],
                 aggregation_type="sum",
             )
+
+
+def test_get_summaries_ordering(mock_env, database):
+    """Test that _get_summaries preserves the order of input h3_ids."""
+    settings = {
+        "PGHOST": database.host,
+        "PGPORT": database.port,
+        "PGDATABASE": database.dbname,
+        "PGUSER": database.user,
+        "PGPASSWORD": database.password,
+        "PGTABLENAME": "space2stats",
+    }
+
+    # Use 3 IDs that exist in the database
+    input_h3_ids_str = [
+        "862a1070fffffff",
+        "867a74817ffffff",
+        "862a10767ffffff",
+    ]
+    input_h3_ids = cells_parse(input_h3_ids_str).to_pylist()
+
+    fields = ["sum_pop_2020"]
+
+    with StatsTable.connect(**settings) as stats_table:
+        rows, colnames = stats_table._get_summaries(fields=fields, h3_ids=input_h3_ids)
+
+        returned_h3_ids_str = [row[0] for row in rows]
+
+        # Assert that the order matches the input
+        assert (
+            returned_h3_ids_str == input_h3_ids_str
+        ), f"Mismatch in order: input={input_h3_ids_str}, returned={returned_h3_ids_str}"

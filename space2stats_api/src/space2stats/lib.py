@@ -45,6 +45,7 @@ class StatsTable:
                 SELECT {0}
                 FROM {1}
                 WHERE hex_id = ANY (%s)
+                ORDER BY array_position(%s, hex_id)
             """
         ).format(pg.sql.SQL(", ").join(cols), pg.sql.Identifier(self.table_name))
 
@@ -52,13 +53,15 @@ class StatsTable:
         h3_ids = [
             scalar.as_py() if hasattr(scalar, "as_py") else scalar for scalar in h3_ids
         ]
+        h3_id_strings = cells_to_string(h3_ids).to_pylist()
 
         with self.conn.cursor() as cur:
             cur.execute(
                 sql_query,
                 [
-                    cells_to_string(h3_ids).to_pylist(),
-                ],
+                    h3_id_strings,
+                    h3_id_strings,
+                ],  # Pass h3_id_strings twice: once for ANY, once for array_position
             )
             rows = cur.fetchall()
             colnames = [desc[0] for desc in cur.description]
