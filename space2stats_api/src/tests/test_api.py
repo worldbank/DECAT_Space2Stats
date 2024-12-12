@@ -1,5 +1,7 @@
+import h3
 import pytest
 from shapely import from_geojson
+from shapely.geometry import Polygon, shape
 
 aoi = {
     "type": "Feature",
@@ -192,3 +194,57 @@ def test_get_fields(client):
     expected_fields = ["sum_pop_2020", "sum_pop_f_10_2020"]
     for field in expected_fields:
         assert field in response_json
+
+
+def test_summary_geometry_mismatch_with_h3(client):
+    aoi = {
+        "type": "Feature",
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [33.78593974945852, 5.115816884114494],
+                    [33.78593974945852, -4.725410543134203],
+                    [41.94362577283266, -4.725410543134203],
+                    [41.94362577283266, 5.115816884114494],
+                    [33.78593974945852, 5.115816884114494],
+                ]
+            ],
+        },
+        "properties": {"name": "Updated AOI"},
+    }
+
+    # Define a request payload to match the reported issue
+    request_payload = {
+        "aoi": aoi,
+        "spatial_join_method": "touches",
+        "fields": ["sum_pop_2020"],
+        "geometry": "polygon",
+    }
+
+    response = client.post("/summary", json=request_payload)
+    assert (
+        response.status_code == 200
+    ), f"Unexpected status code: {response.status_code}"
+
+    response_json = response.json()
+    assert len(response_json) > 0, "No summaries returned from the API"
+
+    for summary in response_json:
+        assert "hex_id" in summary, "Missing 'hex_id' in summary"
+        assert "geometry" in summary, "Missing 'geometry' in summary"
+
+        # Extract hex_id and geometry from the API response
+        hex_id = summary["hex_id"]
+        api_geometry = shape(from_geojson(summary["geometry"]))
+
+        # Generate the geometry independently using h3
+        boundary = h3.cell_to_boundary(hex_id)
+        independent_geometry = Polygon([(lon, lat) for lat, lon in boundary])
+
+        # Compare the API geometry with the independently generated geometry
+        assert api_geometry.equals_exact(independent_geometry, tolerance=0.0001), (
+            f"Geometry mismatch for hex_id {hex_id}. "
+            f"API geometry: {api_geometry.wkt}, "
+            f"Independent geometry: {independent_geometry.wkt}"
+        )
