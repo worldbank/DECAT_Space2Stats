@@ -2,7 +2,7 @@
 all: build serve
 
 build:
-	jupyter-book build . --config docs/_config.yml --toc docs/_toc.yml
+	sphinx-build docs _build/html -b html
 
 serve:
 	open _build/html/index.html
