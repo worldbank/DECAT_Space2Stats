@@ -19,7 +19,6 @@ parts:
     numbered: False
     chapters:
       - file: sub_tasks/admin_bounds.md
-      - file: sub_tasks/sub_national_welfare.md
       - file: sub_tasks/geest.md
       - file: sub_tasks/geo_enhancement.md
   - caption: Notebook Examples
@@ -27,5 +26,7 @@ parts:
     chapters:
       - file: user-docs/space2stats_api_demo.ipynb
       - file: user-docs/space2stats_api_demo_R.md
+      - file: user-docs/space2stats_api_demo_pop_pyramid.ipynb
+      - file: user-docs/space2stats_api_demo_urban_flood_risk.ipynb
       - file: user-docs/space2stats_floods.ipynb
       - file: user-docs/space2stats_py_package_demo.ipynb
