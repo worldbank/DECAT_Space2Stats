@@ -25,7 +25,7 @@ The database currently contains four datasets with global coverage:
 
 Population Demographics
 ^^^
-Total Population, 2020, disaggregarated by age and gender. (WorldPop)
+Total Population, 2020, disaggregated by age and gender. (WorldPop)
 :::
 
 :::{grid-item-card}
@@ -33,7 +33,7 @@ Total Population, 2020, disaggregarated by age and gender. (WorldPop)
 
 Degree of Urbanization
 ^^^
-Population and number of cells in different rural/urban classes. (GHSMOD)
+Population and number of cells in different rural/urban classes. (GHSSMOD)
 :::
 
 :::{grid-item-card}
@@ -395,7 +395,7 @@ PGPASSWORD=
 PGTABLENAME=space2stats
 ```
 
-Connect to the database and use package functions (e.g., `fiels`, `summaries`, `aggregate`). Additional documentation for these is available here. 
+Connect to the database and use package functions (e.g., `fields`, `summaries`, `aggregate`). Additional documentation for these is available here. 
 
 ```python
 from space2stats import StatsTable
