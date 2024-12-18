@@ -50,82 +50,92 @@
     "themes": "Urbanization",
     "table:columns": [
       {
-        "name": "11_POP",
-        "description": "Total population in very low density areas",
-        "type": "float64"
+        "name": "hex_id",
+        "description": "H3 unique identifier",
+        "type": "object"
       },
       {
-        "name": "12_POP",
-        "description": "Total population in low density rural areas",
-        "type": "float64"
-      },
-      {
-        "name": "13_POP",
-        "description": "Total population in rural areas",
-        "type": "float64"
-      },
-      {
-        "name": "21_POP",
-        "description": "Total population in suburban grid cells",
-        "type": "float64"
-      },
-      {
-        "name": "22_POP",
-        "description": "Total population in semi-dense urban clusters",
-        "type": "float64"
-      },
-      {
-        "name": "23_POP",
-        "description": "Total population in dense urban clusters",
-        "type": "float64"
-      },
-      {
-        "name": "30_POP",
-        "description": "Total population in urban centres",
-        "type": "float64"
-      },
-      {
-        "name": "TOTAL_POP",
-        "description": "Total population based on GHS-Pop population",
-        "type": "float64"
-      },
-      {
-        "name": "COUNT_11",
+        "name": "ghs_11_count",
         "description": "Total number of cells in very low density areas",
         "type": "int64"
       },
       {
-        "name": "COUNT_12",
+        "name": "ghs_12_count",
         "description": "Total number of cells in low density rural areas",
         "type": "int64"
       },
       {
-        "name": "COUNT_13",
+        "name": "ghs_13_count",
         "description": "Total number of cells in rural areas",
         "type": "int64"
       },
       {
-        "name": "COUNT_21",
+        "name": "ghs_21_count",
         "description": "Total number of cells in suburban grid cells",
         "type": "int64"
       },
       {
-        "name": "COUNT_22",
+        "name": "ghs_22_count",
         "description": "Total number of cells in semi-dense urban clusters",
         "type": "int64"
       },
       {
-        "name": "COUNT_23",
+        "name": "ghs_23_count",
         "description": "Total number of cells in dense urban clusters",
         "type": "int64"
       },
       {
-        "name": "COUNT_30",
+        "name": "ghs_30_count",
         "description": "Total number of cells in urban centres",
         "type": "int64"
+      },
+      {
+        "name": "ghs_total_count",
+        "description": "Total number of cells in all categories in GHS database",
+        "type": "int64"
+      },
+      {
+        "name": "ghs_11_pop",
+        "description": "Total population in very low density areas",
+        "type": "float64"
+      },
+      {
+        "name": "ghs_12_pop",
+        "description": "Total population in low density rural areas",
+        "type": "float64"
+      },
+      {
+        "name": "ghs_13_pop",
+        "description": "Total population in rural areas",
+        "type": "float64"
+      },
+      {
+        "name": "ghs_21_pop",
+        "description": "Total population in suburban grid cells",
+        "type": "float64"
+      },
+      {
+        "name": "ghs_22_pop",
+        "description": "Total population in semi-dense urban clusters",
+        "type": "float64"
+      },
+      {
+        "name": "ghs_23_pop",
+        "description": "Total population in dense urban clusters",
+        "type": "float64"
+      },
+      {
+        "name": "ghs_30_pop",
+        "description": "Total population in urban centres",
+        "type": "float64"
+      },
+      {
+        "name": "ghs_total_pop",
+        "description": "Total population based on GHS-Pop population",
+        "type": "float64"
       }
     ],
-    "datetime": "2024-11-18T15:57:45.826391Z"
+    "datetime": "2024-12-10T15:28:40.133406Z"
   },
   "links": [
     {
