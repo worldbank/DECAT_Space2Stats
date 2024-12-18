@@ -37,11 +37,11 @@ Population and number of cells in different rural/urban classes. (GHSSMOD)
 :::
 
 :::{grid-item-card}
-:link: https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/nighttime_lights_2013/nighttime_lights_2013.json
+:link: https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/nighttime_lights/nighttime_lights.json
 
 Nighttime Lights
 ^^^
-Sum of luminosity values measured by monthly composites from the VIIRS satellite. (World Bank, Light Every Night)
+Sum of luminosity values measured by annual composites from the VIIRS satellite. (World Bank, Light Every Night)
 :::
 
 :::{grid-item-card}
