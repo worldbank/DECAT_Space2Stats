@@ -9,18 +9,18 @@ The goal of the Space2Stats program is to produce a global database of geospatia
 3. [FAO GAUL](https://developers.google.com/earth-engine/datasets/catalog/FAO_GAUL_2015_level0): While this is a commonly used dataset, it is no longer being updated.
 4. [GADM](https://gadm.org/index.html): GADM provides maps and spatial data for all countries and their sub-divisions
 
-The Space2Stats program will also publish a global database of administraive boundaries at level 0, 1, and 2, in order to comply with the World Bank's strict legal requirements on international boundaries.
+The Space2Stats program will also publish a global database of administrative boundaries at level 0, 1, and 2, in order to comply with the World Bank's strict legal requirements on international boundaries.
 
 ## Hexagons vs Grids
-Once we acknowledge the necessity of a standard grid for aggregation, why did we choose hexagons over a grid? There are two principle advantages to using hexagons:
+Once we acknowledge the necessity of a standard grid for aggregation, why did we choose hexagons over a grid? There are two principal advantages to using hexagons:
 1. Hexagons have a consistent area across the globe, unlike grids which change in width as you move north or south from the equator.
 2. Hexagons have more consistent neighbour calculations than grids or triangles.
 
 ```{figure} images/hexagon_neighbours.jpg
 ---
-alt: Example of neighbour calculations for various shape tesselations
+alt: Example of neighbour calculations for various shape tessellations
 ---
-Example of neighbour calculations for tesselations of triangle, hexagons and squares. Image taken from [Uber H3 website](https://www.uber.com/blog/h3/)
+Example of neighbour calculations for tessellations of triangle, hexagons and squares. Image taken from [Uber H3 website](https://www.uber.com/blog/h3/)
 ```
 
 Additionally, several World Bank projects are leveraging hexagons in their data indexing and calculations:
