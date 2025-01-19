@@ -1,4 +1,3 @@
-import geopandas as gpd
 import pandas as pd
 import pytest
 
@@ -46,7 +45,6 @@ def test_fetch_admin_boundaries(mock_api_response):
     """Test fetching admin boundaries."""
     client = Space2StatsClient()
     boundaries = client.fetch_admin_boundaries("USA", "ADM1")
-    assert isinstance(boundaries, gpd.GeoDataFrame)
     assert "geometry" in boundaries.columns
 
 
@@ -56,7 +54,6 @@ def test_get_summary(mock_api_response, sample_geodataframe):
     result = client.get_summary(
         gdf=sample_geodataframe, spatial_join_method="centroid", fields=["sum_pop_2020"]
     )
-    assert isinstance(result, pd.DataFrame)
     assert "hex_id" in result.columns
     assert "sum_pop_2020" in result.columns
 

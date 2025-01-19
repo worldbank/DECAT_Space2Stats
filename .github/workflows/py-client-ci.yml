@@ -28,13 +28,18 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y proj-bin libproj-dev gdal-bin libgdal-dev
-          
+          sudo apt-get install -y \
+            proj-bin libproj-dev gdal-bin libgdal-dev build-essential python3-dev \
+            libgeos-dev libopenblas-dev liblapack-dev libatlas-base-dev libhdf5-dev
+
       - name: Install Poetry
         uses: snok/install-poetry@v1
         
       - name: Install dependencies
-        run: poetry install
+        run: |
+          poetry run pip install --upgrade pip setuptools wheel
+          poetry run pip install cython numpy
+          poetry install --no-root
 
       - name: Run tests
         run: poetry run pytest
