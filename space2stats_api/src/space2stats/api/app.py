@@ -174,17 +174,20 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>geometry</dt>
         <dd>
-        `Optional["polygon", "point"]`
+        `Literal["polygon", "point"] | None`
 
-        Specifies if the H3 geometries should be included in the response
+        Specifies if the H3 geometries should be included in the response. It can be either "polygon" to get hexagon boundaries, "point" to get hexagon centers, or None to exclude geometries.
         </dd>
         </dl>
 
         Returns
         -------
-        `List[Dict]`
+        `List[Dict[str, Any]]`
 
-        List of dictionaries containing statistics for each hex ID
+        List of dictionaries containing statistics for each hex ID. Each dictionary contains:
+        - `hex_id`: The H3 cell identifier
+        - `geometry` (optional): The geometry of the H3 cell, if geometry is specified
+        - Other fields from the statistics table, based on the specified `fields`
         """
         try:
             return table.summaries_by_hexids(
