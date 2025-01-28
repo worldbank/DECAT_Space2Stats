@@ -35,8 +35,7 @@ Extracts summary statistics from H3 data.
 ## Quick Start
 
 ```bash
-cd space2stats_client
-pip install e .
+pip install -i https://test.pypi.org/simple/ space2stats-client
 ```
 
 ```python
