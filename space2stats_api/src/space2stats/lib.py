@@ -69,6 +69,9 @@ class StatsTable:
             The Area of Interest, either as a `Feature` or an instance of `AoiModel`
         spatial_join_method : ["touches", "centroid", "within"]
             The method to use for performing the spatial join between the AOI and H3 cells
+                - "touches": Includes H3 cells that touch the AOI
+                - "centroid": Includes H3 cells where the centroid falls within the AOI
+                - "within": Includes H3 cells entirely within the AOI
         fields : List[str]
             A list of field names to retrieve from the statistics table
         geometry : Optional["polygon", "point"]
@@ -77,7 +80,10 @@ class StatsTable:
         Returns
         -------
         List[Dict]
-            A list of dictionaries containing statistical summaries for each H3 cell
+            A list of dictionaries containing statistical summaries for each H3 cell. Each dictionary contains:
+                - "hex_id": The H3 cell identifier
+                - "geometry" (optional): The geometry of the H3 cell, if geometry is specified.
+                - Other fields from the statistics table, based on the specified `fields`
         """
         if not isinstance(aoi, Feature):
             aoi = AoiModel.model_validate(aoi)
