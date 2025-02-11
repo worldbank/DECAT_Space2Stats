@@ -68,7 +68,7 @@ jobs:
       - name: Run Client tests
         working-directory: ./space2stats_client
         run: |
-          poetry run python -m pytest --benchmark-skip tests
+          poetry run python -m pytest tests
 
   deploy-to-dev:
     if: ${{ github.event_name == 'pull_request' }}
