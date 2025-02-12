@@ -107,3 +107,6 @@ cdk.out
 lambda_layer
 .venv
 .envrc
+
+# secrets
+.secrets
