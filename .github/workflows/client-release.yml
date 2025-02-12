@@ -64,11 +64,13 @@ jobs:
       - name: List directory contents before upload
         run: ls -R  
 
-      - name: Store the distribution packages2
+      - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
             name: python-package-distributions
-            path: dist/
+            path: |
+              space2stats_client/dist/*.whl
+              space2stats_client/dist/*.tar.gz
 
       - name: List directory contents after upload
         run: ls -R
