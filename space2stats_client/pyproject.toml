@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "space2stats-client"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Python client for accessing sub-national variation data through the Space2Stats API"
 readme = "README.md"
 authors = [{name = "World Bank", email = "worldbank@worldbank.org"}]
