@@ -96,3 +96,49 @@ def test_invalid_aggregation_type(sample_geodataframe):
             fields=["population"],
             aggregation_type="invalid",
         )
+
+
+def test_get_summary_by_hexids(mock_api_response):
+    """Test get_summary_by_hexids with sample data."""
+    client = Space2StatsClient()
+    hex_ids = ["862a1070fffffff", "862a10767ffffff"]
+    fields = ["sum_pop_2020", "sum_pop_f_10_2020"]
+    result = client.get_summary_by_hexids(hex_ids=hex_ids, fields=fields)
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) == 2
+    assert "hex_id" in result.columns
+    for field in fields:
+        assert field in result.columns
+
+
+def test_get_summary_by_hexids_with_geometry(mock_api_response):
+    """Test get_summary_by_hexids with geometry."""
+    client = Space2StatsClient()
+    hex_ids = ["862a1070fffffff", "862a10767ffffff"]
+    fields = ["sum_pop_2020", "sum_pop_f_10_2020"]
+    result = client.get_summary_by_hexids(
+        hex_ids=hex_ids, fields=fields, geometry="polygon"
+    )
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) == 2
+    assert "hex_id" in result.columns
+    assert "geometry" in result.columns
+    for field in fields:
+        assert field in result.columns
+
+
+def test_get_aggregate_by_hexids(mock_api_response):
+    """Test get_aggregate_by_hexids with sample data."""
+    client = Space2StatsClient()
+    hex_ids = ["862a1070fffffff", "862a10767ffffff"]
+    fields = ["sum_pop_2020", "sum_pop_f_10_2020"]
+    aggregation_type = "sum"
+    result = client.get_aggregate_by_hexids(
+        hex_ids=hex_ids, fields=fields, aggregation_type=aggregation_type
+    )
+
+    assert isinstance(result, pd.DataFrame)
+    assert "sum_pop_2020" in result.columns
+    assert "sum_pop_f_10_2020" in result.columns

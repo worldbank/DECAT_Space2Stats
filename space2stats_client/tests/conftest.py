@@ -81,6 +81,43 @@ def mock_api_response(mocker, mock_catalog):
             }
         elif "fields" in str(args[0]):
             mock.json.return_value = ["sum_pop_2020", "sum_pop_f_10_2020"]
+        elif "summary_by_hexids" in str(args[0]):
+            if "geometry" in kwargs.get("json", {}):
+                mock.json.return_value = [
+                    {
+                        "hex_id": "862a1070fffffff",
+                        "sum_pop_2020": 1000,
+                        "sum_pop_f_10_2020": 500,
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]],
+                        },
+                    },
+                    {
+                        "hex_id": "862a10767ffffff",
+                        "sum_pop_2020": 1500,
+                        "sum_pop_f_10_2020": 750,
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]],
+                        },
+                    },
+                ]
+            else:
+                mock.json.return_value = [
+                    {
+                        "hex_id": "862a1070fffffff",
+                        "sum_pop_2020": 1000,
+                        "sum_pop_f_10_2020": 500,
+                    },
+                    {
+                        "hex_id": "862a10767ffffff",
+                        "sum_pop_2020": 1500,
+                        "sum_pop_f_10_2020": 750,
+                    },
+                ]
+        elif "aggregate_by_hexids" in str(args[0]):
+            mock.json.return_value = {"sum_pop_2020": 2500, "sum_pop_f_10_2020": 1250}
         elif "summary" in str(args[0]):
             mock.json.return_value = [
                 {

@@ -204,3 +204,77 @@ class Space2StatsClient:
         gdf_copy = gdf.copy()
         res_all = gdf_copy.join(res_all)
         return res_all
+
+    def get_summary_by_hexids(
+        self,
+        hex_ids: List[str],
+        fields: List[str],
+        geometry: Optional[Literal["polygon", "point"]] = None,
+    ) -> pd.DataFrame:
+        """Retrieve statistics for specific hex IDs.
+
+        Parameters
+        ----------
+        hex_ids : List[str]
+            List of H3 hexagon IDs to query
+        fields : List[str]
+            List of field names to retrieve from the statistics table
+        geometry : Optional[Literal["polygon", "point"]]
+            Specifies if the H3 geometries should be included in the response.
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame with the requested fields for each H3 cell.
+        """
+        request_payload = {
+            "hex_ids": hex_ids,
+            "fields": fields,
+            "geometry": geometry,
+        }
+        response = requests.post(
+            f"{self.base_url}/summary_by_hexids", json=request_payload
+        )
+
+        if response.status_code != 200:
+            raise Exception(f"Failed to get summary by hexids: {response.text}")
+
+        summary_data = response.json()
+        return pd.DataFrame(summary_data)
+
+    def get_aggregate_by_hexids(
+        self,
+        hex_ids: List[str],
+        fields: List[str],
+        aggregation_type: Literal["sum", "avg", "count", "max", "min"],
+    ) -> pd.DataFrame:
+        """Aggregate statistics for specific hex IDs.
+
+        Parameters
+        ----------
+        hex_ids : List[str]
+            List of H3 hexagon IDs to aggregate
+        fields : List[str]
+            List of field names to aggregate
+        aggregation_type : Literal["sum", "avg", "count", "max", "min"]
+            Type of aggregation to perform
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame with the aggregated statistics.
+        """
+        request_payload = {
+            "hex_ids": hex_ids,
+            "fields": fields,
+            "aggregation_type": aggregation_type,
+        }
+        response = requests.post(
+            f"{self.base_url}/aggregate_by_hexids", json=request_payload
+        )
+
+        if response.status_code != 200:
+            raise Exception(f"Failed to get aggregate by hexids: {response.text}")
+
+        aggregate_data = response.json()
+        return pd.DataFrame([aggregate_data])

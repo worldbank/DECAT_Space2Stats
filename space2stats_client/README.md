@@ -31,6 +31,18 @@ Extracts summary statistics from H3 data.
 - `fields`: List of field names to retrieve
 - `aggregation_type`: "sum", "avg", "count", "max", or "min"
 
+### `get_summary_by_hexids(hex_ids, fields, geometry)`
+Retrieves statistics for specific H3 hexagon IDs.
+- `hex_ids`: List of H3 hexagon IDs to query
+- `fields`: List of field names to retrieve
+- `geometry`: Optional; specifies if H3 geometries should be included ("polygon" or "point")
+
+### `get_aggregate_by_hexids(hex_ids, fields, aggregation_type)`
+Aggregates statistics for specific H3 hexagon IDs.
+- `hex_ids`: List of H3 hexagon IDs to aggregate
+- `fields`: List of field names to aggregate
+- `aggregation_type`: Type of aggregation ("sum", "avg", "count", "max", "min")
+
 
 ## Quick Start
 
