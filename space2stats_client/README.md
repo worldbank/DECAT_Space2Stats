@@ -64,11 +64,11 @@ Aggregates statistics for specific H3 hexagon IDs.
 ## Quick Start
 
 ```bash
-pip install -i https://pypi.org/project/space2stats-client/
+pip install space2stats-client
 ```
 
 ```python
-from space2stats import Space2StatsClient
+from space2stats_client import Space2StatsClient
 import geopandas as gpd
 
 # Initialize the client
