@@ -28,7 +28,7 @@ Tags are used to mark specific points in the repository's history, typically for
 
 1. **Update Version**
 
-    IMPORTANT: Update the version number in the `pyproject.toml` file.
+    IMPORTANT: Update the version number in the `pyproject.toml` file and in the `__init__.py` file.
 
 2. **Create and Push a Tag**
 
