@@ -8,41 +8,58 @@ A Python client for accessing the Space2Stats API, providing easy access to cons
 ### `get_topics()`
 Returns a DataFrame containing available dataset themes/topics from the STAC catalog.
 
+---
+
 ### `get_fields()`
 Returns a list of all available fields that can be used with the API.
+
+---
 
 ### `get_properties(item_id: str)`
 Returns a DataFrame with descriptions of variables for a specific dataset.
 
+---
+
 ### `fetch_admin_boundaries(iso3: str, adm: str)`
 Fetches administrative boundaries from GeoBoundaries API for a given country and admin level.
 
+---
+
 ### `get_summary(gdf, spatial_join_method, fields, geometry=None)`
 Extracts H3 level data for areas of interest.
-- `gdf`: GeoDataFrame containing areas of interest
-- `spatial_join_method`: "touches", "centroid", or "within"
-- `fields`: List of field names to retrieve
-- `geometry`: Optional "polygon" or "point" to include H3 geometries
+- **Parameters:**
+  - `gdf`: GeoDataFrame containing areas of interest
+  - `spatial_join_method`: "touches", "centroid", or "within"
+  - `fields`: List of field names to retrieve
+  - `geometry`: Optional "polygon" or "point" to include H3 geometries
+
+---
 
 ### `get_aggregate(gdf, spatial_join_method, fields, aggregation_type)`
 Extracts summary statistics from H3 data.
-- `gdf`: GeoDataFrame containing areas of interest
-- `spatial_join_method`: "touches", "centroid", or "within"
-- `fields`: List of field names to retrieve
-- `aggregation_type`: "sum", "avg", "count", "max", or "min"
+- **Parameters:**
+  - `gdf`: GeoDataFrame containing areas of interest
+  - `spatial_join_method`: "touches", "centroid", or "within"
+  - `fields`: List of field names to retrieve
+  - `aggregation_type`: "sum", "avg", "count", "max", or "min"
+
+---
 
 ### `get_summary_by_hexids(hex_ids, fields, geometry)`
 Retrieves statistics for specific H3 hexagon IDs.
-- `hex_ids`: List of H3 hexagon IDs to query
-- `fields`: List of field names to retrieve
-- `geometry`: Optional; specifies if H3 geometries should be included ("polygon" or "point")
+- **Parameters:**
+  - `hex_ids`: List of H3 hexagon IDs to query
+  - `fields`: List of field names to retrieve
+  - `geometry`: Optional; specifies if H3 geometries should be included ("polygon" or "point")
+
+---
 
 ### `get_aggregate_by_hexids(hex_ids, fields, aggregation_type)`
 Aggregates statistics for specific H3 hexagon IDs.
-- `hex_ids`: List of H3 hexagon IDs to aggregate
-- `fields`: List of field names to aggregate
-- `aggregation_type`: Type of aggregation ("sum", "avg", "count", "max", "min")
-
+- **Parameters:**
+  - `hex_ids`: List of H3 hexagon IDs to aggregate
+  - `fields`: List of field names to aggregate
+  - `aggregation_type`: Type of aggregation ("sum", "avg", "count", "max", "min")
 
 ## Quick Start
 
@@ -92,4 +109,4 @@ This project is licensed under the World Bank Master Community License Agreement
 
 ## Disclaimer
 
-The World Bank makes no warranties regarding the accuracy, reliability or completeness of the results and content. The World Bank disclaims any liability arising from the use of this software. 
+The World Bank makes no warranties regarding the accuracy, reliability, or completeness of the results and content. The World Bank disclaims any liability arising from the use of this software.
