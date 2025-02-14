@@ -47,7 +47,7 @@ Aggregates statistics for specific H3 hexagon IDs.
 ## Quick Start
 
 ```bash
-pip install -i https://test.pypi.org/simple/ space2stats-client
+pip install -i https://pypi.org/project/space2stats-client/
 ```
 
 ```python
