@@ -7,7 +7,7 @@ name = "space2stats-client"
 version = "1.1.1"
 description = "A Python client for accessing sub-national variation data through the Space2Stats API"
 readme = "README.md"
-authors = [{name = "World Bank", email = "worldbank@worldbank.org"}]
+authors = [{name = "Gabe Levin", email = "glevin@worldbank.org"}, {name = "Andres Chamorro", email = "achamorroelizond@worldbank.org"}]
 license = {text = "World Bank Master Community License Agreement"}
 classifiers = [
     "Development Status :: 4 - Beta",
