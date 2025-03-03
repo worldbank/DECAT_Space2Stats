@@ -3,7 +3,7 @@
 # If you wish to continue using _config.yml, make edits to that file and
 # re-generate this one.
 ###############################################################################
-apidoc_module_dir = "../space2stats_api/src"
+apidoc_module_dir = "../space2stats_client/src"
 author = "World Bank"
 comments_config = {"hypothesis": False, "utterances": False}
 copyright = "2023"

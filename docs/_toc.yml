@@ -9,7 +9,7 @@ parts:
           title: STAC Metadata
         - url: https://space2stats.ds.io/docs
           title: API Docs
-        - file: statstable.rst
+        - file: pythonclient.rst
   - caption: Project Overview
     numbered: False
     chapters:
@@ -29,5 +29,4 @@ parts:
       - file: user-docs/space2stats_api_demo_R.md
       - file: user-docs/space2stats_api_demo_pop_pyramid.ipynb
       - file: user-docs/space2stats_api_demo_urban_flood_risk.ipynb
-      - file: user-docs/space2stats_floods.ipynb
-      - file: user-docs/space2stats_py_package_demo.ipynb
+      - file: user-docs/space2stats_floods_with_client.ipynb
