@@ -29,20 +29,20 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install poetry
 
-      - name: Install dependencies
+      - name: Install dependencies for API
         working-directory: ./space2stats_api/src
         run: |
           poetry install --with test
 
-      - name: install lib postgres
+      - name: Install lib postgres
         uses: nyurik/action-setup-postgis@v2
 
-      - name: Run pre-commit
+      - name: Run pre-commit for API
         working-directory: ./space2stats_api/src
         run: |
           poetry run pre-commit run --all-files
 
-      - name: Run tests
+      - name: Run API tests
         working-directory: ./space2stats_api/src
         run: |
           poetry run python -m pytest --benchmark-skip tests
@@ -54,6 +54,21 @@ jobs:
           PGPASSWORD: mypassword
           PGTABLENAME: space2stats
           S3_BUCKET_NAME: test-bucket
+
+      - name: Install dependencies for Client
+        working-directory: ./space2stats_client
+        run: |
+          poetry install --with test
+
+      - name: Run pre-commit for Client 
+        working-directory: ./space2stats_client
+        run: |
+          poetry run pre-commit run --all-files    
+
+      - name: Run Client tests
+        working-directory: ./space2stats_client
+        run: |
+          poetry run python -m pytest tests
 
   deploy-to-dev:
     if: ${{ github.event_name == 'pull_request' }}

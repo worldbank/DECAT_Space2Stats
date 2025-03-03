@@ -356,67 +356,24 @@ The expected response is a JSON containing the requested aggregate statistic for
 
 - [**API Demo (Python)**](user-docs/space2stats_api_demo.ipynb)
 - [**API Demo (R)**](user-docs/space2stats_api_demo_R.md)
-- [**Exploring Flood Exposure (Python Functions)**](user-docs/space2stats_floods.ipynb)
+- [**Exploring Flood Exposure (Python Client)**](user-docs/space2stats_floods_with_client.ipynb)
 
-## StatsTable Python Package
+## Python Client
 
-In addition to the API, the `StatsTable` python package provides the API's underlying functionality as a set of functions (_fields_, _summaries_, and _aggregate_). The package enables researchers to work with the Space2Stats database directly and conduct faster queries and scale research applications.
-
-```{note}
-This package is still under development. Currently, users need to set credential parameters to connect to the database. Reach out to gost@worldbank.org to request credentials.
-```
-
-### Setup and Installation
-
-Install the package via pip:
+In addition to the API, the `Space2StatsClient` python package provides wrapper functions to retrieve metadata and easily run the API's underlying functions (_fields_, _summaries_, and _aggregate_). The package is available on [PyPI](https://pypi.org/project/space2stats-client/) and can be installed using pip:
 
 ```bash
-pip install "git+https://github.com/worldbank/DECAT_Space2Stats.git#subdirectory=space2stats_api/src"
+pip install space2stats-client
 ```
 
-Or, using poetry:
+Or, from source:
 
 ```bash
 conda create -n s2s python=3.11
 conda activate s2s
 pip install poetry
-cd space2stats_api/src
+cd space2stats_client/src
 poetry install
 ```
 
-Create a `db.env` file in the root directory with the following content:
-
-```bash
-PGHOST=
-PGPORT=
-PGDATABASE=
-PGUSER=
-PGPASSWORD=
-PGTABLENAME=space2stats
-```
-
-Connect to the database and use package functions (e.g., `fields`, `summaries`, `aggregate`). Additional documentation for these is available here. 
-
-```python
-from space2stats import StatsTable
-
-with StatsTable.connect() as stats_table:
-    ...
-```
-
-Connection parameters may be explicitly set:
-
-```python
-from space2stats import StatsTable
-
-with StatsTable.connect(
-    PGHOST="localhost",
-    PGPORT="5432",
-    PGUSER="postgres",
-    PGPASSWORD="changeme",
-    PGDATABASE="postgis",
-    PGTABLENAME="space2stats",
-) as stats_table:
-    ...
-```
-
+Full documentation for the client is available [in this page](pythonclient.rst).
