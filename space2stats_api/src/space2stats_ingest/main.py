@@ -8,8 +8,6 @@ import pyarrow.parquet as pq
 from pystac import Item, STACValidationError
 from tqdm import tqdm
 
-TABLE_NAME = "space2stats"
-
 
 def read_parquet_file(file_path: str) -> pa.Table:
     """Reads a Parquet file either from a local path or an S3 path."""
@@ -40,7 +38,7 @@ def validate_stac_item(stac_item_path: str) -> bool:
 
 
 def verify_columns(
-    parquet_file: str, stac_item_path: str, connection_string: str
+    parquet_file: str, stac_item_path: str, connection_string: str, table_name: str
 ) -> bool:
     """Verifies that the Parquet file columns match the STAC item metadata columns,
     ensures that 'hex_id' column is present, and checks that new columns don't already exist in the database."""
@@ -68,7 +66,7 @@ def verify_columns(
             cur.execute(f"""
                 SELECT column_name
                 FROM information_schema.columns
-                WHERE table_name = '{TABLE_NAME}'
+                WHERE table_name = '{table_name}'
             """)
             existing_columns = set(row[0].lower() for row in cur.fetchall())
 
@@ -94,16 +92,17 @@ def load_parquet_to_db(
     parquet_file: str,
     connection_string: str,
     stac_item_path: str,
+    table_name: str,
     chunksize: int = 64_000,
 ):
     """Main function to load and update data in PostgreSQL using Arrow in replace mode."""
     validate_stac_item(stac_item_path)
-    verify_columns(parquet_file, stac_item_path, connection_string)
+    verify_columns(parquet_file, stac_item_path, connection_string, table_name)
 
     # Check if the table already exists in the database
     with pg.connect(connection_string) as conn:
         with conn.cursor() as cur:
-            cur.execute(f"SELECT to_regclass('{TABLE_NAME}');")
+            cur.execute(f"SELECT to_regclass('{table_name}');")
             table_exists = cur.fetchone()[0] is not None
 
     if not table_exists:
@@ -115,23 +114,23 @@ def load_parquet_to_db(
         ) as pbar:
             with conn.cursor() as cur:
                 # Create an empty table with the same schema
-                cur.adbc_ingest(TABLE_NAME, parquet_table.slice(0, 0), mode="replace")
+                cur.adbc_ingest(table_name, parquet_table.slice(0, 0), mode="replace")
 
                 for batch in parquet_table.to_batches(max_chunksize=chunksize):
-                    cur.adbc_ingest(TABLE_NAME, batch, mode="append")
+                    cur.adbc_ingest(table_name, batch, mode="append")
                     pbar.update(batch.num_rows)
 
                 # Create an index on hex_id for future joins
                 print("Creating index")
                 cur.execute(
-                    f"CREATE INDEX idx_{TABLE_NAME}_hex_id ON {TABLE_NAME} (hex_id)"
+                    f"CREATE INDEX idx_{table_name}_hex_id ON {table_name} (hex_id)"
                 )
             conn.commit()
         return
 
     # Load Parquet file into a temporary table
     parquet_table = read_parquet_file(parquet_file)
-    temp_table = f"{TABLE_NAME}_temp"
+    temp_table = f"{table_name}_temp"
     with pg.connect(connection_string) as conn, tqdm(
         total=parquet_table.num_rows, desc="Ingesting Temporary Table", unit="rows"
     ) as pbar:
@@ -152,7 +151,7 @@ def load_parquet_to_db(
                 FROM information_schema.columns
                 WHERE table_name = '{temp_table}'
                 AND column_name NOT IN (
-                    SELECT LOWER(column_name) FROM information_schema.columns WHERE table_name = '{TABLE_NAME}'
+                    SELECT LOWER(column_name) FROM information_schema.columns WHERE table_name = '{table_name}'
                 )
             """)
             new_columns = cur.fetchall()
@@ -164,7 +163,7 @@ def load_parquet_to_db(
                 # Add new columns to the main table
                 for column, column_type in new_columns:
                     cur.execute(
-                        f"ALTER TABLE {TABLE_NAME} ADD COLUMN IF NOT EXISTS {column.lower()} {column_type}"
+                        f"ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {column.lower()} {column_type}"
                     )
 
                 print(f"Adding new columns: {[c[0] for c in new_columns]}...")
@@ -181,7 +180,7 @@ def load_parquet_to_db(
                     "Adding columns to dataset... All or nothing operation may take some time."
                 )
                 cur.execute(f"""
-                    UPDATE {TABLE_NAME} AS main
+                    UPDATE {table_name} AS main
                     SET {set_clause}
                     FROM {temp_table} AS temp
                     WHERE main.hex_id = temp.hex_id
