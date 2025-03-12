@@ -272,3 +272,161 @@ def test_aggregate_by_hexids_invalid_fields(client):
     response = client.post("/aggregate_by_hexids", json=request_payload)
     assert response.status_code == 400
     assert response.json() == {"error": "Invalid fields: ['invalid_field']"}
+
+
+def test_get_timeseries_fields(setup_timeseries_data, client):
+    """Test retrieving available timeseries fields."""
+    response = client.get("/timeseries/fields")
+    assert response.status_code == 200
+
+    assert set(response.json()) == {"field1", "field2"}
+
+
+def test_get_timeseries(setup_timeseries_data, timeseries_data, client):
+    """Test retrieving timeseries data for an AOI."""
+    response = client.post(
+        "/timeseries",
+        json={
+            "aoi": {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [41.14, -2.10],
+                            [41.15, -2.10],
+                            [41.15, -2.11],
+                            [41.14, -2.11],
+                            [41.14, -2.10],
+                        ]
+                    ],
+                },
+                "properties": {},
+            },
+            "spatial_join_method": "touches",
+            "start_date": "2023-01-01",
+            "end_date": "2023-01-03",
+            "fields": ["field1", "field2"],
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
+
+    if data:  # If any results matched our AOI
+        assert "hex_id" in data[0]
+        assert "date" in data[0]
+        assert "field1" in data[0]
+        assert "field2" in data[0]
+
+
+def test_get_timeseries_by_hexids(setup_timeseries_data, timeseries_data, client):
+    """Test retrieving timeseries data by specific hex IDs."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "2023-01-01",
+            "end_date": "2023-01-03",
+            "fields": ["field1", "field2"],
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json() == timeseries_data
+
+
+def test_get_timeseries_date_filtering(setup_timeseries_data, client):
+    """Test date filtering in timeseries endpoint."""
+    # Test with only start_date
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "2023-01-02",
+            "fields": ["field1", "field2"],
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2  # Only 2023-01-02 and 2023-01-03 records
+    assert all(record["date"] >= "2023-01-02" for record in data)
+
+    # Test with only end_date
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "end_date": "2023-01-02",
+            "fields": ["field1", "field2"],
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2  # Only 2023-01-01 and 2023-01-02 records
+    assert all(record["date"] <= "2023-01-02" for record in data)
+
+
+def test_get_timeseries_field_filtering(setup_timeseries_data, client):
+    """Test field filtering in timeseries endpoint."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "fields": ["field1"],  # Only request field1
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+
+    # Check that only requested field is present
+    for record in data:
+        assert "field1" in record
+        assert "field2" not in record
+        assert "hex_id" in record
+        assert "date" in record
+
+
+def test_get_timeseries_invalid_field(setup_timeseries_data, client):
+    """Test error handling for invalid field names."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={"hex_ids": ["8611822e7ffffff"], "fields": ["invalid_field"]},
+    )
+
+    assert response.status_code == 400
+    assert response.json()  # Just ensure there's a JSON response
+
+
+def test_get_timeseries_invalid_hexid(setup_timeseries_data, client):
+    """Test behavior with non-existent hex IDs."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={"hex_ids": ["nonexistent_hex_id"], "fields": ["field1"]},
+    )
+
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+def test_get_timeseries_multiple_hexids(setup_timeseries_data, client):
+    """Test retrieving data for multiple hex IDs."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff", "8611823e3ffffff"],
+            "fields": ["field1", "field2"],
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 6  # 3 dates × 2 hex IDs = 6 records
+
+    # Check that both hex IDs are represented
+    hex_ids = {record["hex_id"] for record in data}
+    assert hex_ids == {"8611822e7ffffff", "8611823e3ffffff"}

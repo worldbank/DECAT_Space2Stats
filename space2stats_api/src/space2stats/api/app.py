@@ -19,7 +19,9 @@ from .schemas import (
     AggregateRequest,
     HexIdAggregateRequest,
     HexIdSummaryRequest,
+    HexIdTimeseriesRequest,
     SummaryRequest,
+    TimeseriesRequest,
 )
 from .settings import Settings
 
@@ -324,5 +326,140 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
     @app.get("/health")
     def health():
         return {"status": "ok"}
+
+    @app.get("/timeseries/fields", response_model=List[str])
+    def get_timeseries_fields(table: StatsTable = Depends(stats_table)):
+        """Get available fields from the timeseries table.
+
+        Returns
+        -------
+        `List[str]`
+
+        List of field names available in the timeseries table
+        """
+        try:
+            return table.timeseries_fields()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @app.post("/timeseries", response_model=List[Dict[str, Any]])
+    def get_timeseries(
+        body: TimeseriesRequest, table: StatsTable = Depends(stats_table)
+    ):
+        """Get timeseries data for an area of interest.
+
+        Parameters
+        ----------
+        <dl>
+        <dt>aoi</dt>
+        <dd>
+        `GeoJSON Feature`
+
+        The Area of Interest, either as a `Feature` or an instance of `AoiModel`
+        </dd>
+
+        <dt>spatial_join_method</dt>
+        <dd>
+        `["touches", "centroid", "within"]`
+
+        The method to use for performing the spatial join between the AOI and H3 cells
+
+        - `touches`: Includes H3 cells that touch the AOI
+        - `centroid`: Includes H3 cells where the centroid falls within the AOI
+        - `within`: Includes H3 cells entirely within the AOI
+        </dd>
+
+        <dt>start_date</dt>
+        <dd>
+        `Optional[str]`
+
+        Start date for filtering data (format: 'YYYY-MM-DD')
+        </dd>
+
+        <dt>end_date</dt>
+        <dd>
+        `Optional[str]`
+
+        End date for filtering data (format: 'YYYY-MM-DD')
+        </dd>
+
+        <dt>fields</dt>
+        <dd>
+        `Optional[List[str]]`
+
+        List of fields to retrieve. If None, all available fields will be returned.
+        </dd>
+        </dl>
+
+        Returns
+        -------
+        `List[Dict[str, Any]]`
+
+        List of dictionaries containing timeseries data for each hex ID and date
+        """
+        try:
+            return table.timeseries_data(
+                aoi=body.aoi,
+                spatial_join_method=body.spatial_join_method,
+                start_date=body.start_date,
+                end_date=body.end_date,
+                fields=body.fields,
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+
+    @app.post("/timeseries_by_hexids", response_model=List[Dict[str, Any]])
+    def get_timeseries_by_hexids(
+        body: HexIdTimeseriesRequest, table: StatsTable = Depends(stats_table)
+    ):
+        """Get timeseries data for specific hex IDs.
+
+        Parameters
+        ----------
+        <dl>
+        <dt>hex_ids</dt>
+        <dd>
+        `List[str]`
+
+        List of H3 hexagon IDs to query
+        </dd>
+
+        <dt>start_date</dt>
+        <dd>
+        `Optional[str]`
+
+        Start date for filtering data (format: 'YYYY-MM-DD')
+        </dd>
+
+        <dt>end_date</dt>
+        <dd>
+        `Optional[str]`
+
+        End date for filtering data (format: 'YYYY-MM-DD')
+        </dd>
+
+        <dt>fields</dt>
+        <dd>
+        `Optional[List[str]]`
+
+        List of fields to retrieve. If None, all available fields will be returned.
+        </dd>
+        </dl>
+
+        Returns
+        -------
+        `List[Dict[str, Any]]`
+
+        List of dictionaries containing timeseries data for each hex ID and date
+        """
+        try:
+            return table.timeseries_data_by_hexids(
+                hex_ids=body.hex_ids,
+                start_date=body.start_date,
+                end_date=body.end_date,
+                fields=body.fields,
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
 
     return app
