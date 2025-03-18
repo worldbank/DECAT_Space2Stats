@@ -2,6 +2,8 @@ import os
 from urllib.request import urlopen
 
 import boto3
+import h3
+
 import geopandas as gpd
 import GOSTrocks.ntlMisc as ntl
 import GOSTrocks.rasterMisc as rMisc
@@ -9,7 +11,7 @@ import h3_helper
 import numpy as np
 import pandas as pd
 from GOSTrocks.misc import tPrint
-from h3 import h3
+#from h3 import h3
 from rasterio.crs import CRS
 from shapely.geometry import Point, Polygon, mapping
 from shapely.ops import unary_union

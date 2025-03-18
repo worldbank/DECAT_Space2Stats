@@ -39,6 +39,12 @@
       "href": "./nighttime_lights/nighttime_lights.json",
       "type": "application/json",
       "title": "Nighttime Lights"
+    },
+    {
+      "rel": "item",
+      "href": "./builtarea_ghsl/builtarea_ghsl.json",
+      "type": "application/json",
+      "title": "Built area"
     }
   ],
   "Title": "Space2Stats Database",
