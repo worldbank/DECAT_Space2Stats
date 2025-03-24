@@ -79,7 +79,7 @@ def mock_api_response(mocker, mock_catalog):
                     "sum_pop_f_10_2020": "Female population count 2020",
                 },
             }
-        elif "fields" in str(args[0]):
+        elif "fields" in str(args[0]) and "timeseries" not in str(args[0]):
             mock.json.return_value = ["sum_pop_2020", "sum_pop_f_10_2020"]
         elif "summary_by_hexids" in str(args[0]):
             if "geometry" in kwargs.get("json", {}):
@@ -128,6 +128,41 @@ def mock_api_response(mocker, mock_catalog):
             ]
         elif "aggregate" in str(args[0]):
             mock.json.return_value = {"sum_pop_2020": 5000, "sum_pop_f_10_2020": 2500}
+        elif "timeseries/fields" in str(args[0]):
+            mock.json.return_value = ["value"]
+        elif "timeseries_by_hexids" in str(args[0]):
+            if "start_date" in kwargs.get("json", {}) and "end_date" in kwargs.get(
+                "json", {}
+            ):
+                mock.json.return_value = [
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-02", "value": 0.75},
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-03", "value": 1.25},
+                ]
+            elif "start_date" in kwargs.get("json", {}):
+                mock.json.return_value = [
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-02", "value": 0.75},
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-03", "value": 1.25},
+                ]
+            elif "end_date" in kwargs.get("json", {}):
+                mock.json.return_value = [
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-01", "value": 0.5},
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-02", "value": 0.75},
+                ]
+            else:
+                mock.json.return_value = [
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-01", "value": 0.5},
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-02", "value": 0.75},
+                    {"hex_id": "8611822e7ffffff", "date": "2024-01-03", "value": 1.25},
+                    {"hex_id": "8611823e3ffffff", "date": "2024-01-01", "value": 0.8},
+                    {"hex_id": "8611823e3ffffff", "date": "2024-01-02", "value": 1.0},
+                    {"hex_id": "8611823e3ffffff", "date": "2024-01-03", "value": 1.5},
+                ]
+        elif "timeseries" in str(args[0]):
+            mock.json.return_value = [
+                {"hex_id": "8611822e7ffffff", "date": "2024-01-01", "value": 0.5},
+                {"hex_id": "8611822e7ffffff", "date": "2024-01-02", "value": 0.75},
+                {"hex_id": "8611822e7ffffff", "date": "2024-01-03", "value": 1.25},
+            ]
 
         return mock
 

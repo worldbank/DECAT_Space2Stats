@@ -61,6 +61,32 @@ Aggregates statistics for specific H3 hexagon IDs.
   - `fields`: List of field names to aggregate
   - `aggregation_type`: Type of aggregation ("sum", "avg", "count", "max", "min")
 
+---
+
+### `get_timeseries_fields()`
+Returns a list of available fields from the timeseries table.
+
+---
+
+### `get_timeseries(gdf, spatial_join_method, start_date=None, end_date=None, fields=None)`
+Gets timeseries data for areas of interest.
+- **Parameters:**
+  - `gdf`: GeoDataFrame containing areas of interest
+  - `spatial_join_method`: "touches", "centroid", or "within"
+  - `start_date`: Optional start date (format: 'YYYY-MM-DD')
+  - `end_date`: Optional end date (format: 'YYYY-MM-DD')
+  - `fields`: Optional list of field names to retrieve
+
+---
+
+### `get_timeseries_by_hexids(hex_ids, start_date=None, end_date=None, fields=None)`
+Gets timeseries data for specific H3 hexagon IDs.
+- **Parameters:**
+  - `hex_ids`: List of H3 hexagon IDs to query
+  - `start_date`: Optional start date (format: 'YYYY-MM-DD')
+  - `end_date`: Optional end date (format: 'YYYY-MM-DD')
+  - `fields`: Optional list of field names to retrieve
+
 ## Quick Start
 
 ```bash

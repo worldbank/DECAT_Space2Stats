@@ -142,3 +142,93 @@ def test_get_aggregate_by_hexids(mock_api_response):
     assert isinstance(result, pd.DataFrame)
     assert "sum_pop_2020" in result.columns
     assert "sum_pop_f_10_2020" in result.columns
+
+
+def test_get_timeseries_fields(mock_api_response):
+    """Test that get_timeseries_fields returns list of available fields."""
+    client = Space2StatsClient()
+    fields = client.get_timeseries_fields()
+    assert isinstance(fields, list)
+    assert "value" in fields
+
+
+def test_get_timeseries(mock_api_response, sample_geodataframe):
+    """Test get_timeseries with sample data."""
+    client = Space2StatsClient()
+    result = client.get_timeseries(
+        gdf=sample_geodataframe, spatial_join_method="centroid", fields=["value"]
+    )
+    assert isinstance(result, pd.DataFrame)
+    assert "hex_id" in result.columns
+    assert "date" in result.columns
+    assert "value" in result.columns
+    assert "area_id" in result.columns
+
+
+def test_get_timeseries_by_hexids(mock_api_response):
+    """Test get_timeseries_by_hexids with sample data."""
+    client = Space2StatsClient()
+    hex_ids = ["8611822e7ffffff", "8611823e3ffffff"]
+    fields = ["value"]
+    result = client.get_timeseries_by_hexids(hex_ids=hex_ids, fields=fields)
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) > 0
+    assert "hex_id" in result.columns
+    assert "date" in result.columns
+    assert "value" in result.columns
+
+
+def test_get_timeseries_by_hexids_with_date_range(mock_api_response):
+    """Test get_timeseries_by_hexids with date filtering."""
+    client = Space2StatsClient()
+    hex_ids = ["8611822e7ffffff"]
+    fields = ["value"]
+    start_date = "2024-01-02"
+    end_date = "2024-01-03"
+
+    result = client.get_timeseries_by_hexids(
+        hex_ids=hex_ids, fields=fields, start_date=start_date, end_date=end_date
+    )
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) == 2  # Should have 2 records in this date range
+    assert all(pd.to_datetime(result["date"]) >= pd.to_datetime(start_date))
+    assert all(pd.to_datetime(result["date"]) <= pd.to_datetime(end_date))
+
+
+def test_get_timeseries_by_hexids_values(mock_api_response):
+    """Test that get_timeseries_by_hexids returns expected values."""
+    client = Space2StatsClient()
+    hex_ids = ["8611822e7ffffff", "8611823e3ffffff"]
+    fields = ["value"]
+
+    # Use the existing mock data from the fixture
+    result = client.get_timeseries_by_hexids(hex_ids=hex_ids, fields=fields)
+
+    # Verify specific values based on the mock data in conftest.py
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) == 6  # Should have 6 records total from fixture
+
+    # Check values for the first hex_id
+    first_hex_data = result[result["hex_id"] == "8611822e7ffffff"]
+    assert len(first_hex_data) == 3
+
+    # Sort by date to ensure consistent order
+    first_hex_data = first_hex_data.sort_values("date").reset_index(drop=True)
+
+    # Check specific values from the first hex_id
+    assert first_hex_data.loc[0, "date"] == "2024-01-01"
+    assert first_hex_data.loc[0, "value"] == 0.5
+    assert first_hex_data.loc[1, "date"] == "2024-01-02"
+    assert first_hex_data.loc[1, "value"] == 0.75
+    assert first_hex_data.loc[2, "date"] == "2024-01-03"
+    assert first_hex_data.loc[2, "value"] == 1.25
+
+    # Check values for the second hex_id
+    second_hex_data = result[result["hex_id"] == "8611823e3ffffff"]
+    assert len(second_hex_data) == 3
+
+    # Check a specific value from the second hex_id
+    assert "2024-01-03" in second_hex_data["date"].values
+    assert 1.5 in second_hex_data["value"].values
