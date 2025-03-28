@@ -2,9 +2,10 @@ from functools import wraps
 
 import typer
 
-from .main import load_parquet_to_db
+from .main import load_parquet_to_db, load_parquet_to_db_ts
 
 app = typer.Typer()
+app_ts = typer.Typer()
 
 
 def handle_errors(func):
@@ -35,4 +36,23 @@ def load(
     """
     typer.echo(f"Loading data into PostgreSQL database from {parquet_file}")
     load_parquet_to_db(parquet_file, connection_string, stac_item_path, chunksize)
+    typer.echo("Data loaded successfully to PostgreSQL!")
+
+
+@app_ts.command()
+@handle_errors
+def load_ts(
+    connection_string: str,
+    stac_item_path: str,  # Add the STAC metadata file path as an argument
+    table_name: str,
+    parquet_file: str,
+    chunksize: int = 64_000,
+):
+    """
+    Load a Parquet file into a PostgreSQL database after verifying columns with the STAC metadata.
+    """
+    typer.echo(f"Loading data into PostgreSQL database from {parquet_file}")
+    load_parquet_to_db_ts(
+        parquet_file, connection_string, stac_item_path, table_name, chunksize
+    )
     typer.echo("Data loaded successfully to PostgreSQL!")

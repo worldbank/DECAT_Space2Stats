@@ -1,0 +1,103 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
+  ],
+  "id": "climate",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
+  "properties": {
+    "name": "Standardized Precipitation Index (SPI)",
+    "description": "Index for a given timescale measuring drought severity based on precipitation anomalies (SPI) ",
+    "methodological_notes": "Processed by Benny Instanto (GOST). The SPI was constructed with a 6-month timescale window based on precidipation data from CHIRPS. The resulting index is standardized (-3 to +3) and stored as a netcdf (~5km resolution). The netcdf was converted to h3 using the h3ronpy raster_to_dataframe function which uses the centroid value for each cell.",
+    "source_data": "CHIRPS3",
+    "sci:citation": "tbd",
+    "method": "sample",
+    "resolution": "5km",
+    "themes": "Climate",
+    "start_datetime": "2005-01-01T00:00:00Z",
+    "end_datetime": "2024-12-01T00:00:00Z",
+    "table:columns": [
+      {
+        "name": "hex_id",
+        "description": "H3 unique identifier",
+        "type": "object"
+      },
+      {
+        "name": "spi",
+        "description": "Standardized Precipitation Index (SPI), 6-month timescale",
+        "type": "float64"
+      },
+      {
+        "name": "date",
+        "description": "Month, formatted as YYYY-MM-DD",
+        "type": "datetime64[ns]"
+      }
+    ],
+    "datetime": null
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    }
+  ],
+  "assets": {
+    "api-docs": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "collection": "space2stats-collection"
+}

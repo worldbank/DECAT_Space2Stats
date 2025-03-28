@@ -199,3 +199,46 @@ def load_parquet_to_db(
         with conn.cursor() as cur:
             cur.execute(f"DROP TABLE IF EXISTS {temp_table}")
         conn.commit()
+
+
+def load_parquet_to_db_ts(
+    parquet_file: str,
+    connection_string: str,
+    stac_item_path: str,
+    table_name_ts: str,
+    chunksize: int = 64_000,
+):
+    """Main function to load TS data in PostgreSQL."""
+    validate_stac_item(stac_item_path)
+    verify_columns(parquet_file, stac_item_path, connection_string)
+
+    # Check if the table already exists in the database
+    with pg.connect(connection_string) as conn:
+        with conn.cursor() as cur:
+            cur.execute(f"SELECT to_regclass('{table_name_ts}');")
+            table_exists = cur.fetchone()[0] is not None
+
+    if not table_exists:
+        # If the table does not exist, directly ingest the Parquet file in batches
+        parquet_table = read_parquet_file(parquet_file)
+
+        with pg.connect(connection_string) as conn, tqdm(
+            total=parquet_table.num_rows, desc="Ingesting Data", unit="rows"
+        ) as pbar:
+            with conn.cursor() as cur:
+                # Create an empty table with the same schema
+                cur.adbc_ingest(
+                    table_name_ts, parquet_table.slice(0, 0), mode="replace"
+                )
+
+                for batch in parquet_table.to_batches(max_chunksize=chunksize):
+                    cur.adbc_ingest(table_name_ts, batch, mode="append")
+                    pbar.update(batch.num_rows)
+
+                # Create an index on hex_id for future joins
+                print("Creating index")
+                cur.execute(
+                    f"CREATE INDEX idx_{table_name_ts}_hex_id ON {table_name_ts} (hex_id)"
+                )
+            conn.commit()
+        return
