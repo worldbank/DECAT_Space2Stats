@@ -57,6 +57,7 @@ pyarrow = "^17.0.0"
 
 [tool.poetry.scripts]
 space2stats-ingest = "space2stats_ingest.cli:app"
+space2stats-ingest-ts = "space2stats_ingest.cli:app_ts"
 
 [tool.poetry.group.docs]
 optional = true

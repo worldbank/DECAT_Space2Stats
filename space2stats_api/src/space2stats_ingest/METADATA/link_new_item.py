@@ -109,27 +109,54 @@ def create_new_item(
     except IndexError:
         raise IndexError(f"Item '{item_id}' not found in the metadata sources sheet")
 
-    # Define the item
-    item = Item(
-        id=item_id,
-        geometry=geom,
-        bbox=bbox,
-        datetime=datetime.now(),
-        properties={
-            "name": src_metadata["Name"],
-            "description": src_metadata["Description"],
-            "methodological_notes": src_metadata["Methodological Notes"],
-            "source_data": src_metadata["Source Data"],
-            "sci:citation": src_metadata["Citation source"],
-            "method": src_metadata["Method"],
-            "resolution": src_metadata["Resolution"],
-            "themes": src_metadata["Theme"],
-        },
-        stac_extensions=[
-            "https://stac-extensions.github.io/table/v1.2.0/schema.json",
-            "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
-        ],
-    )
+    if pd.isna(src_metadata["End Date"]):
+        # Define the item
+        item = Item(
+            id=item_id,
+            geometry=geom,
+            bbox=bbox,
+            datetime=datetime.now(),
+            properties={
+                "name": src_metadata["Name"],
+                "description": src_metadata["Description"],
+                "methodological_notes": src_metadata["Methodological Notes"],
+                "source_data": src_metadata["Source Data"],
+                "sci:citation": src_metadata["Citation source"],
+                "method": src_metadata["Method"],
+                "resolution": src_metadata["Resolution"],
+                "themes": src_metadata["Theme"],
+            },
+            stac_extensions=[
+                "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+                "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+            ],
+        )
+    else:
+        # Define the item with a time range
+        item = Item(
+            id=item_id,
+            geometry=geom,
+            bbox=bbox,
+            datetime=None,
+            start_datetime=src_metadata["Start Date"],
+            end_datetime=src_metadata["End Date"],
+            properties={
+                "name": src_metadata["Name"],
+                "description": src_metadata["Description"],
+                "methodological_notes": src_metadata["Methodological Notes"],
+                "source_data": src_metadata["Source Data"],
+                "sci:citation": src_metadata["Citation source"],
+                "method": src_metadata["Method"],
+                "resolution": src_metadata["Resolution"],
+                "themes": src_metadata["Theme"],
+                # "start_datetime": src_metadata["Start Date"],
+                # "end_datetime": src_metadata["End Date"],
+            },
+            stac_extensions=[
+                "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+                "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+            ],
+        )
 
     # Add table columns as properties
     TableExtension.add_to(item)
