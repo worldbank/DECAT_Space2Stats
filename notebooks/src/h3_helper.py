@@ -3,13 +3,12 @@ import json
 import os
 import pickle
 import sys
-import h3
-
 from urllib.request import urlopen
 
 import contextily as ctx
 import folium
 import geopandas as gpd
+import h3
 import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -17,7 +16,6 @@ import pandas as pd
 import rasterio
 import shapely
 from GOSTrocks.misc import tPrint
-# from h3 import h3
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from rasterio.crs import CRS
 from shapely.geometry import Polygon, mapping
@@ -108,11 +106,7 @@ def generate_lvl0_lists(
             return xx
         except:
             # print("Could not load pickle file, continuing to process h0 manually")
-            raise (
-                ValueError(
-                    "Could not load pickle file"
-                )
-            )
+            raise (ValueError("Could not load pickle file"))
 
     # Get list of all h3 lvl 0 cells
     h3_lvl0 = list(h3.get_res0_cells())
