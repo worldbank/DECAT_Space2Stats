@@ -1,0 +1,151 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
+  ],
+  "id": "builtarea_ghsl",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
+  "properties": {
+    "name": "Built area",
+    "description": "Built area (in m2) in 5-year epochs. Source data report built area as total m2 built in 100m pixels at a global scale.",
+    "methodological_notes": "Zonal statistics are calculated as simple sum of built area in metres squared.",
+    "source_data": "https://human-settlement.emergency.copernicus.eu/datasets.php",
+    "sci:citation": "Pesaresi M., Schiavina M., Politis P., Freire S., Krasnodębska K., Uhl J. H., Carioli A., Corbane C., Dijkstra L., Florio P., Friedrich H. K., Gao J., Leyk S., Lu L., Maffenini L., Mari-Rivero I., Melchiorri M., Syrris V., Van Den Hoek J., Kemper T. Advances on the Global Human Settlement Layer by joint assessment of Earth Observation and population survey data, International Journal of Digital Earth 17 (1), 2024 10.1080/17538947.2024.2390454\n",
+    "method": "sum",
+    "resolution": "100m",
+    "themes": "Urbanization",
+    "table:columns": [
+      {
+        "name": "hex_id",
+        "description": "H3 unique identifier",
+        "type": "object"
+      },
+      {
+        "name": "sum_built_area_m_1975",
+        "description": "Total built area (m2) in 1975",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_1980",
+        "description": "Total built area (m2) in 1980",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_1985",
+        "description": "Total built area (m2) in 1985",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_1990",
+        "description": "Total built area (m2) in 1990",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_1995",
+        "description": "Total built area (m2) in 1995",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_2000",
+        "description": "Total built area (m2) in 2000",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_2005",
+        "description": "Total built area (m2) in 2005",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_2010",
+        "description": "Total built area (m2) in 2010",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_2015",
+        "description": "Total built area (m2) in 2015",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_2020",
+        "description": "Total built area (m2) in 2020",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_2025",
+        "description": "Total built area (m2) in 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_built_area_m_2030",
+        "description": "Total built area (m2) in 2030",
+        "type": "object"
+      }
+    ],
+    "datetime": "2025-02-11T11:15:40.200689Z"
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    }
+  ],
+  "assets": {
+    "api-docs": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "collection": "space2stats-collection"
+}
