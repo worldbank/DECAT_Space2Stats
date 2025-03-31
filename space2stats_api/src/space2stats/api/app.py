@@ -15,7 +15,12 @@ from .. import __version__
 from ..lib import StatsTable
 from .db import close_db_connection, connect_to_db
 from .errors import add_exception_handlers
-from .schemas import AggregateRequest, SummaryRequest
+from .schemas import (
+    AggregateRequest,
+    HexIdAggregateRequest,
+    HexIdSummaryRequest,
+    SummaryRequest,
+)
 from .settings import Settings
 
 s3_client = boto3.client("s3")
@@ -144,6 +149,55 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e)) from e
 
+    @app.post("/summary_by_hexids", response_model=List[Dict[str, Any]])
+    def get_summary_by_hexids(
+        body: HexIdSummaryRequest, table: StatsTable = Depends(stats_table)
+    ):
+        """Retrieve statistics for specific hex IDs.
+
+        Parameters
+        ----------
+        <dl>
+        <dt>hex_ids</dt>
+        <dd>
+        `List[str]`
+
+        List of H3 hexagon IDs to query
+        </dd>
+
+        <dt>fields</dt>
+        <dd>
+        `List[str]`
+
+        List of field names to retrieve from the statistics table
+        </dd>
+
+        <dt>geometry</dt>
+        <dd>
+        `Literal["polygon", "point"] | None`
+
+        Specifies if the H3 geometries should be included in the response. It can be either "polygon" to get hexagon boundaries, "point" to get hexagon centers, or None to exclude geometries.
+        </dd>
+        </dl>
+
+        Returns
+        -------
+        `List[Dict[str, Any]]`
+
+        List of dictionaries containing statistics for each hex ID. Each dictionary contains:
+        - `hex_id`: The H3 cell identifier
+        - `geometry` (optional): The geometry of the H3 cell, if geometry is specified
+        - Other fields from the statistics table, based on the specified `fields`
+        """
+        try:
+            return table.summaries_by_hexids(
+                hex_ids=body.hex_ids,
+                fields=body.fields,
+                geometry=body.geometry,
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+
     @app.post("/aggregate", response_model=Dict[str, float])
     def get_aggregate(body: AggregateRequest, table: StatsTable = Depends(stats_table)):
         """Aggregate Statistics from a GeoJSON feature.
@@ -203,6 +257,52 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
             )
         except pg.errors.UndefinedColumn as e:
             raise HTTPException(status_code=400, detail=e.diag.message_primary) from e
+
+    @app.post("/aggregate_by_hexids", response_model=Dict[str, float])
+    def get_aggregate_by_hexids(
+        body: HexIdAggregateRequest, table: StatsTable = Depends(stats_table)
+    ):
+        """Aggregate statistics for specific hex IDs.
+
+        Parameters
+        ----------
+        <dl>
+        <dt>hex_ids</dt>
+        <dd>
+        `List[str]`
+
+        List of H3 hexagon IDs to aggregate
+        </dd>
+
+        <dt>fields</dt>
+        <dd>
+        `List[str]`
+
+        List of field names to aggregate
+        </dd>
+
+        <dt>aggregation_type</dt>
+        <dd>
+        `["sum", "avg", "count", "max", "min"]`
+
+        Type of aggregation to perform on the fields
+        </dd>
+        </dl>
+
+        Returns
+        -------
+        `Dict[str, float]`
+
+        Dictionary containing aggregated statistics for the specified hex IDs
+        """
+        try:
+            return table.aggregate_by_hexids(
+                hex_ids=body.hex_ids,
+                fields=body.fields,
+                aggregation_type=body.aggregation_type,
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
 
     @app.get("/fields", response_model=List[str])
     def fields(table: StatsTable = Depends(stats_table)):

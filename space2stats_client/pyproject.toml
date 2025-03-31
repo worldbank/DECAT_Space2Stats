@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "space2stats-client"
+version = "1.1.1"
+description = "A Python client for accessing sub-national variation data through the Space2Stats API"
+readme = "README.md"
+authors = [{name = "Gabe Levin", email = "glevin@worldbank.org"}, {name = "Andres Chamorro", email = "achamorroelizond@worldbank.org"}]
+license = {text = "World Bank Master Community License Agreement"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+keywords = ["gis", "spatial", "statistics", "world bank", "development"]
+dependencies = [
+    "pandas>=1.5.0",
+    "geopandas>=0.12.0",
+    "requests>=2.25.0",
+    "pystac>=1.0.0"
+]
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://github.com/worldbank/DECAT_Space2Stats.git"
+Documentation = "https://worldbank.github.io/DECAT_Space2Stats/"
+Repository = "https://github.com/worldbank/DECAT_Space2Stats.git"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+shapely = "*"
+numpy = "*"
+cython = "*"
+pandas = "*"
+geopandas = "*" 
+pre-commit = "*"

@@ -13,8 +13,20 @@ class SummaryRequest(BaseModel):
     geometry: Optional[Literal["polygon", "point"]] = None
 
 
+class HexIdSummaryRequest(BaseModel):
+    hex_ids: List[str]
+    fields: List[str]
+    geometry: Optional[Literal["polygon", "point"]] = None
+
+
 class AggregateRequest(BaseModel):
     aoi: Feature
     spatial_join_method: Literal["touches", "centroid", "within"]
+    fields: List[str]
+    aggregation_type: Literal["sum", "avg", "count", "max", "min"]
+
+
+class HexIdAggregateRequest(BaseModel):
+    hex_ids: List[str]
     fields: List[str]
     aggregation_type: Literal["sum", "avg", "count", "max", "min"]

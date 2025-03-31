@@ -192,3 +192,83 @@ def test_get_fields(client):
     expected_fields = ["sum_pop_2020", "sum_pop_f_10_2020"]
     for field in expected_fields:
         assert field in response_json
+
+
+def test_get_summary_by_hexids(client):
+    request_payload = {
+        "hex_ids": ["862a1070fffffff", "862a10767ffffff"],
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
+    }
+
+    response = client.post("/summary_by_hexids", json=request_payload)
+    assert response.status_code == 200
+    response_json = response.json()
+    assert isinstance(response_json, list)
+    assert len(response_json) == 2
+
+    # Check structure of returned data
+    for summary in response_json:
+        assert "hex_id" in summary
+        for field in request_payload["fields"]:
+            assert field in summary
+        assert len(summary) == len(request_payload["fields"]) + 1
+
+
+def test_get_summary_by_hexids_with_geometry(client):
+    request_payload = {
+        "hex_ids": ["862a1070fffffff", "862a10767ffffff"],
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
+        "geometry": "polygon",
+    }
+
+    response = client.post("/summary_by_hexids", json=request_payload)
+    assert response.status_code == 200
+    response_json = response.json()
+
+    for summary in response_json:
+        assert "hex_id" in summary
+        assert "geometry" in summary
+        geometry = from_geojson(summary["geometry"])
+        assert geometry.geom_type == "Polygon"
+        assert len(summary) == len(request_payload["fields"]) + 2
+
+
+def test_get_summary_by_hexids_invalid_fields(client):
+    request_payload = {
+        "hex_ids": ["862a1070fffffff"],
+        "fields": ["sum_pop_2020", "invalid_field"],
+    }
+
+    response = client.post("/summary_by_hexids", json=request_payload)
+    assert response.status_code == 400
+    assert response.json() == {"error": "Invalid fields: ['invalid_field']"}
+
+
+def test_aggregate_by_hexids(client):
+    request_payload = {
+        "hex_ids": ["862a1070fffffff", "862a10767ffffff"],
+        "fields": ["sum_pop_2020", "sum_pop_f_10_2020"],
+        "aggregation_type": "sum",
+    }
+
+    response = client.post("/aggregate_by_hexids", json=request_payload)
+    assert response.status_code == 200
+    response_json = response.json()
+
+    assert isinstance(response_json, dict)
+    assert "sum_pop_2020" in response_json
+    assert "sum_pop_f_10_2020" in response_json
+    assert response_json["sum_pop_2020"] == 250  # 100 + 150 from test data
+    assert response_json["sum_pop_f_10_2020"] == 450  # 200 + 250 from test data
+
+
+def test_aggregate_by_hexids_invalid_fields(client):
+    request_payload = {
+        "hex_ids": ["862a1070fffffff"],
+        "fields": ["sum_pop_2020", "invalid_field"],
+        "aggregation_type": "sum",
+    }
+
+    response = client.post("/aggregate_by_hexids", json=request_payload)
+    assert response.status_code == 400
+    assert response.json() == {"error": "Invalid fields: ['invalid_field']"}
