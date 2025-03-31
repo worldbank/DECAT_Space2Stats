@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 import psycopg as pg
+from arro3.core import Array
 from geojson_pydantic import Feature
 from h3ronpy import cells_to_string
 from psycopg import Connection
@@ -90,13 +91,7 @@ class StatsTable:
 
         self._validate_fields(fields)
 
-        # Get H3 ids from geometry
-        resolution = 6
-        h3_ids = generate_h3_ids(
-            aoi.geometry.model_dump(exclude_none=True),
-            resolution,
-            spatial_join_method,
-        )
+        h3_ids = self._get_h3_ids_for_aoi(aoi, spatial_join_method)
 
         if not h3_ids:
             return []
@@ -155,15 +150,7 @@ class StatsTable:
 
         self._validate_fields(fields)
 
-        # Get H3 ids from geometry
-        resolution = 6
-        h3_ids = list(
-            generate_h3_ids(
-                aoi.geometry.model_dump(exclude_none=True),
-                resolution,
-                spatial_join_method,
-            )
-        )
+        h3_ids = self._get_h3_ids_for_aoi(aoi, spatial_join_method)
 
         if not h3_ids:
             return {}
@@ -298,3 +285,198 @@ class StatsTable:
             aggregated_results[col] = row[idx]
 
         return aggregated_results
+
+    def timeseries_fields(self) -> List[str]:
+        """Get available fields from the timeseries table.
+
+        Returns
+        -------
+        List[str]
+            List of field names available in the timeseries table
+        """
+        sql_query = """
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'spi_test'
+        """
+
+        with self.conn.cursor() as cur:
+            cur.execute(sql_query)
+            columns = [
+                row[0] for row in cur.fetchall() if row[0] not in ["hex_id", "date"]
+            ]
+
+        return columns
+
+    def timeseries_data(
+        self,
+        aoi: AoiModel,
+        spatial_join_method: Literal["touches", "centroid", "within"],
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        fields: Optional[List[str]] = None,
+    ) -> List[Dict[str, Any]]:
+        """Retrieve timeseries data for an area of interest.
+
+        Parameters
+        ----------
+        aoi : GeoJSON Feature
+            The Area of Interest, either as a `Feature` or an instance of `AoiModel`
+        spatial_join_method : Literal["touches", "centroid", "within"]
+            The method to use for performing the spatial join
+        start_date : Optional[str]
+            Start date for filtering data (format: 'YYYY-MM-DD')
+        end_date : Optional[str]
+            End date for filtering data (format: 'YYYY-MM-DD')
+        fields : Optional[List[str]]
+            List of fields to retrieve. If None, all available fields will be returned.
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+            List of dictionaries containing timeseries data for each hex ID and date
+        """
+        # Get H3 IDs for the AOI
+        h3_ids = self._get_h3_ids_for_aoi(aoi, spatial_join_method)
+
+        # Convert H3 IDs to strings
+        hex_ids = cells_to_string(h3_ids).to_pylist()
+
+        # Use the existing method to get timeseries data for these hex IDs
+        return self.timeseries_data_by_hexids(
+            hex_ids=hex_ids,
+            start_date=start_date,
+            end_date=end_date,
+            fields=fields,
+        )
+
+    def timeseries_data_by_hexids(
+        self,
+        hex_ids: List[str],
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        fields: Optional[List[str]] = None,
+    ) -> List[Dict[str, Any]]:
+        """Retrieve timeseries data from the timeseries data table for specific hex IDs.
+
+        Parameters
+        ----------
+        hex_ids : List[str]
+            List of H3 hexagon IDs to query
+        start_date : Optional[str]
+            Start date for filtering data (format: 'YYYY-MM-DD')
+        end_date : Optional[str]
+            End date for filtering data (format: 'YYYY-MM-DD')
+        fields : Optional[List[str]]
+            List of fields to retrieve. If None, all available fields will be returned.
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+            List of dictionaries containing timeseries data for each hex ID and date
+        """
+        # Get available fields if not specified
+        if fields is None:
+            fields = self.timeseries_fields()
+        else:
+            # Validate requested fields
+            available_fields = self.timeseries_fields()
+            invalid_fields = [
+                field for field in fields if field not in available_fields
+            ]
+            if invalid_fields:
+                raise ValueError(f"Invalid fields: {invalid_fields}")
+
+        # Convert hex_ids to proper format if needed
+        h3_id_strings = [h for h in hex_ids]
+
+        # Build the query
+        field_identifiers = [pg.sql.Identifier(field) for field in fields]
+        select_fields = [
+            pg.sql.Identifier("hex_id"),
+            pg.sql.Identifier("date"),
+        ] + field_identifiers
+
+        sql_query = pg.sql.SQL("""
+            SELECT {0}
+            FROM spi_test
+            WHERE hex_id = ANY (%s)
+            {1}
+            ORDER BY hex_id, date
+        """).format(pg.sql.SQL(", ").join(select_fields), pg.sql.SQL(""))
+
+        params: List[Any] = [h3_id_strings]
+
+        # Add date filters if specified
+        where_clauses = []
+        if start_date:
+            where_clauses.append(pg.sql.SQL("AND date >= %s"))
+            params.append(start_date)
+        if end_date:
+            where_clauses.append(pg.sql.SQL("AND date <= %s"))
+            params.append(end_date)
+
+        # Add where clauses to query if they exist
+        if where_clauses:
+            sql_query = pg.sql.SQL("""
+                SELECT {0}
+                FROM spi_test
+                WHERE hex_id = ANY (%s)
+                {1}
+                ORDER BY hex_id, date
+            """).format(
+                pg.sql.SQL(", ").join(select_fields),
+                pg.sql.SQL(" ").join(where_clauses),
+            )
+
+        # Execute the query
+        with self.conn.cursor() as cur:
+            cur.execute(sql_query, params)
+            rows = cur.fetchall()
+            colnames = [desc[0] for desc in cur.description]
+
+        # Format the results
+        results = []
+        for row in rows:
+            result = {}
+            for i, col in enumerate(colnames):
+                # Convert date objects to ISO format strings
+                if col == "date" and row[i]:
+                    result[col] = row[i].isoformat()
+                else:
+                    result[col] = row[i]
+            results.append(result)
+
+        return results
+
+    def _get_h3_ids_for_aoi(
+        self,
+        aoi: AoiModel,
+        spatial_join_method: Literal["touches", "centroid", "within"],
+    ) -> Array:
+        """Get H3 IDs for an area of interest.
+
+        Parameters
+        ----------
+        aoi : Union[Feature, AoiModel]
+            The Area of Interest, either as a Feature or an instance of AoiModel
+        spatial_join_method : Literal["touches", "centroid", "within"]
+            The method to use for performing the spatial join
+
+        Returns
+        -------
+        Array
+            Array of H3 IDs
+        """
+        if not isinstance(aoi, Feature):
+            aoi = AoiModel.model_validate(aoi)
+
+        # Get H3 ids from geometry
+        resolution = 6
+        h3_ids = generate_h3_ids(
+            aoi.geometry.model_dump(exclude_none=True),
+            resolution,
+            spatial_join_method,
+        )
+
+        return h3_ids
