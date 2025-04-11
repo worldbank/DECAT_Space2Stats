@@ -389,6 +389,13 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         List of fields to retrieve. If None, all available fields will be returned.
         </dd>
+
+        <dt>geometry</dt>
+        <dd>
+        `Optional["polygon", "point"]`
+
+        Specifies if the H3 geometries should be included in the response. It can be either "polygon" or "point". If None, geometries are not included.
+        </dd>
         </dl>
 
         Returns
@@ -404,6 +411,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
                 start_date=body.start_date,
                 end_date=body.end_date,
                 fields=body.fields,
+                geometry=body.geometry,
             )
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
@@ -444,6 +452,13 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         List of fields to retrieve. If None, all available fields will be returned.
         </dd>
+
+        <dt>geometry</dt>
+        <dd>
+        `Optional["polygon", "point"]`
+
+        Specifies if the H3 geometries should be included in the response. It can be either "polygon" or "point". If None, geometries are not included.
+        </dd>
         </dl>
 
         Returns
@@ -458,6 +473,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
                 start_date=body.start_date,
                 end_date=body.end_date,
                 fields=body.fields,
+                geometry=body.geometry,
             )
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))

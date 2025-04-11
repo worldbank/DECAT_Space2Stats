@@ -1,4 +1,6 @@
+import re
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Dict, List, Literal, Optional
 
 import psycopg as pg
@@ -315,6 +317,7 @@ class StatsTable:
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         fields: Optional[List[str]] = None,
+        geometry: Optional[Literal["polygon", "point"]] = None,
     ) -> List[Dict[str, Any]]:
         """Retrieve timeseries data for an area of interest.
 
@@ -330,24 +333,25 @@ class StatsTable:
             End date for filtering data (format: 'YYYY-MM-DD')
         fields : Optional[List[str]]
             List of fields to retrieve. If None, all available fields will be returned.
+        geometry : Optional[Literal["polygon", "point"]]
+            If specified, includes H3 cell geometries in the response
 
         Returns
         -------
         List[Dict[str, Any]]
             List of dictionaries containing timeseries data for each hex ID and date
         """
-        # Get H3 IDs for the AOI
         h3_ids = self._get_h3_ids_for_aoi(aoi, spatial_join_method)
 
         # Convert H3 IDs to strings
         hex_ids = cells_to_string(h3_ids).to_pylist()
 
-        # Use the existing method to get timeseries data for these hex IDs
         return self.timeseries_data_by_hexids(
             hex_ids=hex_ids,
             start_date=start_date,
             end_date=end_date,
             fields=fields,
+            geometry=geometry,
         )
 
     def timeseries_data_by_hexids(
@@ -356,6 +360,7 @@ class StatsTable:
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         fields: Optional[List[str]] = None,
+        geometry: Optional[Literal["polygon", "point"]] = None,
     ) -> List[Dict[str, Any]]:
         """Retrieve timeseries data from the timeseries data table for specific hex IDs.
 
@@ -369,6 +374,8 @@ class StatsTable:
             End date for filtering data (format: 'YYYY-MM-DD')
         fields : Optional[List[str]]
             List of fields to retrieve. If None, all available fields will be returned.
+        geometry : Optional[Literal["polygon", "point"]]
+            If specified, includes H3 cell geometries in the response
 
         Returns
         -------
@@ -386,6 +393,13 @@ class StatsTable:
             ]
             if invalid_fields:
                 raise ValueError(f"Invalid fields: {invalid_fields}")
+
+        # Validate date format and existence
+        self._validate_date(start_date, "start_date")
+        self._validate_date(end_date, "end_date")
+
+        # Validate date range
+        self._validate_date_range(start_date, end_date)
 
         # Convert hex_ids to proper format if needed
         h3_id_strings = [h for h in hex_ids]
@@ -435,19 +449,62 @@ class StatsTable:
             rows = cur.fetchall()
             colnames = [desc[0] for desc in cur.description]
 
+        # Generate geometries if requested
+        geometries = None
+        if geometry:
+            h3_ids_int = [int(h, 16) for h in hex_ids]
+            geometries = generate_h3_geometries(h3_ids_int, geometry)
+
         # Format the results
         results = []
         for row in rows:
             result = {}
             for i, col in enumerate(colnames):
-                # Convert date objects to ISO format strings
                 if col == "date" and row[i]:
                     result[col] = row[i].isoformat()
                 else:
                     result[col] = row[i]
+
+            if geometry and geometries is not None:
+                hex_id = result["hex_id"]
+                if hex_id in hex_ids:
+                    hex_idx = hex_ids.index(hex_id)
+                    result["geometry"] = geometries[hex_idx]
+
             results.append(result)
 
         return results
+
+    def _validate_date(self, date_str, date_type):
+        """Validate date format and existence."""
+        date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+        if not date_str:
+            return
+
+        if not date_pattern.match(date_str):
+            raise ValueError(
+                f"Invalid {date_type} format: {date_str}. Must be YYYY-MM-DD"
+            )
+
+        try:
+            datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            raise ValueError(
+                f"Invalid {date_type}: {date_str}. The date does not exist in the calendar."
+            )
+
+    def _validate_date_range(self, start_date, end_date):
+        """Validate that start_date is not after end_date."""
+        if not start_date or not end_date:
+            return
+
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+
+        if start > end:
+            raise ValueError(
+                f"Invalid date range: start_date ({start_date}) is after end_date ({end_date})"
+            )
 
     def _get_h3_ids_for_aoi(
         self,

@@ -430,3 +430,299 @@ def test_get_timeseries_multiple_hexids(setup_timeseries_data, client):
     # Check that both hex IDs are represented
     hex_ids = {record["hex_id"] for record in data}
     assert hex_ids == {"8611822e7ffffff", "8611823e3ffffff"}
+
+
+def test_get_timeseries_with_geometry_polygon(setup_timeseries_data, client):
+    """Test retrieving timeseries data with polygon geometry."""
+    response = client.post(
+        "/timeseries",
+        json={
+            "aoi": {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [41.14, -2.10],
+                            [41.15, -2.10],
+                            [41.15, -2.11],
+                            [41.14, -2.11],
+                            [41.14, -2.10],
+                        ]
+                    ],
+                },
+                "properties": {},
+            },
+            "spatial_join_method": "touches",
+            "fields": ["field1", "field2"],
+            "geometry": "polygon",
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+
+    if data:
+        for record in data:
+            assert "hex_id" in record
+            assert "date" in record
+            assert "geometry" in record
+            geometry = from_geojson(record["geometry"])
+            assert geometry.geom_type == "Polygon"
+
+
+def test_get_timeseries_with_geometry_point(setup_timeseries_data, client):
+    """Test retrieving timeseries data with point geometry."""
+    response = client.post(
+        "/timeseries",
+        json={
+            "aoi": {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [41.14, -2.10],
+                            [41.15, -2.10],
+                            [41.15, -2.11],
+                            [41.14, -2.11],
+                            [41.14, -2.10],
+                        ]
+                    ],
+                },
+                "properties": {},
+            },
+            "spatial_join_method": "touches",
+            "fields": ["field1", "field2"],
+            "geometry": "point",
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+
+    if data:
+        for record in data:
+            assert "hex_id" in record
+            assert "date" in record
+            assert "geometry" in record
+            geometry = from_geojson(record["geometry"])
+            assert geometry.geom_type == "Point"
+
+
+def test_get_timeseries_by_hexids_with_geometry_polygon(setup_timeseries_data, client):
+    """Test retrieving timeseries data by hex IDs with polygon geometry."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "fields": ["field1", "field2"],
+            "geometry": "polygon",
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+
+    if data:
+        for record in data:
+            assert "hex_id" in record
+            assert "date" in record
+            assert "geometry" in record
+            geometry = from_geojson(record["geometry"])
+            assert geometry.geom_type == "Polygon"
+
+
+def test_get_timeseries_by_hexids_with_geometry_point(setup_timeseries_data, client):
+    """Test retrieving timeseries data by hex IDs with point geometry."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "fields": ["field1", "field2"],
+            "geometry": "point",
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+
+    if data:
+        for record in data:
+            assert "hex_id" in record
+            assert "date" in record
+            assert "geometry" in record
+            geometry = from_geojson(record["geometry"])
+            assert geometry.geom_type == "Point"
+
+
+def test_timeseries_by_hexids_with_date_and_geometry(setup_timeseries_data, client):
+    """Test combining date filtering and geometry in a single request."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "2023-01-01",
+            "end_date": "2023-01-02",
+            "fields": ["field1", "field2"],
+            "geometry": "polygon",
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+
+    if data:
+        for record in data:
+            assert "geometry" in record
+            geometry = from_geojson(record["geometry"])
+            assert geometry.geom_type == "Polygon"
+
+            date = record["date"]
+            assert date >= "2023-01-01"
+            assert date <= "2023-01-02"
+
+
+def test_timeseries_date_edge_cases(setup_timeseries_data, client):
+    """Test edge cases for date validation in timeseries requests."""
+    # Test with February 29 on a leap year
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "2020-02-29",
+            "end_date": "2020-03-01",
+            "fields": ["field1"],
+        },
+    )
+    assert response.status_code == 200
+
+    # Test with date at millennium boundary
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "2000-01-01",
+            "fields": ["field1"],
+        },
+    )
+    assert response.status_code == 200
+
+    # Test with very old date
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "1900-01-01",
+            "fields": ["field1"],
+        },
+    )
+    assert response.status_code == 200
+
+    # Test with future date
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "2050-01-01",
+            "fields": ["field1"],
+        },
+    )
+    assert response.status_code == 200
+
+
+def test_timeseries_invalid_date_formats(setup_timeseries_data, client):
+    """Test that invalid date formats are rejected with appropriate error messages."""
+    invalid_dates = [
+        "01-01-2023",  # MM-DD-YYYY format (should be YYYY-MM-DD)
+        "2023/01/01",  # Wrong separator (/ instead of -)
+        "2023-1-1",  # Missing leading zeros
+        "20230101",  # No separators
+        "not-a-date",  # Not a date at all
+        "2023-02-30",  # Non-existent date (February 30)
+        "2023-13-01",  # Invalid month (13)
+        "2023-04-31",  # Invalid day (April 31)
+        "2023-02-29",  # Not a leap year
+    ]
+
+    # Test each invalid date as start_date
+    for invalid_date in invalid_dates:
+        response = client.post(
+            "/timeseries_by_hexids",
+            json={
+                "hex_ids": ["8611822e7ffffff"],
+                "start_date": invalid_date,
+                "fields": ["field1"],
+            },
+        )
+
+        assert (
+            response.status_code == 400
+        ), f"Failed to reject invalid start_date: {invalid_date}"
+        error_detail = str(response.json())
+        assert (
+            "Invalid" in error_detail
+            or "does not exist" in error_detail
+            or "format" in error_detail.lower()
+        ), f"Unexpected error message for {invalid_date}: {error_detail}"
+
+    # Test each invalid date as end_date
+    for invalid_date in invalid_dates:
+        response = client.post(
+            "/timeseries_by_hexids",
+            json={
+                "hex_ids": ["8611822e7ffffff"],
+                "end_date": invalid_date,
+                "fields": ["field1"],
+            },
+        )
+
+        assert (
+            response.status_code == 400
+        ), f"Failed to reject invalid end_date: {invalid_date}"
+        error_detail = str(response.json())
+        assert (
+            "Invalid" in error_detail
+            or "does not exist" in error_detail
+            or "format" in error_detail.lower()
+        ), f"Unexpected error message for {invalid_date}: {error_detail}"
+
+    # Test with both start_date and end_date being invalid
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "01/01/2023",
+            "end_date": "12/31/2023",
+            "fields": ["field1"],
+        },
+    )
+
+    assert response.status_code == 400
+    error_detail = str(response.json())
+    assert (
+        "Invalid" in error_detail
+        or "does not exist" in error_detail
+        or "format" in error_detail.lower()
+    ), f"Unexpected error message for {invalid_date}: {error_detail}"
+
+
+def test_timeseries_end_date_before_start_date(setup_timeseries_data, client):
+    """Test validation when end_date is before start_date."""
+    response = client.post(
+        "/timeseries_by_hexids",
+        json={
+            "hex_ids": ["8611822e7ffffff"],
+            "start_date": "2023-05-15",
+            "end_date": "2023-03-01",
+            "fields": ["field1"],
+        },
+    )
+
+    assert (
+        response.status_code == 400
+    ), "API should reject when end_date is before start_date"
+    error_detail = str(response.json())
+    assert (
+        "start_date" in error_detail.lower() or "end_date" in error_detail.lower()
+    ), f"Error message should mention date range issue: {error_detail}"

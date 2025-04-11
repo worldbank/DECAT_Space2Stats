@@ -38,6 +38,7 @@ class TimeseriesRequest(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     fields: Optional[List[str]] = None
+    geometry: Optional[Literal["polygon", "point"]] = None
 
 
 class HexIdTimeseriesRequest(BaseModel):
@@ -45,3 +46,4 @@ class HexIdTimeseriesRequest(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     fields: Optional[List[str]] = None
+    geometry: Optional[Literal["polygon", "point"]] = None
