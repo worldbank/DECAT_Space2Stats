@@ -13,6 +13,8 @@ from .h3_utils import generate_h3_geometries, generate_h3_ids
 from .settings import Settings
 from .types import AoiModel
 
+TIMESERIES_TABLE_NAME = "climate"
+
 
 @dataclass
 class StatsTable:
@@ -299,11 +301,11 @@ class StatsTable:
         sql_query = """
             SELECT column_name
             FROM information_schema.columns
-            WHERE table_name = 'spi_test'
+            WHERE table_name = %s
         """
 
         with self.conn.cursor() as cur:
-            cur.execute(sql_query)
+            cur.execute(sql_query, [TIMESERIES_TABLE_NAME])
             columns = [
                 row[0] for row in cur.fetchall() if row[0] not in ["hex_id", "date"]
             ]
@@ -413,11 +415,15 @@ class StatsTable:
 
         sql_query = pg.sql.SQL("""
             SELECT {0}
-            FROM spi_test
+            FROM {2}
             WHERE hex_id = ANY (%s)
             {1}
             ORDER BY hex_id, date
-        """).format(pg.sql.SQL(", ").join(select_fields), pg.sql.SQL(""))
+        """).format(
+            pg.sql.SQL(", ").join(select_fields),
+            pg.sql.SQL(""),
+            pg.sql.Identifier(TIMESERIES_TABLE_NAME),
+        )
 
         params: List[Any] = [h3_id_strings]
 
@@ -434,13 +440,14 @@ class StatsTable:
         if where_clauses:
             sql_query = pg.sql.SQL("""
                 SELECT {0}
-                FROM spi_test
+                FROM {2}
                 WHERE hex_id = ANY (%s)
                 {1}
                 ORDER BY hex_id, date
             """).format(
                 pg.sql.SQL(", ").join(select_fields),
                 pg.sql.SQL(" ").join(where_clauses),
+                pg.sql.Identifier(TIMESERIES_TABLE_NAME),
             )
 
         # Execute the query
