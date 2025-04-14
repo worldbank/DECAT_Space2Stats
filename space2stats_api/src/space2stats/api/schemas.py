@@ -35,15 +35,15 @@ class HexIdAggregateRequest(BaseModel):
 class TimeseriesRequest(BaseModel):
     aoi: Feature
     spatial_join_method: Literal["touches", "centroid", "within"]
+    fields: List[str]
     start_date: Optional[str] = None
     end_date: Optional[str] = None
-    fields: Optional[List[str]] = None
     geometry: Optional[Literal["polygon", "point"]] = None
 
 
 class HexIdTimeseriesRequest(BaseModel):
     hex_ids: List[str]
+    fields: List[str]
     start_date: Optional[str] = None
     end_date: Optional[str] = None
-    fields: Optional[List[str]] = None
     geometry: Optional[Literal["polygon", "point"]] = None
