@@ -316,9 +316,9 @@ class StatsTable:
         self,
         aoi: AoiModel,
         spatial_join_method: Literal["touches", "centroid", "within"],
+        fields: List[str],
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        fields: Optional[List[str]] = None,
         geometry: Optional[Literal["polygon", "point"]] = None,
     ) -> List[Dict[str, Any]]:
         """Retrieve timeseries data for an area of interest.
@@ -329,12 +329,12 @@ class StatsTable:
             The Area of Interest, either as a `Feature` or an instance of `AoiModel`
         spatial_join_method : Literal["touches", "centroid", "within"]
             The method to use for performing the spatial join
+        fields : List[str]
+            List of fields to retrieve. Cannot be empty.
         start_date : Optional[str]
             Start date for filtering data (format: 'YYYY-MM-DD')
         end_date : Optional[str]
             End date for filtering data (format: 'YYYY-MM-DD')
-        fields : Optional[List[str]]
-            List of fields to retrieve. If None, all available fields will be returned.
         geometry : Optional[Literal["polygon", "point"]]
             If specified, includes H3 cell geometries in the response
 
@@ -343,6 +343,11 @@ class StatsTable:
         List[Dict[str, Any]]
             List of dictionaries containing timeseries data for each hex ID and date
         """
+        if not fields:
+            raise ValueError("Fields parameter cannot be empty")
+
+        self._validate_fields_ts(fields)
+
         h3_ids = self._get_h3_ids_for_aoi(aoi, spatial_join_method)
 
         # Convert H3 IDs to strings
@@ -350,18 +355,18 @@ class StatsTable:
 
         return self.timeseries_data_by_hexids(
             hex_ids=hex_ids,
+            fields=fields,
             start_date=start_date,
             end_date=end_date,
-            fields=fields,
             geometry=geometry,
         )
 
     def timeseries_data_by_hexids(
         self,
         hex_ids: List[str],
+        fields: List[str],
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        fields: Optional[List[str]] = None,
         geometry: Optional[Literal["polygon", "point"]] = None,
     ) -> List[Dict[str, Any]]:
         """Retrieve timeseries data from the timeseries data table for specific hex IDs.
@@ -370,12 +375,12 @@ class StatsTable:
         ----------
         hex_ids : List[str]
             List of H3 hexagon IDs to query
+        fields : List[str]
+            List of fields to retrieve. Cannot be empty.
         start_date : Optional[str]
             Start date for filtering data (format: 'YYYY-MM-DD')
         end_date : Optional[str]
             End date for filtering data (format: 'YYYY-MM-DD')
-        fields : Optional[List[str]]
-            List of fields to retrieve. If None, all available fields will be returned.
         geometry : Optional[Literal["polygon", "point"]]
             If specified, includes H3 cell geometries in the response
 
@@ -384,23 +389,14 @@ class StatsTable:
         List[Dict[str, Any]]
             List of dictionaries containing timeseries data for each hex ID and date
         """
-        # Get available fields if not specified
-        if fields is None:
-            fields = self.timeseries_fields()
-        else:
-            # Validate requested fields
-            available_fields = self.timeseries_fields()
-            invalid_fields = [
-                field for field in fields if field not in available_fields
-            ]
-            if invalid_fields:
-                raise ValueError(f"Invalid fields: {invalid_fields}")
+        # Validate that fields is not empty
+        if not fields:
+            raise ValueError("Fields parameter cannot be empty")
 
-        # Validate date format and existence
+        # Validate fields and dates
+        self._validate_fields_ts(fields)
         self._validate_date(start_date, "start_date")
         self._validate_date(end_date, "end_date")
-
-        # Validate date range
         self._validate_date_range(start_date, end_date)
 
         # Convert hex_ids to proper format if needed
@@ -481,6 +477,14 @@ class StatsTable:
             results.append(result)
 
         return results
+
+    def _validate_fields_ts(self, fields: List[str]) -> None:
+        """Validate that requested fields exist in the database."""
+        invalid_fields = [
+            field for field in fields if field not in self.timeseries_fields()
+        ]
+        if invalid_fields:
+            raise ValueError(f"Invalid fields: {invalid_fields}")
 
     def _validate_date(self, date_str, date_type):
         """Validate date format and existence."""
