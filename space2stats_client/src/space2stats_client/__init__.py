@@ -1,6 +1,7 @@
 """Space2Stats-Client - A World Bank Python client for accessing spatial statistics."""
 
 from .client import Space2StatsClient
+from .widgets import FieldSelector
 
 __version__ = "1.2.0"
 __license__ = "World Bank Master Community License Agreement"
