@@ -43,3 +43,6 @@ cython = "*"
 pandas = "*"
 geopandas = "*" 
 pre-commit = "*"
+
+[tool.poetry.dependencies]
+ipywidgets = "^8.0.0"
