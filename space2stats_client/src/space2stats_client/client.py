@@ -16,15 +16,23 @@ class Space2StatsClient:
     completeness of the results and content.
     """
 
-    def __init__(self, base_url: str = "https://space2stats.ds.io"):
+    def __init__(
+        self, base_url: str = "https://space2stats.ds.io", verify_ssl: bool = True
+    ):
         """Initialize the Space2Stats client.
 
         Parameters
         ----------
         base_url : str
             Base URL for the Space2Stats API
+        verify_ssl : bool
+            Whether to verify SSL certificates in requests (default: True)
         """
+        if not isinstance(verify_ssl, bool):
+            raise TypeError("verify_ssl must be a boolean value (True or False)")
+
         self.base_url = base_url
+        self.verify_ssl = verify_ssl
         self.summary_endpoint = f"{base_url}/summary"
         self.aggregation_endpoint = f"{base_url}/aggregate"
         self.fields_endpoint = f"{base_url}/fields"
@@ -74,17 +82,16 @@ class Space2StatsClient:
         Exception
             If the API request fails.
         """
-        response = requests.get(self.fields_endpoint)
+        response = requests.get(self.fields_endpoint, verify=self.verify_ssl)
         if response.status_code != 200:
             raise Exception(f"Failed to get fields: {response.text}")
 
         return response.json()
 
-    @staticmethod
-    def fetch_admin_boundaries(iso3: str, adm: str) -> gpd.GeoDataFrame:
+    def fetch_admin_boundaries(self, iso3: str, adm: str) -> gpd.GeoDataFrame:
         """Fetch administrative boundaries from GeoBoundaries API."""
         url = f"https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{adm}/"
-        res = requests.get(url).json()
+        res = requests.get(url, verify=self.verify_ssl).json()
         return gpd.read_file(res["gjDownloadURL"])
 
     def get_summary(
@@ -130,7 +137,9 @@ class Space2StatsClient:
                 "fields": fields,
                 "geometry": geometry,
             }
-            response = requests.post(self.summary_endpoint, json=request_payload)
+            response = requests.post(
+                self.summary_endpoint, json=request_payload, verify=self.verify_ssl
+            )
 
             if response.status_code != 200:
                 raise Exception(f"Failed to get summary: {response.text}")
@@ -190,7 +199,9 @@ class Space2StatsClient:
                 "fields": fields,
                 "aggregation_type": aggregation_type,
             }
-            response = requests.post(self.aggregation_endpoint, json=request_payload)
+            response = requests.post(
+                self.aggregation_endpoint, json=request_payload, verify=self.verify_ssl
+            )
 
             if response.status_code != 200:
                 raise Exception(f"Failed to get aggregate: {response.text}")
@@ -236,7 +247,9 @@ class Space2StatsClient:
             "geometry": geometry,
         }
         response = requests.post(
-            f"{self.base_url}/summary_by_hexids", json=request_payload
+            f"{self.base_url}/summary_by_hexids",
+            json=request_payload,
+            verify=self.verify_ssl,
         )
 
         if response.status_code != 200:
@@ -273,7 +286,9 @@ class Space2StatsClient:
             "aggregation_type": aggregation_type,
         }
         response = requests.post(
-            f"{self.base_url}/aggregate_by_hexids", json=request_payload
+            f"{self.base_url}/aggregate_by_hexids",
+            json=request_payload,
+            verify=self.verify_ssl,
         )
 
         if response.status_code != 200:
