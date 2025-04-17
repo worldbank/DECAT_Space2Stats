@@ -149,8 +149,6 @@ def create_new_item(
                 "method": src_metadata["Method"],
                 "resolution": src_metadata["Resolution"],
                 "themes": src_metadata["Theme"],
-                # "start_datetime": src_metadata["Start Date"],
-                # "end_datetime": src_metadata["End Date"],
             },
             stac_extensions=[
                 "https://stac-extensions.github.io/table/v1.2.0/schema.json",
