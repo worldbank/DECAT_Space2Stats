@@ -51,6 +51,22 @@ Flood Exposure
 ^^^
 Population exposed to floods greater than 15 cm, 1-in-100 return period. (Fathom v3 and WorldPop)
 :::
+
+:::{grid-item-card}
+:link: https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/builtarea_ghsl/builtarea_ghsl.json
+
+Built Area
+^^^
+Built area (in m2) in 5-year epochs. (GHSL)
+:::
+
+:::{grid-item-card}
+:link: https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/climate/climate.json
+
+Climate Time Series
+^^^
+Index measuring drought severity based on precipitation anomalies (SPI)
+:::
 ::::
 
 Our [STAC Metadata](https://tinyurl.com/s2s-stac) contains key information about each data source and the variables available in the database. Additional datasets under consideration are listed in our [Annex](./annexA.md).
