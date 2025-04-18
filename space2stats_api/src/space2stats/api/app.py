@@ -166,6 +166,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
         <dl>
         <dt>hex_ids</dt>
         <dd>
+
         `List[str]`
 
         List of H3 hexagon IDs to query
@@ -173,6 +174,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>fields</dt>
         <dd>
+
         `List[str]`
 
         List of field names to retrieve from the statistics table
@@ -180,6 +182,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>geometry</dt>
         <dd>
+
         `Literal["polygon", "point"] | None`
 
         Specifies if the H3 geometries should be included in the response. It can be either "polygon" to get hexagon boundaries, "point" to get hexagon centers, or None to exclude geometries.
@@ -275,6 +278,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
         <dl>
         <dt>hex_ids</dt>
         <dd>
+
         `List[str]`
 
         List of H3 hexagon IDs to aggregate
@@ -282,6 +286,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>fields</dt>
         <dd>
+
         `List[str]`
 
         List of field names to aggregate
@@ -289,6 +294,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>aggregation_type</dt>
         <dd>
+
         `["sum", "avg", "count", "max", "min"]`
 
         Type of aggregation to perform on the fields
@@ -357,6 +363,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
         <dl>
         <dt>aoi</dt>
         <dd>
+
         `GeoJSON Feature`
 
         The Area of Interest, either as a `Feature` or an instance of `AoiModel`
@@ -364,6 +371,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>spatial_join_method</dt>
         <dd>
+
         `["touches", "centroid", "within"]`
 
         The method to use for performing the spatial join between the AOI and H3 cells
@@ -375,6 +383,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>start_date</dt>
         <dd>
+
         `Optional[str]`
 
         Start date for filtering data (format: 'YYYY-MM-DD')
@@ -382,6 +391,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>end_date</dt>
         <dd>
+
         `Optional[str]`
 
         End date for filtering data (format: 'YYYY-MM-DD')
@@ -389,6 +399,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>fields</dt>
         <dd>
+
         `Optional[List[str]]`
 
         List of fields to retrieve. If None, all available fields will be returned.
@@ -396,6 +407,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>geometry</dt>
         <dd>
+
         `Optional["polygon", "point"]`
 
         Specifies if the H3 geometries should be included in the response. It can be either "polygon" or "point". If None, geometries are not included.
@@ -431,6 +443,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
         <dl>
         <dt>hex_ids</dt>
         <dd>
+
         `List[str]`
 
         List of H3 hexagon IDs to query
@@ -438,6 +451,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>start_date</dt>
         <dd>
+
         `Optional[str]`
 
         Start date for filtering data (format: 'YYYY-MM-DD')
@@ -445,6 +459,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>end_date</dt>
         <dd>
+
         `Optional[str]`
 
         End date for filtering data (format: 'YYYY-MM-DD')
@@ -452,6 +467,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>fields</dt>
         <dd>
+
         `Optional[List[str]]`
 
         List of fields to retrieve. If None, all available fields will be returned.
@@ -459,6 +475,7 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
         <dt>geometry</dt>
         <dd>
+
         `Optional["polygon", "point"]`
 
         Specifies if the H3 geometries should be included in the response. It can be either "polygon" or "point". If None, geometries are not included.
