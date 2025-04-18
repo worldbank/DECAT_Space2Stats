@@ -8,7 +8,6 @@ from geojson_pydantic import Feature
 from moto import mock_aws
 from pytest_postgresql.janitor import DatabaseJanitor
 from space2stats.api.app import build_app
-from space2stats.lib import TIMESERIES_TABLE_NAME
 
 
 @pytest.fixture
@@ -150,8 +149,8 @@ def setup_timeseries_data(database):
         with conn.cursor() as cur:
             # Create timeseries table
             cur.execute(
-                f"""
-                CREATE TABLE {TIMESERIES_TABLE_NAME} (
+                """
+                CREATE TABLE climate (
                     hex_id TEXT,
                     date DATE,
                     field1 FLOAT,
@@ -163,8 +162,8 @@ def setup_timeseries_data(database):
 
             # Insert sample timeseries data
             cur.execute(
-                f"""
-                INSERT INTO {TIMESERIES_TABLE_NAME} (hex_id, date, field1, field2)
+                """
+                INSERT INTO climate (hex_id, date, field1, field2)
                 VALUES 
                     ('8611822e7ffffff', '2023-01-01', 10, 20),
                     ('8611822e7ffffff', '2023-01-02', 15, 25),

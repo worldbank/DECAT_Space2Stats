@@ -10,16 +10,15 @@ from h3ronpy import cells_to_string
 from psycopg import Connection
 
 from .h3_utils import generate_h3_geometries, generate_h3_ids
+from .model_types import AoiModel
 from .settings import Settings
-from .types import AoiModel
-
-TIMESERIES_TABLE_NAME = "climate"
 
 
 @dataclass
 class StatsTable:
     conn: Connection
     table_name: str
+    timeseries_table_name: str
 
     @classmethod
     def connect(cls, settings: Optional[Settings] = None, **kwargs) -> "StatsTable":
@@ -33,7 +32,11 @@ class StatsTable:
         """
         settings = settings or Settings(**kwargs, _extra="forbid")
         conn = pg.connect(settings.DB_CONNECTION_STRING)
-        return cls(conn=conn, table_name=settings.PGTABLENAME)
+        return cls(
+            conn=conn,
+            table_name=settings.PGTABLENAME,
+            timeseries_table_name=settings.TIMESERIES_TABLE_NAME,
+        )
 
     def __enter__(self) -> "StatsTable":
         return self
@@ -305,7 +308,7 @@ class StatsTable:
         """
 
         with self.conn.cursor() as cur:
-            cur.execute(sql_query, [TIMESERIES_TABLE_NAME])
+            cur.execute(sql_query, [self.timeseries_table_name])
             columns = [
                 row[0] for row in cur.fetchall() if row[0] not in ["hex_id", "date"]
             ]
@@ -418,7 +421,7 @@ class StatsTable:
         """).format(
             pg.sql.SQL(", ").join(select_fields),
             pg.sql.SQL(""),
-            pg.sql.Identifier(TIMESERIES_TABLE_NAME),
+            pg.sql.Identifier(self.timeseries_table_name),
         )
 
         params: List[Any] = [h3_id_strings]
@@ -443,7 +446,7 @@ class StatsTable:
             """).format(
                 pg.sql.SQL(", ").join(select_fields),
                 pg.sql.SQL(" ").join(where_clauses),
-                pg.sql.Identifier(TIMESERIES_TABLE_NAME),
+                pg.sql.Identifier(self.timeseries_table_name),
             )
 
         # Execute the query

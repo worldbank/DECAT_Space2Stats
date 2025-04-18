@@ -3,7 +3,7 @@ from typing import List, Literal, Optional
 from geojson_pydantic import Feature
 from pydantic import BaseModel
 
-from ..types import AoiModel
+from ..model_types import AoiModel
 
 
 class SummaryRequest(BaseModel):

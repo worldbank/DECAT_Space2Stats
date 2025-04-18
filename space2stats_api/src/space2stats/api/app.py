@@ -83,7 +83,11 @@ def build_app(settings: Optional[Settings] = None) -> FastAPI:
 
     def stats_table(request: Request):
         with request.app.state.pool.connection() as conn:
-            yield StatsTable(conn=conn, table_name=settings.PGTABLENAME)
+            yield StatsTable(
+                conn=conn,
+                table_name=settings.PGTABLENAME,
+                timeseries_table_name=settings.TIMESERIES_TABLE_NAME,
+            )
 
     @app.post("/summary", response_model=List[Dict[str, Any]])
     def get_summary(body: SummaryRequest, table: StatsTable = Depends(stats_table)):
