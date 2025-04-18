@@ -322,6 +322,7 @@ class Space2StatsClient:
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         fields: Optional[List[str]] = None,
+        geometry: Optional[Literal["polygon", "point"]] = None,
     ) -> pd.DataFrame:
         """Get timeseries data for areas of interest.
 
@@ -358,6 +359,7 @@ class Space2StatsClient:
                 "start_date": start_date,
                 "end_date": end_date,
                 "fields": fields,
+                "geometry": geometry,
             }
 
             response = requests.post(self.timeseries_endpoint, json=request_payload)
@@ -382,6 +384,7 @@ class Space2StatsClient:
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         fields: Optional[List[str]] = None,
+        geometry: Optional[Literal["polygon", "point"]] = None,
     ) -> pd.DataFrame:
         """Get timeseries data for specific hex IDs.
 
@@ -406,6 +409,7 @@ class Space2StatsClient:
             "start_date": start_date,
             "end_date": end_date,
             "fields": fields,
+            "geometry": geometry,
         }
 
         # Remove None values from payload
