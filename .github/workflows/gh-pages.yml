@@ -18,9 +18,8 @@ jobs:
         run: |
           python3 -m venv book
           source book/bin/activate
-          cd space2stats_api/src
-          pip install poetry
           poetry install --with docs
+          pip install space2stats-client
           cd ../../
       - name: Build Jupyter Book using Sphinx
         run: |
