@@ -16,6 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: GIS",
 ]
@@ -26,7 +27,7 @@ dependencies = [
     "requests>=2.25.0",
     "pystac>=1.0.0"
 ]
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.9,<=3.13"
 
 [project.urls]
 Homepage = "https://github.com/worldbank/DECAT_Space2Stats.git"
