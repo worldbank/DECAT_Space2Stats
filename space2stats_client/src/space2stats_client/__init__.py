@@ -2,6 +2,6 @@
 
 from .client import Space2StatsClient
 
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 __license__ = "World Bank Master Community License Agreement"
 __copyright__ = "Copyright (c) 2025 The World Bank"

@@ -3,7 +3,7 @@ Python Client
 
 A Python client for accessing the Space2Stats API, providing easy access to consistent, comparable, and authoritative sub-national variation data from the World Bank.
 
-.. autoclass:: space2stats_client.client.Space2StatsClient
+.. autoclass:: space2stats_client.Space2StatsClient
     :members:
     :undoc-members:
     :show-inheritance:

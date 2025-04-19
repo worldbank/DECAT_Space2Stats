@@ -36,6 +36,9 @@ class Space2StatsClient:
         self.summary_endpoint = f"{base_url}/summary"
         self.aggregation_endpoint = f"{base_url}/aggregate"
         self.fields_endpoint = f"{base_url}/fields"
+        self.timeseries_endpoint = f"{base_url}/timeseries"
+        self.timeseries_by_hexids_endpoint = f"{base_url}/timeseries_by_hexids"
+        self.timeseries_fields_endpoint = f"{base_url}/timeseries/fields"
         self.catalog = Catalog.from_file(
             "https://raw.githubusercontent.com/worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/METADATA/stac/catalog.json"
         )
@@ -293,3 +296,130 @@ class Space2StatsClient:
 
         aggregate_data = response.json()
         return pd.DataFrame([aggregate_data])
+
+    def get_timeseries_fields(self) -> List[str]:
+        """Get available fields from the timeseries table.
+
+        Returns
+        -------
+        List[str]
+            List of field names available in the timeseries table
+
+        Raises
+        ------
+        Exception
+            If the API request fails
+        """
+        response = requests.get(self.timeseries_fields_endpoint)
+        if response.status_code != 200:
+            raise Exception(f"Failed to get timeseries fields: {response.text}")
+        return response.json()
+
+    def get_timeseries(
+        self,
+        gdf: gpd.GeoDataFrame,
+        spatial_join_method: Literal["touches", "centroid", "within"],
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        fields: Optional[List[str]] = None,
+        geometry: Optional[Literal["polygon", "point"]] = None,
+    ) -> pd.DataFrame:
+        """Get timeseries data for areas of interest.
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            The Areas of Interest
+        spatial_join_method : ["touches", "centroid", "within"]
+            The method to use for performing the spatial join between the AOI and H3 cells
+                - "touches": Includes H3 cells that touch the AOI
+                - "centroid": Includes H3 cells where the centroid falls within the AOI
+                - "within": Includes H3 cells entirely within the AOI
+        start_date : Optional[str]
+            Start date for filtering data (format: 'YYYY-MM-DD')
+        end_date : Optional[str]
+            End date for filtering data (format: 'YYYY-MM-DD')
+        fields : Optional[List[str]]
+            List of fields to retrieve. If None, all available fields will be returned.
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame containing timeseries data for each hex ID and date
+        """
+        res_all = []
+        for idx, row in gdf.iterrows():
+            request_payload = {
+                "aoi": {
+                    "type": "Feature",
+                    "geometry": row.geometry.__geo_interface__,
+                    "properties": {},
+                },
+                "spatial_join_method": spatial_join_method,
+                "start_date": start_date,
+                "end_date": end_date,
+                "fields": fields,
+                "geometry": geometry,
+            }
+
+            response = requests.post(self.timeseries_endpoint, json=request_payload)
+            if response.status_code != 200:
+                raise Exception(f"Failed to get timeseries: {response.text}")
+
+            timeseries_data = response.json()
+            if timeseries_data:
+                df = pd.DataFrame(timeseries_data)
+                df["area_id"] = idx
+                res_all.append(df)
+
+        if not res_all:
+            return pd.DataFrame()
+
+        result = pd.concat(res_all, ignore_index=True)
+        return result
+
+    def get_timeseries_by_hexids(
+        self,
+        hex_ids: List[str],
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        fields: Optional[List[str]] = None,
+        geometry: Optional[Literal["polygon", "point"]] = None,
+    ) -> pd.DataFrame:
+        """Get timeseries data for specific hex IDs.
+
+        Parameters
+        ----------
+        hex_ids : List[str]
+            List of H3 hexagon IDs to query
+        start_date : Optional[str]
+            Start date for filtering data (format: 'YYYY-MM-DD')
+        end_date : Optional[str]
+            End date for filtering data (format: 'YYYY-MM-DD')
+        fields : Optional[List[str]]
+            List of fields to retrieve. If None, all available fields will be returned.
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame containing timeseries data for each hex ID and date
+        """
+        request_payload = {
+            "hex_ids": hex_ids,
+            "start_date": start_date,
+            "end_date": end_date,
+            "fields": fields,
+            "geometry": geometry,
+        }
+
+        # Remove None values from payload
+        request_payload = {k: v for k, v in request_payload.items() if v is not None}
+
+        response = requests.post(
+            self.timeseries_by_hexids_endpoint, json=request_payload
+        )
+        if response.status_code != 200:
+            raise Exception(f"Failed to get timeseries by hexids: {response.text}")
+
+        timeseries_data = response.json()
+        return pd.DataFrame(timeseries_data)

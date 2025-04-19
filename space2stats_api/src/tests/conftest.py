@@ -139,3 +139,65 @@ def pop_stac_item_path():
 @pytest.fixture
 def metadata_excel_file_path():
     return "./space2stats_ingest/METADATA/Space2Stats Metadata Content.xlsx"
+
+
+@pytest.fixture(scope="function")
+def setup_timeseries_data(database):
+    """Set up timeseries test data in the database."""
+    db_url = f"postgresql://{database.user}:{database.password}@{database.host}:{database.port}/{database.dbname}"
+    with psycopg.connect(db_url) as conn:
+        with conn.cursor() as cur:
+            # Create timeseries table
+            cur.execute(
+                """
+                CREATE TABLE climate (
+                    hex_id TEXT,
+                    date DATE,
+                    field1 FLOAT,
+                    field2 FLOAT
+                );
+                """
+            )
+            conn.commit()
+
+            # Insert sample timeseries data
+            cur.execute(
+                """
+                INSERT INTO climate (hex_id, date, field1, field2)
+                VALUES 
+                    ('8611822e7ffffff', '2023-01-01', 10, 20),
+                    ('8611822e7ffffff', '2023-01-02', 15, 25),
+                    ('8611822e7ffffff', '2023-01-03', 20, 30),
+                    ('8611823e3ffffff', '2023-01-01', 5, 15),
+                    ('8611823e3ffffff', '2023-01-02', 10, 20),
+                    ('8611823e3ffffff', '2023-01-03', 15, 25);
+                """
+            )
+            conn.commit()
+
+    return database
+
+
+@pytest.fixture
+def timeseries_data():
+    """Fixture to provide sample timeseries data."""
+    return [
+        {
+            "hex_id": "8611822e7ffffff",
+            "date": "2023-01-01",
+            "field1": 10,
+            "field2": 20,
+        },
+        {
+            "hex_id": "8611822e7ffffff",
+            "date": "2023-01-02",
+            "field1": 15,
+            "field2": 25,
+        },
+        {
+            "hex_id": "8611822e7ffffff",
+            "date": "2023-01-03",
+            "field1": 20,
+            "field2": 30,
+        },
+    ]
