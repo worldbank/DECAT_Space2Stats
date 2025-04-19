@@ -368,15 +368,381 @@ The expected response is a JSON containing the requested aggregate statistic for
 {'sum_pop_2020': 1374175.833772784}
 ```
 
+### `/summary_by_hexids`
+
+The summary endpoint returns data at the h3 level for a specified h3 hexagon (level 6).
+
+- **hex_ids**: List of H3 hexagon IDs to query (`List[str]`).
+- **fields** (`List[str]`): A list of field names to retrieve from the statistics table.
+- **geometry** (`Optional[Literal["polygon", "point"]]`): Specifies if the H3 geometries should be included in the response. It can be either `"polygon"` or `"point"`. If `None`, geometries are not included.
+
+`````{tab-set}
+````{tab-item} python
+
+```{code-block} python
+import requests
+import pandas as pd
+
+BASE_URL = "https://space2stats.ds.io"
+SUMMARY_ENDPOINT = f"{BASE_URL}/summary_by_hexids"
+
+hex_ids = [
+    "866a4a00fffffff",
+    "866a4a017ffffff",
+    "866a4a01fffffff",
+    "866a4a047ffffff",
+    "866a4a04fffffff",
+]
+
+# Define the Request Payload
+request_payload = {
+    "hex_ids": hex_ids,
+    "fields": ["sum_pop_2020"],
+}
+
+# Get Summary Data
+response = requests.post(SUMMARY_ENDPOINT, json=request_payload)
+if response.status_code != 200:
+    raise Exception(f"Failed to get summary: {response.text}")
+
+summary_data = response.json()
+df = pd.DataFrame(summary_data)
+df
+```
+````
+
+````{tab-item} r
+
+```{code-block} r
+library(httr2)
+library(jsonlite)
+
+base_url <- "https://space2stats.ds.io"
+
+hex_ids = c(
+  "866a4a00fffffff",
+  "866a4a017ffffff",
+  "866a4a01fffffff",
+  "866a4a047ffffff",
+  "866a4a04fffffff"
+)
+
+request_payload <- list(
+  hex_ids = hex_ids,
+  fields = list("sum_pop_2020"),
+)
+
+# Set up the base URL and create the request
+req <- request(base_url) |>
+  req_url_path_append("summary_by_hexids") |>
+  req_body_json(request_payload)
+
+# Perform the request and get the response
+resp <- req |> req_perform()
+
+# Turn response into a data frame
+summary_data <- resp |> resp_body_string() |> fromJSON(flatten = TRUE)
+
+head(summary_data)
+```
+````
+`````
+
+The expected response is a JSON containing the hexagon ID and the requested fields:
+
+```text
+	hex_id	sum_pop_2020
+0	866a4a00fffffff	476.538185
+1	866a4a017ffffff	676.912804
+2	866a4a01fffffff	347.182722
+3	866a4a047ffffff	380.988678
+4	866a4a04fffffff	285.943490
+```
+
+### `/aggregate_by_hexids`
+
+The aggregate endpoint is very similar to the summary endpoint, but it returns an aggregate statistic for all of the h3 cells provided, based on an additional `aggregation type` function ('sum', 'avg', 'count', 'max' or 'min').
+
+`````{tab-set}
+````{tab-item} python
+
+```{code-block} python
+import requests
+
+BASE_URL = "https://space2stats.ds.io"
+AGGREGATION_ENDPOINT = f"{BASE_URL}/aggregate_by_hexids"
+
+hex_ids = [
+    "866a4a00fffffff",
+    "866a4a017ffffff",
+    "866a4a01fffffff",
+    "866a4a047ffffff",
+    "866a4a04fffffff",
+]
+
+request_payload = {
+    "hex_ids": hex_ids,
+    "fields": ["sum_pop_2020"],
+    "aggregation_type": "sum",
+}
+
+response = requests.post(AGGREGATION_ENDPOINT, json=request_payload)
+
+if response.status_code == 200:
+    result = response.json()
+    print(result)
+else:
+    print(response.content)
+```
+````
+
+````{tab-item} r
+
+```{code-block} r
+library(httr2)
+library(sf)
+library(jsonlite)
+library(geojsonsf)
+
+base_url <- "https://space2stats.ds.io"
+
+hex_ids <- c(
+  "866a4a00fffffff",
+  "866a4a017ffffff",
+  "866a4a01fffffff",
+  "866a4a047ffffff",
+  "866a4a04fffffff"
+)
+
+# Create the request payload
+request_payload <- list(
+  hex_ids = hex_ids,
+  fields = list("sum_pop_2020"),
+  aggregation_type = "sum"
+)
+
+# Set up the base URL and create the request
+req <- request(base_url) |>
+  req_url_path_append("aggregate_by_hexids") |>
+  req_body_json(request_payload)
+
+# Perform the request and get the response
+resp <- req |> req_perform()
+
+# Turn response into a data frame
+aggregate_data <- resp |> resp_body_string() |> fromJSON(flatten = TRUE)
+
+print(aggregate_data)
+```
+````
+`````
+
+The expected response is a JSON containing the requested aggregate statistic for the area:
+
+```text
+{'sum_pop_2020': 2167.565878674388}
+```
+
+### `/timeseries`
+
+The timeseries endpoint provides access to monthly data hosted in a separate [time-enabled table](https://radiantearth.github.io/stac-browser/#/external/raw.githubusercontent.com/worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/METADATA/stac/space2stats-collection/climate/climate.json). A summary json can be retrieved with the following parameters included as part of the request body. Note that you can only request fields from this table, and not from the other datasets.
+
+- **aoi**: The Area of Interest, either as a `Feature` or an instance of `AoiModel`.
+- **spatial_join_method** (`Literal["touches", "centroid", "within"]`): The method to use for performing the spatial join between the AOI and H3 cells.
+  - `"touches"`: Includes H3 cells that touch the AOI.
+  - `"centroid"`: Includes H3 cells where the centroid falls within the AOI.
+  - `"within"`: Includes H3 cells entirely within the AOI.
+- **start_date** (`str`): The start date for the time series data in ISO format (YYYY-MM-DD). (If not provided, defaults to the earliest date in the database.)
+- **end_date** (`str`): The end date for the time series data in ISO format (YYYY-MM-DD). (If not provided, defaults to the latest date in the database.)
+- **fields** (`List[str]`): A list of field names to retrieve from the statistics table.
+- **geometry** (`Optional[Literal["polygon", "point"]]`): Specifies if the H3 geometries should be included in the response. It can be either `"polygon"` or `"point"`. If `None`, geometries are not included.
+
+`````{tab-set}
+````{tab-item} python
+
+```{code-block} python
+import requests
+import pandas as pd
+
+BASE_URL = "https://space2stats.ds.io"
+TIMESERIES_ENDPOINT = f"{BASE_URL}/timeseries"
+
+# Bounding box around Kenya
+aoi = {
+    "type": "Feature",
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [33.78593974945852, 5.115816884114494],
+                [33.78593974945852, -4.725410543134203],
+                [41.94362577283266, -4.725410543134203],
+                [41.94362577283266, 5.115816884114494],
+                [33.78593974945852, 5.115816884114494],
+            ]
+        ],
+    },
+    "properties": {"name": "Updated AOI"},
+}
+
+# Define the Request Payload
+request_payload = {
+    "aoi": aoi,
+    "spatial_join_method": "touches",
+    "start_date": "2020-01-01",
+    "end_date": "2020-12-31",
+    "fields": ["spi"]
+}
+
+# Get Time Series Data
+response = requests.post(TIMESERIES_ENDPOINT, json=request_payload)
+if response.status_code != 200:
+    raise Exception(f"Failed to get timeseries: {response.text}")
+
+timeseries_data = response.json()
+df = pd.DataFrame(timeseries_data)
+```
+````
+
+````{tab-item} r
+
+```{code-block} r
+library(httr2)
+library(jsonlite)
+
+base_url <- "https://space2stats.ds.io"
+
+# Bounding box around Kenya
+aoi <- list(
+  type = "Feature",
+  properties = NULL,  # Empty properties
+  geometry = list(
+    type = "Polygon",
+    coordinates = list(
+      list(
+        c(33.78593974945852, 5.115816884114494),
+        c(33.78593974945852, -4.725410543134203),
+        c(41.94362577283266, -4.725410543134203),
+        c(41.94362577283266, 5.115816884114494),
+        c(33.78593974945852, 5.115816884114494)
+      )
+    )
+  )
+)
+
+request_payload <- list(
+  aoi = aoi,
+  spatial_join_method = "centroid",
+  start_date = "2020-01-01",
+  end_date = "2020-12-31",
+  fields = list("spi")
+)
+
+# Set up the base URL and create the request
+req <- request(base_url) |>
+  req_url_path_append("timeseries") |>
+  req_body_json(request_payload)
+
+# Perform the request and get the response
+resp <- req |> req_perform()
+
+# Turn response into a data frame
+timeseries_data <- resp |> resp_body_string() |> fromJSON(flatten = TRUE)
+
+head(timeseries_data)
+```
+````
+`````
+
+### `/timeseries_by_hexids`
+
+Access timeseries data for specified h3 hexagons (level 6).
+
+`````{tab-set}
+````{tab-item} python
+
+```{code-block} python
+import requests
+import pandas as pd
+
+BASE_URL = "https://space2stats.ds.io"
+TIMESERIES_ENDPOINT = f"{BASE_URL}/timeseries_by_hexids"
+
+hex_ids = [
+    "866a4a00fffffff",
+    "866a4a017ffffff",
+    "866a4a01fffffff",
+    "866a4a047ffffff",
+    "866a4a04fffffff",
+]
+
+# Define the Request Payload
+request_payload = {
+    "hex_ids": hex_ids,
+    "start_date": "2020-01-01",
+    "end_date": "2020-12-31",
+    "fields": ["spi"]
+}
+
+# Get Time Series Data
+response = requests.post(TIMESERIES_ENDPOINT, json=request_payload)
+if response.status_code != 200:
+    raise Exception(f"Failed to get timeseries: {response.text}")
+
+timeseries_data = response.json()
+df = pd.DataFrame(timeseries_data)
+```
+````
+
+````{tab-item} r
+
+```{code-block} r
+library(httr2)
+library(jsonlite)
+
+base_url <- "https://space2stats.ds.io"
+
+hex_ids <- c(
+  "866a4a00fffffff",
+  "866a4a017ffffff",
+  "866a4a01fffffff",
+  "866a4a047ffffff",
+  "866a4a04fffffff"
+)
+
+request_payload <- list(
+  hex_ids = hex_ids,
+  start_date = "2020-01-01",
+  end_date = "2020-12-31",
+  fields = list("spi")
+)
+
+# Set up the base URL and create the request
+req <- request(base_url) |>
+  req_url_path_append("timeseries_by_hexids") |>
+  req_body_json(request_payload)
+
+# Perform the request and get the response
+resp <- req |> req_perform()
+
+# Turn response into a data frame
+timeseries_data <- resp |> resp_body_string() |> fromJSON(flatten = TRUE)
+
+head(timeseries_data)
+```
+````
+`````
+
 ## Notebook Examples
 
 - [**API Demo (Python)**](user-docs/space2stats_api_demo.ipynb)
 - [**API Demo (R)**](user-docs/space2stats_api_demo_R.md)
 - [**Exploring Flood Exposure (Python Client)**](user-docs/space2stats_floods_with_client.ipynb)
+- [**Exploring Time Series Data (Python Client)**](user-docs/space2stats_api_demo_spi_droughts.ipynb)
 
 ## Python Client
 
-In addition to the API, the `Space2StatsClient` python package provides wrapper functions to retrieve metadata and easily run the API's underlying functions (_fields_, _summaries_, and _aggregate_). The package is available on [PyPI](https://pypi.org/project/space2stats-client/) and can be installed using pip:
+In addition to the API, the `Space2StatsClient` python package provides wrapper functions to retrieve metadata and easily access API endpoints (_fields_, _summaries_, and _aggregate_, _timeseries_). The package is available on [PyPI](https://pypi.org/project/space2stats-client/) and can be installed using pip:
 
 ```bash
 pip install space2stats-client
