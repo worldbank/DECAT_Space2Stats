@@ -125,6 +125,9 @@ class Space2StatsClient:
         DataFrame
             A DataFrame with the requested fields for each H3 cell.
         """
+        if spatial_join_method not in ["touches", "centroid", "within"]:
+            raise ValueError("Input should be 'touches', 'centroid' or 'within'")
+
         res_all = {}
         for idx, row in gdf.iterrows():
             request_payload = {
@@ -187,6 +190,9 @@ class Space2StatsClient:
         DataFrame
             A DataFrame with the aggregated statistics.
         """
+        if aggregation_type not in ["sum", "avg", "count", "max", "min"]:
+            raise ValueError("Input should be 'sum', 'avg', 'count', 'max' or 'min'")
+
         res_all = []
         for idx, row in gdf.iterrows():
             request_payload = {
