@@ -52,6 +52,7 @@ jobs:
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
           PGTABLENAME: ${{ secrets.PGTABLENAME }}
+          TIMESERIES_TABLE_NAME: ${{ secrets.TIMESERIES_TABLE_NAME }}
           CDK_CERTIFICATE_ARN: ${{ vars.CDK_CERTIFICATE_ARN }}
           CDK_DEFAULT_ACCOUNT: ${{ vars.CDK_DEFAULT_ACCOUNT }}
           CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
