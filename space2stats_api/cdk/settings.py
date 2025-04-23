@@ -10,6 +10,7 @@ class AppSettings(BaseSettings):
     PGUSER: str
     PGPASSWORD: str
     PGTABLENAME: str
+    TIMESERIES_TABLE_NAME: str
 
 
 class DeploymentSettings(BaseSettings):
