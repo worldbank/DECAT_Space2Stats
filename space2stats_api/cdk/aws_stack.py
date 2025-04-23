@@ -19,7 +19,7 @@ class Space2StatsStack(Stack):
     ) -> None:
         super().__init__(scope, id, **kwargs)
 
-        app_settings = AppSettings()
+        app_settings = AppSettings(_env_file="./aws_app.env")
 
         bucket = s3.Bucket(
             self,
