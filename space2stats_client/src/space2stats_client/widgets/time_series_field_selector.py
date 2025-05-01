@@ -169,9 +169,9 @@ class TimeSeriesFieldSelector:
 
         # Create a button to get selected fields
         get_selected_button = widgets.Button(
-            description="Get Selected Fields",
+            description="Show Selection",
             button_style="primary",
-            tooltip="Get the list of selected fields",
+            tooltip="Show the selected fields and date range",
         )
 
         # Output area for selected fields
@@ -179,11 +179,15 @@ class TimeSeriesFieldSelector:
 
         def on_get_selected_clicked(b):
             selected = self.get_selected_fields()
+            time_period = self.get_time_period()
             with selected_output:
                 selected_output.clear_output()
                 if selected:
                     print(f"Selected {len(selected)} fields:")
                     print(selected)
+                    print("\nSelected time period:")
+                    print(f"Start date: {time_period['start_date']}")
+                    print(f"End date: {time_period['end_date']}")
                 else:
                     print("No fields selected")
 
