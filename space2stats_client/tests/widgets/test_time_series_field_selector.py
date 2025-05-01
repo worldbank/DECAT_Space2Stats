@@ -1,5 +1,3 @@
-"""Unit tests for TimeSeriesFieldSelector widget."""
-
 from datetime import date, datetime
 from unittest.mock import MagicMock, Mock, patch
 
@@ -234,7 +232,7 @@ def test_create_ui():
         # Check the button
         get_selected_button = ui.children[1]
         assert isinstance(get_selected_button, widgets.Button)
-        assert get_selected_button.description == "Get Selected Fields"
+        assert get_selected_button.description == "Show Selection"
 
         # Check the output area
         selected_output = ui.children[2]
