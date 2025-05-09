@@ -96,6 +96,7 @@ def mock_env(monkeypatch, database):
     monkeypatch.setenv("PGPASSWORD", database.password)
     monkeypatch.setenv("PGTABLENAME", "space2stats")
     monkeypatch.setenv("S3_BUCKET_NAME", "mybucket")
+    monkeypatch.setenv("TIMESERIES_TABLE_NAME", "climate")
 
 
 @pytest.fixture
