@@ -177,3 +177,38 @@ def mock_api_response(mocker, mock_catalog):
     mocker.patch("pystac.Catalog.from_file", return_value=mock_catalog)
 
     return mock_response
+
+
+@pytest.fixture
+def mock_error_response_413(mocker):
+    """Mock response for 413 Request Entity Too Large error."""
+    mock_response = mocker.Mock()
+    mock_response.status_code = 413
+    mock_response.json.return_value = {
+        "error": "Request Entity Too Large",
+        "detail": "The request payload exceeds the API limits",
+        "hint": "Try again with a smaller request or making multiple requests with smaller payloads. The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries data is requested).",
+    }
+    return mock_response
+
+
+@pytest.fixture
+def mock_error_response_400(mocker):
+    """Mock response for 400 Bad Request error with JSON response."""
+    mock_response = mocker.Mock()
+    mock_response.status_code = 400
+    mock_response.json.return_value = {
+        "error": "Bad Request",
+        "detail": "Invalid request parameters",
+    }
+    return mock_response
+
+
+@pytest.fixture
+def mock_error_response_500(mocker):
+    """Mock response for 500 Internal Server Error with plain text."""
+    mock_response = mocker.Mock()
+    mock_response.status_code = 500
+    mock_response.json.side_effect = ValueError("Not JSON")
+    mock_response.text = "Internal Server Error"
+    return mock_response
