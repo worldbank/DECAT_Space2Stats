@@ -1,5 +1,6 @@
 """Space2Stats client for accessing the World Bank's spatial statistics API."""
 
+import inspect
 from typing import Dict, List, Literal, Optional
 
 import geopandas as gpd
@@ -41,6 +42,25 @@ class Space2StatsClient:
         self.timeseries_fields_endpoint = f"{base_url}/timeseries/fields"
         self.catalog = Catalog.from_file(
             "https://raw.githubusercontent.com/worldbank/DECAT_Space2Stats/refs/heads/main/space2stats_api/src/space2stats_ingest/METADATA/stac/catalog.json"
+        )
+
+    def _handle_api_error(self, response: requests.Response) -> None:
+        """Handle API error responses with specific handling for different status codes."""
+        caller = inspect.currentframe().f_back.f_code.co_name
+
+        try:
+            error_data = response.json()
+            error_message = error_data.get(
+                "detail", error_data.get("error", response.text)
+            )
+            hint = error_data.get("hint", "")
+            if hint:
+                error_message = f"{error_message}\nHint: {hint}"
+        except:
+            error_message = response.text
+
+        raise Exception(
+            f"Failed to {caller} (HTTP {response.status_code}): {error_message}"
         )
 
     def get_topics(self) -> pd.DataFrame:
@@ -259,7 +279,7 @@ class Space2StatsClient:
         )
 
         if response.status_code != 200:
-            raise Exception(f"Failed to get summary by hexids: {response.text}")
+            self._handle_api_error(response)
 
         summary_data = response.json()
         return pd.DataFrame(summary_data)
