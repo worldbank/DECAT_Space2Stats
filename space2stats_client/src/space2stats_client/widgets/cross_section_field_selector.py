@@ -75,8 +75,8 @@ class CrossSectionFieldSelector:
                 for item in items:
                     item_data = item.to_dict()
 
-                    # Skip this item if it has "themes": "Climate"
-                    if item_data.get("properties", {}).get("themes") == "Climate":
+                    # Skip this item if it has start_datetime
+                    if item_data.get("properties", {}).get("start_datetime"):
                         continue
 
                     # Use the item's title or name as the group name
