@@ -96,23 +96,14 @@ class CrossSectionFieldSelector:
                             if field_name and field_name.lower() in [
                                 f.lower() for f in self.all_fields
                             ]:
-                                # Find the exact field name with correct case
-                                exact_field = next(
-                                    (
-                                        f
-                                        for f in self.all_fields
-                                        if f.lower() == field_name.lower()
-                                    ),
-                                    None,
+                                # Use the case from the STAC item
+                                fields_in_item.append(field_name)
+                                # Store description for tooltip
+                                self.field_descriptions[field_name] = column.get(
+                                    "description", ""
                                 )
-                                if exact_field:
-                                    fields_in_item.append(exact_field)
-                                    # Store description for tooltip
-                                    self.field_descriptions[exact_field] = column.get(
-                                        "description", ""
-                                    )
-                                    # Map field to group
-                                    self.field_to_group[exact_field] = group_name
+                                # Map field to group
+                                self.field_to_group[field_name] = group_name
 
                         if fields_in_item:
                             self.field_groups[group_name] = fields_in_item
