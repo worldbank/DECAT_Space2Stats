@@ -232,3 +232,43 @@ def test_get_timeseries_by_hexids_values(mock_api_response):
     # Check a specific value from the second hex_id
     assert "2024-01-03" in second_hex_data["date"].values
     assert 1.5 in second_hex_data["value"].values
+
+
+def test_handle_api_error_413(mock_error_response_413):
+    """Test handling of 413 Request Entity Too Large error."""
+    client = Space2StatsClient()
+
+    with pytest.raises(Exception) as exc_info:
+        client._handle_api_error(mock_error_response_413)
+
+    expected_message = (
+        "Failed to test_handle_api_error_413 (HTTP 413): The request payload exceeds the API limits\n"
+        "Hint: Try again with a smaller request or making multiple requests with smaller payloads. "
+        "The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, "
+        "and the date range (if timeseries data is requested)."
+    ).strip()
+    assert str(exc_info.value).strip() == expected_message
+
+
+def test_handle_api_error_generic(mock_error_response_400):
+    """Test handling of generic API errors."""
+    client = Space2StatsClient()
+
+    with pytest.raises(Exception) as exc_info:
+        client._handle_api_error(mock_error_response_400)
+
+    expected_message = (
+        "Failed to test_handle_api_error_generic (HTTP 400): Invalid request parameters"
+    ).strip()
+    assert str(exc_info.value).strip() == expected_message
+
+
+def test_handle_api_error_non_json(mock_error_response_500):
+    """Test handling of non-JSON error responses."""
+    client = Space2StatsClient()
+
+    with pytest.raises(Exception) as exc_info:
+        client._handle_api_error(mock_error_response_500)
+
+    assert "HTTP 500" in str(exc_info.value)
+    assert "Internal Server Error" in str(exc_info.value)
