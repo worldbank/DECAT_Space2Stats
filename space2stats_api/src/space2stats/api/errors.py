@@ -12,6 +12,18 @@ async def database_exception_handler(request: Request, exc: OperationalError):
 
 
 async def http_exception_handler(request: Request, exc: HTTPException):
+    # Special handling for 413 errors
+    if exc.status_code == 413:
+        return JSONResponse(
+            status_code=413,
+            content={
+                "error": "Request Entity Too Large",
+                "detail": "The request payload exceeds the API limits",
+                "hint": "Try again with a smaller request or making multiple requests with smaller payloads. The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested).",
+            },
+        )
+
+    # Default handling for all other HTTP exceptions
     return JSONResponse(
         status_code=exc.status_code,
         content={"error": exc.detail},

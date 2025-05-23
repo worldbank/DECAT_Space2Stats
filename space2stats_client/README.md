@@ -87,6 +87,68 @@ Gets timeseries data for specific H3 hexagon IDs.
   - `end_date`: Optional end date (format: 'YYYY-MM-DD')
   - `fields`: Optional list of field names to retrieve
 
+## Interactive Widgets
+
+Space2Stats provides interactive widgets that make it easy to explore and select data fields in Jupyter notebooks.
+
+### CrossSectionFieldSelector
+
+This widget helps users interactively select fields from the Space2Stats API for cross-sectional data. Fields are organized by their source STAC items for easier navigation.
+
+```python
+from space2stats_client import Space2StatsClient, CrossSectionFieldSelector
+
+# Initialize the client
+client = Space2StatsClient()
+
+# Create the field selector widget
+selector = CrossSectionFieldSelector(client)
+
+# Display the interactive widget in your notebook
+selector.display()
+
+# Later, retrieve the selected fields
+selected_fields = selector.get_selected_fields()
+
+# Use the selected fields in an API call
+gdf = gpd.read_file("path/to/your/area.geojson")
+summary = client.get_summary(
+    gdf=gdf,
+    spatial_join_method="centroid",
+    fields=selected_fields
+)
+```
+
+### TimeSeriesFieldSelector
+
+This widget allows users to interactively select fields for time series data and specify a valid time period based on the available data range.
+
+```python
+from space2stats_client import Space2StatsClient, TimeSeriesFieldSelector
+
+# Initialize the client
+client = Space2StatsClient()
+
+# Create the time series field selector widget
+ts_selector = TimeSeriesFieldSelector(client)
+
+# Display the interactive widget in your notebook
+ts_selector.display()
+
+# Later, retrieve the selected fields and time period
+selections = ts_selector.get_selections()
+
+# Use the selections in a time series API call
+gdf = gpd.read_file("path/to/your/area.geojson")
+timeseries_data = client.get_timeseries(
+    gdf=gdf,
+    spatial_join_method="centroid",
+    fields=selections['fields'],
+    start_date=selections['time_period']['start_date'].strftime('%Y-%m-%d'),
+    end_date=selections['time_period']['end_date'].strftime('%Y-%m-%d')
+)
+```
+
 ## Quick Start
 
 ```bash
@@ -105,7 +167,7 @@ topics = client.get_topics()
 print(topics)
 
 # Get fields for a specific dataset
-fields = client.get_fields("dataset_id")
+fields = client.get_fields()
 print(fields)
 
 # Get data for an area of interest
@@ -122,6 +184,15 @@ aggregates = client.get_aggregate(
     spatial_join_method="centroid",
     fields=["population", "gdp"],
     aggregation_type="sum"
+)
+
+# Get time series data
+timeseries = client.get_timeseries(
+    gdf=gdf,
+    spatial_join_method="centroid",
+    fields=["spi"],
+    start_date="2020-01-01",
+    end_date="2020-12-31"
 )
 ```
 

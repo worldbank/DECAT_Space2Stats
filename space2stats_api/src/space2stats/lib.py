@@ -58,7 +58,9 @@ class StatsTable:
                 sql_query,
                 [self.table_name],
             )
-            columns = [row[0] for row in cur.fetchall() if row[0] != "hex_id"]
+            columns = [
+                row[0] for row in cur.fetchall() if row[0] not in ["hex_id", "ogc_fid"]
+            ]
 
         return columns
 
