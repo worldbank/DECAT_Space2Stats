@@ -363,3 +363,76 @@ def test_display():
         assert isinstance(display_arg, widgets.VBox)
         assert len(display_arg.children) == 2
         assert display_arg.children[0] == selector.output
+
+
+def test_field_name_case_insensitivity(mock_client):
+    """Test that field matching is case insensitive."""
+    client, mock_collection = mock_client
+
+    item = MagicMock()
+    item.to_dict.return_value = {
+        "properties": {
+            "name": "Dataset1",
+            "table:columns": [
+                {"name": "Field1", "description": "Description for Field1"},
+            ],
+        }
+    }
+
+    mock_collection.get_items.return_value = [item]
+
+    selector = CrossSectionFieldSelector(client)
+    selector.all_fields = ["field1"]  # lowercase in API response
+
+    selector._group_fields_by_stac_items()
+
+    assert "Field1" in selector.field_groups["Dataset1"]  # original case preserved
+    assert selector.field_descriptions["Field1"] == "Description for Field1"
+
+
+def test_accordion_titles_and_counts():
+    """Test that accordion titles include correct group counts."""
+    selector = CrossSectionFieldSelector()
+    selector.field_groups = {"Group1": ["field1", "field2"], "Group2": ["field3"]}
+
+    ui = selector.create_ui()
+    accordion = ui.children[0]
+
+    assert accordion.get_title(0) == "Group1 (2)"
+    assert accordion.get_title(1) == "Group2 (1)"
+
+
+def test_widget_layouts():
+    """Test that widgets have correct layout properties."""
+    selector = CrossSectionFieldSelector()
+    selector.field_groups = {"Group1": ["field1"]}
+
+    ui = selector.create_ui()
+    accordion = ui.children[0]
+    group_widget = accordion.children[0]
+    checkbox = group_widget.children[1]  # First field checkbox
+
+    assert checkbox.layout.width == "400px"
+    assert not checkbox.indent
+
+
+def test_select_all_handler():
+    """Test the select all checkbox handler properly toggles all fields."""
+    selector = CrossSectionFieldSelector()
+    selector.field_groups = {"Group1": ["field1", "field2"]}
+
+    ui = selector.create_ui()
+    group_checkboxes = selector.checkboxes["Group1"]
+    select_all = group_checkboxes["select_all"]
+    field1 = group_checkboxes["fields"]["field1"]
+    field2 = group_checkboxes["fields"]["field2"]
+
+    # Test select all
+    select_all.value = True
+    assert field1.value is True
+    assert field2.value is True
+
+    # Test deselect all
+    select_all.value = False
+    assert field1.value is False
+    assert field2.value is False
