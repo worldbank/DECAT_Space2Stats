@@ -242,7 +242,7 @@ def test_handle_api_error_413(mock_error_response_413):
         client._handle_api_error(mock_error_response_413)
 
     expected_message = (
-        "Failed to test_handle_api_error_413 (HTTP 413): The request payload exceeds the API limits\n"
+        "Failed to test_handle_api_error_413 (HTTP 413): Request Entity Too Large: The request payload exceeds the API limits\n\n"
         "Hint: Try again with a smaller request or making multiple requests with smaller payloads. "
         "The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, "
         "and the date range (if timeseries data is requested)."
@@ -258,7 +258,7 @@ def test_handle_api_error_generic(mock_error_response_400):
         client._handle_api_error(mock_error_response_400)
 
     expected_message = (
-        "Failed to test_handle_api_error_generic (HTTP 400): Invalid request parameters"
+        "Failed to test_handle_api_error_generic (HTTP 400): Bad Request: Invalid request parameters"
     ).strip()
     assert str(exc_info.value).strip() == expected_message
 
@@ -272,3 +272,23 @@ def test_handle_api_error_non_json(mock_error_response_500):
 
     assert "HTTP 500" in str(exc_info.value)
     assert "Internal Server Error" in str(exc_info.value)
+
+
+def test_handle_api_error_503(mock_error_response_503):
+    """Test handling of 503 Service Unavailable error."""
+    client = Space2StatsClient()
+
+    with pytest.raises(Exception) as exc_info:
+        client._handle_api_error(mock_error_response_503)
+
+    expected_message = (
+        "Failed to test_handle_api_error_503 (HTTP 503): Service Unavailable: The request likely timed out due to processing complexity or high server load\n\n"
+        "Hint: Try a smaller request by reducing the area of interest (AOI), number of fields requested, or date range (for timeseries). You can also break large requests into multiple smaller requests.\n\n"
+        "Suggestions:\n"
+        "  • Reduce the number of hexagon IDs in your request\n"
+        "  • Request fewer fields at a time\n"
+        "  • Use a smaller geographic area\n"
+        "  • For timeseries requests, use a shorter date range\n"
+        "  • Try the request again in a few moments"
+    ).strip()
+    assert str(exc_info.value).strip() == expected_message

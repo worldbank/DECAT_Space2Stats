@@ -84,3 +84,26 @@ def test_http_exception_handler_413():
     assert response.status_code == 413
     response_data = json.loads(response.body.decode("utf-8"))
     assert response_data == expected_response
+
+
+def test_http_exception_handler_503():
+    request = None
+    exception = HTTPException(status_code=503, detail="Service Unavailable")
+    response = asyncio.run(http_exception_handler(request, exception))
+
+    expected_response = {
+        "error": "Service Unavailable",
+        "detail": "The request likely timed out due to processing complexity or high server load",
+        "hint": "Try a smaller request by reducing the area of interest (AOI), number of fields requested, or date range (for timeseries). You can also break large requests into multiple smaller requests.",
+        "suggestions": [
+            "Reduce the number of hexagon IDs in your request",
+            "Request fewer fields at a time",
+            "Use a smaller geographic area",
+            "For timeseries requests, use a shorter date range",
+            "Try the request again in a few moments",
+        ],
+    }
+
+    assert response.status_code == 503
+    response_data = json.loads(response.body.decode("utf-8"))
+    assert response_data == expected_response

@@ -23,6 +23,24 @@ async def http_exception_handler(request: Request, exc: HTTPException):
             },
         )
 
+    # Special handling for 503 errors
+    if exc.status_code == 503:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "error": "Service Unavailable",
+                "detail": "The request likely timed out due to processing complexity or high server load",
+                "hint": "Try a smaller request by reducing the area of interest (AOI), number of fields requested, or date range (for timeseries). You can also break large requests into multiple smaller requests.",
+                "suggestions": [
+                    "Reduce the number of hexagon IDs in your request",
+                    "Request fewer fields at a time",
+                    "Use a smaller geographic area",
+                    "For timeseries requests, use a shorter date range",
+                    "Try the request again in a few moments",
+                ],
+            },
+        )
+
     # Default handling for all other HTTP exceptions
     return JSONResponse(
         status_code=exc.status_code,
