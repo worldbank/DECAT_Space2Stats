@@ -31,3 +31,4 @@ parts:
       - file: user-docs/space2stats_api_demo_urban_flood_risk.ipynb
       - file: user-docs/space2stats_floods_with_client.ipynb
       - file: user-docs/space2stats_api_demo_spi_droughts.ipynb
+      - file: user-docs/space2stats_walkthrough.ipynb
