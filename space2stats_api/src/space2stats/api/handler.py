@@ -4,6 +4,7 @@ import asyncio
 import json
 import os
 import sys
+import time
 from http import HTTPStatus
 
 from fastapi import HTTPException
@@ -19,7 +20,11 @@ app = build_app(settings)
 # AWS Lambda response payload limit (6MB)
 LAMBDA_RESPONSE_LIMIT = 6 * 1024 * 1024  # 6MB in bytes
 
-# Error hint messages
+# Add these near the top of handler.py
+LAMBDA_TIMEOUT_SECONDS = 120  # Match your CDK timeout setting
+TIMEOUT_BUFFER_SECONDS = 5  # Buffer to ensure we respond before timeout
+
+# Error hint messages - updated to match client expectations
 ERROR_HINTS = {
     413: (
         "Try again with a smaller request or making multiple requests "
@@ -27,8 +32,8 @@ ERROR_HINTS = {
         "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested)."
     ),
     503: (
-        "The service is currently unavailable, possibly due to Lambda function timeouts "
-        "or high system load. Please try again later or reduce request complexity."
+        "Try a smaller request by reducing the area of interest (AOI), number of fields requested, "
+        "or date range (for timeseries). You can also break large requests into multiple smaller requests."
     ),
 }
 
@@ -74,21 +79,45 @@ def _get_response_size(response: dict) -> int:
     return len(body) if body else 0
 
 
+def get_remaining_time_ms(context):
+    """Get remaining execution time in milliseconds."""
+    if context and hasattr(context, "get_remaining_time_in_millis"):
+        return context.get_remaining_time_in_millis()
+    return None
+
+
 def handler(event, context):
     """
-    AWS Lambda entry point with proactive response size checking:
-      - Checks response size before returning to prevent 413 errors
-      - Catches FastAPI HTTPException (e.g. 413, 503)
-      - Detects and reformats infrastructure 503 errors
-      - Everything else bubbles up as a 500
+    AWS Lambda entry point with proactive timeout detection.
     """
+    start_time = time.time()
+
     try:
+        # Check if we're approaching timeout before processing
+        remaining_time_ms = get_remaining_time_ms(context)
+        if remaining_time_ms and remaining_time_ms < (TIMEOUT_BUFFER_SECONDS * 1000):
+            return _create_error_response(
+                503,
+                f"Request approaching lambda timeout - unable to process. "
+                f"Remaining time: {remaining_time_ms}ms, Lambda timeout: {LAMBDA_TIMEOUT_SECONDS}s",
+                suggestions=[
+                    "Reduce the number of hexagon IDs in your request",
+                    "Request fewer fields at a time",
+                    "Use a smaller geographic area",
+                    "For timeseries requests, use a shorter date range",
+                    "Request is too complex for current timeout limits",
+                ],
+            )
+
+        # Wrap the mangum handler call with timeout checking
         response = mangum_handler(event, context)
 
         if response.get("statusCode") == 503:
+            elapsed_time = time.time() - start_time
             return _create_error_response(
                 503,
-                "The request likely timed out due to processing complexity or high server load",
+                f"The request likely timed out due to processing complexity or high server load. "
+                f"Request took {round(elapsed_time, 2)}s of the {LAMBDA_TIMEOUT_SECONDS}s timeout limit.",
                 suggestions=[
                     "Reduce the number of hexagon IDs in your request",
                     "Request fewer fields at a time",
@@ -103,9 +132,9 @@ def handler(event, context):
         if body_size > LAMBDA_RESPONSE_LIMIT:
             return _create_error_response(
                 413,
-                "The response payload exceeds AWS Lambda limits.",
-                response_size_mb=round(body_size / (1024 * 1024), 2),
-                limit_mb=round(LAMBDA_RESPONSE_LIMIT / (1024 * 1024), 2),
+                f"The response payload exceeds AWS Lambda limits. "
+                f"Response size: {round(body_size / (1024 * 1024), 2)}MB, "
+                f"Limit: {round(LAMBDA_RESPONSE_LIMIT / (1024 * 1024), 2)}MB",
             )
 
         return response
@@ -114,6 +143,22 @@ def handler(event, context):
         return _create_error_response(exc.status_code, exc.detail)
 
     except Exception as e:
+        elapsed_time = time.time() - start_time
+
+        # Check if this might be a timeout-related exception
+        if elapsed_time > (LAMBDA_TIMEOUT_SECONDS - TIMEOUT_BUFFER_SECONDS):
+            return _create_error_response(
+                503,
+                f"Request timed out during processing. "
+                f"Elapsed time: {round(elapsed_time, 2)}s, Lambda timeout: {LAMBDA_TIMEOUT_SECONDS}s, "
+                f"Error: {type(e).__name__}",
+                suggestions=[
+                    "Reduce request complexity",
+                    "Try breaking large requests into smaller chunks",
+                    "Consider using pagination for large datasets",
+                ],
+            )
+
         # Log the error for debugging
         print(f"Unexpected error in lambda handler: {e}", file=sys.stderr)
         return _create_error_response(
