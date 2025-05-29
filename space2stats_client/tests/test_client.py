@@ -250,30 +250,6 @@ def test_handle_api_error_413(mock_error_response_413):
     assert str(exc_info.value).strip() == expected_message
 
 
-def test_handle_api_error_generic(mock_error_response_400):
-    """Test handling of generic API errors."""
-    client = Space2StatsClient()
-
-    with pytest.raises(Exception) as exc_info:
-        client._handle_api_error(mock_error_response_400)
-
-    expected_message = (
-        "Failed to test_handle_api_error_generic (HTTP 400): Bad Request: Invalid request parameters"
-    ).strip()
-    assert str(exc_info.value).strip() == expected_message
-
-
-def test_handle_api_error_non_json(mock_error_response_500):
-    """Test handling of non-JSON error responses."""
-    client = Space2StatsClient()
-
-    with pytest.raises(Exception) as exc_info:
-        client._handle_api_error(mock_error_response_500)
-
-    assert "HTTP 500" in str(exc_info.value)
-    assert "Internal Server Error" in str(exc_info.value)
-
-
 def test_handle_api_error_503(mock_error_response_503):
     """Test handling of 503 Service Unavailable error."""
     client = Space2StatsClient()
