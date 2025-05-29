@@ -78,7 +78,8 @@ class Space2StatsClient:
                 # This is API Gateway's format (e.g., 413 from API Gateway limits)
                 if response.status_code == 413:
                     error_message = (
-                        "Request Entity Too Large: The request payload exceeds API Gateway limits\n\n"
+                        f"Failed to {caller} (HTTP 413): Request Entity Too Large - "
+                        "The request payload exceeds API Gateway limits of 10MB\n\n"
                         "Hint: Try again with a smaller request or making multiple requests "
                         "with smaller payloads. The factors to consider are the number of "
                         "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested)."
