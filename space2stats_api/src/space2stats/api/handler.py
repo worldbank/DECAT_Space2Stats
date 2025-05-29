@@ -19,15 +19,6 @@ app = build_app(settings)
 # AWS Lambda response payload limit (6MB)
 LAMBDA_RESPONSE_LIMIT = 6 * 1024 * 1024  # 6MB in bytes
 
-# Error hint messages - updated to match client expectations
-ERROR_HINTS = {
-    413: (
-        "Try again with a smaller request or making multiple requests "
-        "with smaller payloads. The factors to consider are the number of "
-        "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested)."
-    ),
-}
-
 
 @app.on_event("startup")
 async def startup_event() -> None:
@@ -44,10 +35,6 @@ def _create_error_response(status_code: int, detail: str, **extra_fields) -> dic
         "error": HTTPStatus(status_code).phrase,
         "detail": detail,
     }
-
-    # Add hint if available
-    if status_code in ERROR_HINTS:
-        error_payload["hint"] = ERROR_HINTS[status_code]
 
     # Add any extra fields
     error_payload.update(extra_fields)

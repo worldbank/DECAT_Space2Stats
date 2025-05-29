@@ -12,39 +12,21 @@ async def database_exception_handler(request: Request, exc: OperationalError):
 
 
 async def http_exception_handler(request: Request, exc: HTTPException):
-    # Special handling for 413 errors
+    content = {"error": exc.detail}
+
+    # Add custom handling for 413 errors
     if exc.status_code == 413:
-        return JSONResponse(
-            status_code=413,
-            content={
-                "error": "Request Entity Too Large",
-                "detail": "The request payload exceeds the API limits",
-                "hint": "Try again with a smaller request or making multiple requests with smaller payloads. The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested).",
-            },
-        )
+        content = {
+            "error": "Request Entity Too Large",
+            "detail": "The request payload exceeds the API limits",
+            "hint": "Try again with a smaller request or making multiple requests "
+            "with smaller payloads. The factors to consider are the number of "
+            "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested).",
+        }
 
-    # Special handling for 503 errors
-    if exc.status_code == 503:
-        return JSONResponse(
-            status_code=503,
-            content={
-                "error": "Service Unavailable",
-                "detail": "The request likely timed out due to processing complexity or high server load",
-                "hint": "Try a smaller request by reducing the area of interest (AOI), number of fields requested, or date range (for timeseries). You can also break large requests into multiple smaller requests.",
-                "suggestions": [
-                    "Reduce the number of hexagon IDs in your request",
-                    "Request fewer fields at a time",
-                    "Use a smaller geographic area",
-                    "For timeseries requests, use a shorter date range",
-                    "Try the request again in a few moments",
-                ],
-            },
-        )
-
-    # Default handling for all other HTTP exceptions
     return JSONResponse(
         status_code=exc.status_code,
-        content={"error": exc.detail},
+        content=content,
     )
 
 
