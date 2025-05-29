@@ -48,6 +48,28 @@ class Space2StatsClient:
         """Handle API error responses with specific handling for different status codes."""
         caller = inspect.currentframe().f_back.f_code.co_name
 
+        # Special handling for 503 Service Unavailable from API Gateway
+        if response.status_code == 503:
+            try:
+                error_data = response.json()
+                error_message = error_data.get("message", "Service Unavailable")
+            except Exception:
+                error_message = "Service Unavailable"
+
+            # Check if this is the basic API Gateway timeout message
+            if error_message == "Service Unavailable":
+                raise Exception(
+                    f"Failed to {caller} (HTTP 503): Service Unavailable - "
+                    f"Request timed out due to API Gateway timeout limit (30 seconds). "
+                    f"Try reducing the request size:\n"
+                    f"  • Use fewer hexagon IDs or a smaller geographic area\n"
+                    f"  • Request fewer fields at a time\n"
+                    f"  • For polygon AOI requests, use a smaller area or simpler geometry\n"
+                    f"  • Consider breaking large requests into smaller chunks"
+                )
+            else:
+                raise Exception(f"Failed to {caller} (HTTP 503): {error_message}")
+
         try:
             error_data = response.json()
 
