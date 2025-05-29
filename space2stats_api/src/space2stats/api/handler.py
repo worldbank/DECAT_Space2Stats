@@ -79,30 +79,24 @@ def handler(event, context):
     AWS Lambda entry point with proactive response size checking:
       - Checks response size before returning to prevent 413 errors
       - Catches FastAPI HTTPException (e.g. 413, 503)
-      - Catches raw Lambda 503 responses and adds helpful hints
+      - Detects and reformats infrastructure 503 errors
       - Everything else bubbles up as a 500
     """
     try:
         response = mangum_handler(event, context)
 
-        if response.get("statusCode") == 503 and isinstance(response.get("body"), str):
-            try:
-                body_json = json.loads(response["body"])
-                # Check if this is a raw Lambda 503 response
-                if body_json.get("message") == "Service Unavailable":
-                    return _create_error_response(
-                        503,
-                        "The request likely timed out due to processing complexity or high server load.",
-                        suggestions=[
-                            "Reduce the number of hexagon IDs in your request",
-                            "Request fewer fields at a time",
-                            "Use a smaller geographic area",
-                            "For timeseries requests, use a shorter date range",
-                            "Try the request again in a few moments",
-                        ],
-                    )
-            except (json.JSONDecodeError, TypeError):
-                pass
+        if response.get("statusCode") == 503:
+            return _create_error_response(
+                503,
+                "The request likely timed out due to processing complexity or high server load",
+                suggestions=[
+                    "Reduce the number of hexagon IDs in your request",
+                    "Request fewer fields at a time",
+                    "Use a smaller geographic area",
+                    "For timeseries requests, use a shorter date range",
+                    "Try the request again in a few moments",
+                ],
+            )
 
         # Check response size before returning
         body_size = _get_response_size(response)
