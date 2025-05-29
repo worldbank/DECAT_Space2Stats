@@ -73,24 +73,35 @@ class Space2StatsClient:
         try:
             error_data = response.json()
 
-            # Extract main error information
-            error_title = error_data.get("error", "API Error")
-            error_detail = error_data.get("detail", response.text)
+            # Handle both API Gateway format and application format
+            if "message" in error_data and "error" not in error_data:
+                # This is API Gateway's format (e.g., 413 from API Gateway limits)
+                if response.status_code == 413:
+                    error_message = (
+                        "Request Entity Too Large: The request payload exceeds API Gateway limits\n\n"
+                        "Hint: Try again with a smaller request or making multiple requests "
+                        "with smaller payloads. The factors to consider are the number of "
+                        "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested)."
+                    )
+                else:
+                    error_message = error_data.get("message", response.text)
+            else:
+                # This is your application's format
+                error_title = error_data.get("error", "API Error")
+                error_detail = error_data.get("detail", response.text)
+                error_message = f"{error_title}: {error_detail}"
 
-            # Build comprehensive error message
-            error_message = f"{error_title}: {error_detail}"
+                # Add hint if available
+                hint = error_data.get("hint", "")
+                if hint:
+                    error_message += f"\n\nHint: {hint}"
 
-            # Add hint if available
-            hint = error_data.get("hint", "")
-            if hint:
-                error_message += f"\n\nHint: {hint}"
-
-            # Add suggestions if available
-            suggestions = error_data.get("suggestions", [])
-            if suggestions:
-                error_message += "\n\nSuggestions:"
-                for suggestion in suggestions:
-                    error_message += f"\n  • {suggestion}"
+                # Add suggestions if available
+                suggestions = error_data.get("suggestions", [])
+                if suggestions:
+                    error_message += "\n\nSuggestions:"
+                    for suggestion in suggestions:
+                        error_message += f"\n  • {suggestion}"
 
         except Exception:
             error_message = response.text
