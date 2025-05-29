@@ -282,13 +282,12 @@ def test_handle_api_error_503(mock_error_response_503):
         client._handle_api_error(mock_error_response_503)
 
     expected_message = (
-        "Failed to test_handle_api_error_503 (HTTP 503): Service Unavailable: The request likely timed out due to processing complexity or high server load\n\n"
-        "Hint: Try a smaller request by reducing the area of interest (AOI), number of fields requested, or date range (for timeseries). You can also break large requests into multiple smaller requests.\n\n"
-        "Suggestions:\n"
-        "  • Reduce the number of hexagon IDs in your request\n"
+        "Failed to test_handle_api_error_503 (HTTP 503): Service Unavailable - "
+        "Request timed out due to API Gateway timeout limit (30 seconds). "
+        "Try reducing the request size:\n"
+        "  • Use fewer hexagon IDs or a smaller geographic area\n"
         "  • Request fewer fields at a time\n"
-        "  • Use a smaller geographic area\n"
-        "  • For timeseries requests, use a shorter date range\n"
-        "  • Try the request again in a few moments"
+        "  • For polygon AOI requests, use a smaller area or simpler geometry\n"
+        "  • Consider breaking large requests into smaller chunks"
     ).strip()
     assert str(exc_info.value).strip() == expected_message
