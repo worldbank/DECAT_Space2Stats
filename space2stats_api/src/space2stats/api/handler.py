@@ -3,9 +3,9 @@
 import asyncio
 import json
 import os
-import sys
-from typing import Any, Dict
+from http import HTTPStatus
 
+from fastapi import HTTPException
 from mangum import Mangum
 
 from .app import build_app
@@ -15,9 +15,6 @@ from .settings import Settings
 settings = Settings(DB_MAX_CONN_SIZE=1)  # disable connection pooling
 app = build_app(settings)
 
-# AWS Lambda response limit is 6MB, but be conservative with headers/encoding overhead
-LAMBDA_RESPONSE_LIMIT = 5.8 * 1024 * 1024  # 5.8MB to account for overhead
-
 
 @app.on_event("startup")
 async def startup_event() -> None:
@@ -25,90 +22,70 @@ async def startup_event() -> None:
     await connect_to_db(app, settings=settings)
 
 
-# Create the Mangum handler
 mangum_handler = Mangum(app, lifespan="off")
 
 
-def check_response_size(response: Dict[str, Any]) -> Dict[str, Any]:
-    """Check if response size exceeds Lambda limits and return 413 if it does."""
-    try:
-        # The 'body' field contains the actual response data
-        body = response.get("body", "")
-
-        # Calculate the size of the body (this is what gets sent to the client)
-        if isinstance(body, str):
-            body_size = len(body.encode("utf-8"))
-        else:
-            # Handle binary responses
-            body_size = len(body) if body else 0
-
-        # Also account for headers and other response metadata
-        response_overhead = len(
-            json.dumps({k: v for k, v in response.items() if k != "body"}).encode(
-                "utf-8"
-            )
-        )
-
-        total_size = body_size + response_overhead
-
-        if total_size > LAMBDA_RESPONSE_LIMIT:
-            # Return a 413 error response instead of the original response
-            return {
-                "statusCode": 413,
-                "headers": {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",  # Maintain CORS if needed
-                },
-                "body": json.dumps(
-                    {
-                        "error": "Request Entity Too Large",
-                        "detail": "The response payload exceeds the Lambda limits",
-                        "hint": "Try again with a smaller request or making multiple requests with smaller payloads. The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested).",
-                        "response_size_mb": round(total_size / (1024 * 1024), 2),
-                        "limit_mb": round(LAMBDA_RESPONSE_LIMIT / (1024 * 1024), 2),
-                    }
-                ),
-            }
-
-        return response
-
-    except Exception as e:
-        # If size check fails for any reason, log it and return original response
-        # This allows the RuntimeError handler to catch Lambda-level issues
-        print(f"Error in response size check: {e}", file=sys.stderr)
-        return response
-
-
 def handler(event, context):
+    """
+    AWS Lambda entry point with lean reactive error handling:
+      - Catches FastAPI HTTPException (e.g. 413, 503)
+      - Catches AWS RuntimeErrors for too-large responses
+      - Everything else bubbles up as a 500
+    """
     try:
-        # Generate the full response
-        response = mangum_handler(event, context)
+        return mangum_handler(event, context)
 
-        # Check response size before returning to AWS Lambda runtime
-        checked_response = check_response_size(response)
+    except HTTPException as exc:
+        status = exc.status_code
+        phrase = HTTPStatus(status).phrase
 
-        return checked_response
+        # Base error payload
+        error_payload = {
+            "error": phrase,
+            "detail": exc.detail,
+        }
+
+        # Per-status hints
+        if status == 413:
+            error_payload["hint"] = (
+                "Try again with a smaller request or making multiple requests "
+                "with smaller payloads. The factors to consider are the number of "
+                "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested)."
+            )
+        elif status == 503:
+            error_payload["hint"] = (
+                "The service is currently unavailable, possibly due to Lambda function timeouts "
+                "or high system load. Please try again later or reduce request complexity."
+            )
+
+        return {
+            "statusCode": status,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps(error_payload),
+        }
 
     except RuntimeError as e:
-        # Fallback: catch Lambda runtime errors that slip through
-        if "Failed to post invocation response" in str(
-            e
-        ) and "Http response code: 413" in str(e):
-            return {
-                "statusCode": 413,
-                "headers": {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                },
-                "body": json.dumps(
-                    {
-                        "error": "Request Entity Too Large",
-                        "detail": "The response payload exceeds the Lambda limits (caught at runtime)",
-                        "hint": "Try again with a smaller request or making multiple requests with smaller payloads. The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested).",
-                    }
+        # AWS Lambda may raise a RuntimeError if the *response* payload is too large
+        msg = str(e)
+        if any(
+            kw in msg
+            for kw in ["Http response code: 413", "Response payload size is too large"]
+        ):
+            error_payload = {
+                "error": HTTPStatus(413).phrase,
+                "detail": "The response payload exceeds AWS Lambda limits.",
+                "hint": (
+                    "Try again with a smaller request or making multiple requests "
+                    "with smaller payloads. The factors to consider are the number of "
+                    "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested)."
                 ),
             }
-        # Re-raise other RuntimeErrors
+            return {
+                "statusCode": 413,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps(error_payload),
+            }
+        # Unhandled runtime errors → default 500
         raise
 
 
