@@ -25,13 +25,14 @@ Fetches administrative boundaries from GeoBoundaries API for a given country and
 
 ---
 
-### `get_summary(gdf, spatial_join_method, fields, geometry=None)`
+### `get_summary(gdf, spatial_join_method, fields)`
 Extracts H3 level data for areas of interest.
 - **Parameters:**
   - `gdf`: GeoDataFrame containing areas of interest
   - `spatial_join_method`: "touches", "centroid", or "within"
   - `fields`: List of field names to retrieve
   - `geometry`: Optional "polygon" or "point" to include H3 geometries
+  - `verbose`: Optional boolean to display progress messages
 
 ---
 
@@ -42,6 +43,7 @@ Extracts summary statistics from H3 data.
   - `spatial_join_method`: "touches", "centroid", or "within"
   - `fields`: List of field names to retrieve
   - `aggregation_type`: "sum", "avg", "count", "max", or "min"
+  - `verbose`: Optional boolean to display progress messages
 
 ---
 
@@ -51,6 +53,8 @@ Retrieves statistics for specific H3 hexagon IDs.
   - `hex_ids`: List of H3 hexagon IDs to query
   - `fields`: List of field names to retrieve
   - `geometry`: Optional; specifies if H3 geometries should be included ("polygon" or "point")
+  - `verbose`: Optional boolean to display progress messages
+
 
 ---
 
@@ -60,6 +64,8 @@ Aggregates statistics for specific H3 hexagon IDs.
   - `hex_ids`: List of H3 hexagon IDs to aggregate
   - `fields`: List of field names to aggregate
   - `aggregation_type`: Type of aggregation ("sum", "avg", "count", "max", "min")
+  - `verbose`: Optional boolean to display progress messages
+
 
 ---
 
@@ -68,24 +74,28 @@ Returns a list of available fields from the timeseries table.
 
 ---
 
-### `get_timeseries(gdf, spatial_join_method, start_date=None, end_date=None, fields=None)`
+### `get_timeseries(gdf, spatial_join_method, fields, start_date=None, end_date=None)`
 Gets timeseries data for areas of interest.
 - **Parameters:**
   - `gdf`: GeoDataFrame containing areas of interest
   - `spatial_join_method`: "touches", "centroid", or "within"
+  - `fields`: List of field names to retrieve
   - `start_date`: Optional start date (format: 'YYYY-MM-DD')
   - `end_date`: Optional end date (format: 'YYYY-MM-DD')
-  - `fields`: Optional list of field names to retrieve
+  - `geometry`: Optional "polygon" or "point" to include H3 geometries
+  - `verbose`: Optional boolean to display progress messages
 
 ---
 
-### `get_timeseries_by_hexids(hex_ids, start_date=None, end_date=None, fields=None)`
+### `get_timeseries_by_hexids(hex_ids, fields, start_date=None, end_date=None)`
 Gets timeseries data for specific H3 hexagon IDs.
 - **Parameters:**
   - `hex_ids`: List of H3 hexagon IDs to query
+  - `fields`: List of field names to retrieve
   - `start_date`: Optional start date (format: 'YYYY-MM-DD')
   - `end_date`: Optional end date (format: 'YYYY-MM-DD')
-  - `fields`: Optional list of field names to retrieve
+  - `geometry`: Optional "polygon" or "point" to include H3 geometries
+  - `verbose`: Optional boolean to display progress messages
 
 ## Interactive Widgets
 
@@ -166,7 +176,11 @@ client = Space2StatsClient()
 topics = client.get_topics()
 print(topics)
 
+<<<<<<< HEAD
+# Get fields for all datasets
+=======
 # Get fields for a specific dataset
+>>>>>>> main
 fields = client.get_fields()
 print(fields)
 
@@ -174,16 +188,27 @@ print(fields)
 gdf = gpd.read_file("path/to/your/area.geojson")
 summary = client.get_summary(
     gdf=gdf,
-    spatial_join_method="centroid",
-    fields=["population", "gdp"]
+    spatial_join_method="centroid",  # Options: "touches", "centroid", "within"
+    fields=["population", "gdp"],
+    geometry="polygon"  # Optional: "polygon" or "point"
 )
 
 # Get aggregated statistics
 aggregates = client.get_aggregate(
     gdf=gdf,
-    spatial_join_method="centroid",
+    spatial_join_method="centroid",  # Options: "touches", "centroid", "within"
     fields=["population", "gdp"],
-    aggregation_type="sum"
+    aggregation_type="sum"  # Options: "sum", "avg", "count", "max", "min"
+)
+
+# Get timeseries data
+timeseries = client.get_timeseries(
+    gdf=gdf,
+    spatial_join_method="centroid",
+    fields=["spi"],
+    start_date="2020-01-01",  # Optional
+    end_date="2020-12-31",    # Optional
+    geometry="polygon"         # Optional
 )
 
 # Get time series data

@@ -52,7 +52,9 @@ class Space2StatsStack(Stack):
             self,
             "Space2StatsHttpApi",
             default_integration=integrations.HttpLambdaIntegration(
-                "LambdaIntegration", handler=lambda_function
+                "LambdaIntegration",
+                handler=lambda_function,
+                payload_format_version=apigatewayv2.PayloadFormatVersion.VERSION_2_0,
             ),
         )
 

@@ -210,3 +210,23 @@ def mock_error_response_500(mocker):
     mock_response.json.side_effect = ValueError("Not JSON")
     mock_response.text = "Internal Server Error"
     return mock_response
+
+
+@pytest.fixture
+def mock_error_response_503(mocker):
+    """Mock response for 503 Service Unavailable error."""
+    mock_response = mocker.Mock()
+    mock_response.status_code = 503
+    mock_response.json.return_value = {
+        "error": "Service Unavailable",
+        "detail": "The request likely timed out due to processing complexity or high server load",
+        "hint": "Try a smaller request by reducing the area of interest (AOI), number of fields requested, or date range (for timeseries). You can also break large requests into multiple smaller requests.",
+        "suggestions": [
+            "Reduce the number of hexagon IDs in your request",
+            "Request fewer fields at a time",
+            "Use a smaller geographic area",
+            "For timeseries requests, use a shorter date range",
+            "Try the request again in a few moments",
+        ],
+    }
+    return mock_response

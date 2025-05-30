@@ -48,15 +48,62 @@ class Space2StatsClient:
         """Handle API error responses with specific handling for different status codes."""
         caller = inspect.currentframe().f_back.f_code.co_name
 
+        # Special handling for 503 Service Unavailable from API Gateway
+        if response.status_code == 503:
+            try:
+                error_data = response.json()
+                error_message = error_data.get("message", "Service Unavailable")
+            except Exception:
+                error_message = "Service Unavailable"
+
+            # Check if this is the basic API Gateway timeout message
+            if error_message == "Service Unavailable":
+                raise Exception(
+                    f"Failed to {caller} (HTTP 503): Service Unavailable - "
+                    f"Request timed out due to API Gateway timeout limit (30 seconds). "
+                    f"Try reducing the request size:\n"
+                    f"  • Use fewer hexagon IDs or a smaller geographic area\n"
+                    f"  • Request fewer fields at a time\n"
+                    f"  • For polygon AOI requests, use a smaller area or simpler geometry\n"
+                    f"  • Consider breaking large requests into smaller chunks"
+                )
+            else:
+                raise Exception(f"Failed to {caller} (HTTP 503): {error_message}")
+
         try:
             error_data = response.json()
-            error_message = error_data.get(
-                "detail", error_data.get("error", response.text)
-            )
-            hint = error_data.get("hint", "")
-            if hint:
-                error_message = f"{error_message}\nHint: {hint}"
-        except:
+
+            # Handle both API Gateway format and application format
+            if "message" in error_data and "error" not in error_data:
+                # This is API Gateway's format (e.g., 413 from API Gateway limits)
+                if response.status_code == 413:
+                    error_message = (
+                        "Request Entity Too Large: The request payload exceeds API Gateway limits of 10MB\n\n"
+                        "Hint: Try again with a smaller request or making multiple requests "
+                        "with smaller payloads. The factors to consider are the number of "
+                        "hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested)."
+                    )
+                else:
+                    error_message = error_data.get("message", response.text)
+            else:
+                # This is your application's format
+                error_title = error_data.get("error", "API Error")
+                error_detail = error_data.get("detail", response.text)
+                error_message = f"{error_title}: {error_detail}"
+
+                # Add hint if available
+                hint = error_data.get("hint", "")
+                if hint:
+                    error_message += f"\n\nHint: {hint}"
+
+                # Add suggestions if available
+                suggestions = error_data.get("suggestions", [])
+                if suggestions:
+                    error_message += "\n\nSuggestions:"
+                    for suggestion in suggestions:
+                        error_message += f"\n  • {suggestion}"
+
+        except Exception:
             error_message = response.text
 
         raise Exception(
@@ -120,6 +167,7 @@ class Space2StatsClient:
         spatial_join_method: Literal["touches", "centroid", "within"],
         fields: List[str],
         geometry: Optional[Literal["polygon", "point"]] = None,
+        verbose: bool = True,
     ) -> pd.DataFrame:
         """Extract h3 level data from Space2Stats for a GeoDataFrame.
 
@@ -140,6 +188,9 @@ class Space2StatsClient:
         geometry : Optional["polygon", "point"]
             Specifies if the H3 geometries should be included in the response.
 
+        verbose : bool
+            Whether to display progress messages (default: True)
+
         Returns
         -------
         DataFrame
@@ -148,8 +199,15 @@ class Space2StatsClient:
         if spatial_join_method not in ["touches", "centroid", "within"]:
             raise ValueError("Input should be 'touches', 'centroid' or 'within'")
 
+        total_boundaries = len(gdf)
         res_all = {}
-        for idx, row in gdf.iterrows():
+
+        for boundary_num, (idx, row) in enumerate(gdf.iterrows(), 1):
+            if verbose:
+                print(
+                    f"Fetching data for boundary {boundary_num} of {total_boundaries}..."
+                )
+
             request_payload = {
                 "aoi": {
                     "type": "Feature",
@@ -165,7 +223,7 @@ class Space2StatsClient:
             )
 
             if response.status_code != 200:
-                raise Exception(f"Failed to get summary: {response.text}")
+                self._handle_api_error(response)
 
             summary_data = response.json()
             if not summary_data:
@@ -188,6 +246,7 @@ class Space2StatsClient:
         spatial_join_method: Literal["touches", "centroid", "within"],
         fields: list,
         aggregation_type: Literal["sum", "avg", "count", "max", "min"],
+        verbose: bool = True,
     ) -> pd.DataFrame:
         """Extract summary statistic from underlying H3 Space2Stats data.
 
@@ -205,6 +264,9 @@ class Space2StatsClient:
         aggregation_type : ["sum", "avg", "count", "max", "min"]
             Statistical function to apply to each field per AOI.
 
+        verbose : bool
+            Whether to display progress messages (default: True)
+
         Returns
         -------
         DataFrame
@@ -213,8 +275,15 @@ class Space2StatsClient:
         if aggregation_type not in ["sum", "avg", "count", "max", "min"]:
             raise ValueError("Input should be 'sum', 'avg', 'count', 'max' or 'min'")
 
+        total_boundaries = len(gdf)
         res_all = []
-        for idx, row in gdf.iterrows():
+
+        for boundary_num, (idx, row) in enumerate(gdf.iterrows(), 1):
+            if verbose:
+                print(
+                    f"Fetching data for boundary {boundary_num} of {total_boundaries}..."
+                )
+
             request_payload = {
                 "aoi": {
                     "type": "Feature",
@@ -230,7 +299,7 @@ class Space2StatsClient:
             )
 
             if response.status_code != 200:
-                raise Exception(f"Failed to get aggregate: {response.text}")
+                self._handle_api_error(response)
 
             aggregate_data = response.json()
             if not aggregate_data:
@@ -250,6 +319,7 @@ class Space2StatsClient:
         hex_ids: List[str],
         fields: List[str],
         geometry: Optional[Literal["polygon", "point"]] = None,
+        verbose: bool = True,
     ) -> pd.DataFrame:
         """Retrieve statistics for specific hex IDs.
 
@@ -261,12 +331,17 @@ class Space2StatsClient:
             List of field names to retrieve from the statistics table
         geometry : Optional[Literal["polygon", "point"]]
             Specifies if the H3 geometries should be included in the response.
+        verbose : bool
+            Whether to display progress messages (default: True)
 
         Returns
         -------
         DataFrame
             A DataFrame with the requested fields for each H3 cell.
         """
+        if verbose:
+            print(f"Fetching data for {len(hex_ids)} hex IDs...")
+
         request_payload = {
             "hex_ids": hex_ids,
             "fields": fields,
@@ -289,6 +364,7 @@ class Space2StatsClient:
         hex_ids: List[str],
         fields: List[str],
         aggregation_type: Literal["sum", "avg", "count", "max", "min"],
+        verbose: bool = True,
     ) -> pd.DataFrame:
         """Aggregate statistics for specific hex IDs.
 
@@ -300,12 +376,17 @@ class Space2StatsClient:
             List of field names to aggregate
         aggregation_type : Literal["sum", "avg", "count", "max", "min"]
             Type of aggregation to perform
+        verbose : bool
+            Whether to display progress messages (default: True)
 
         Returns
         -------
         DataFrame
             A DataFrame with the aggregated statistics.
         """
+        if verbose:
+            print(f"Aggregating data for {len(hex_ids)} hex IDs...")
+
         request_payload = {
             "hex_ids": hex_ids,
             "fields": fields,
@@ -318,7 +399,7 @@ class Space2StatsClient:
         )
 
         if response.status_code != 200:
-            raise Exception(f"Failed to get aggregate by hexids: {response.text}")
+            self._handle_api_error(response)
 
         aggregate_data = response.json()
         return pd.DataFrame([aggregate_data])
@@ -338,7 +419,7 @@ class Space2StatsClient:
         """
         response = requests.get(self.timeseries_fields_endpoint)
         if response.status_code != 200:
-            raise Exception(f"Failed to get timeseries fields: {response.text}")
+            self._handle_api_error(response)
         return response.json()
 
     def get_timeseries(
@@ -349,6 +430,7 @@ class Space2StatsClient:
         end_date: Optional[str] = None,
         fields: Optional[List[str]] = None,
         geometry: Optional[Literal["polygon", "point"]] = None,
+        verbose: bool = True,
     ) -> pd.DataFrame:
         """Get timeseries data for areas of interest.
 
@@ -367,14 +449,23 @@ class Space2StatsClient:
             End date for filtering data (format: 'YYYY-MM-DD')
         fields : Optional[List[str]]
             List of fields to retrieve. If None, all available fields will be returned.
+        verbose : bool
+            Whether to display progress messages (default: True)
 
         Returns
         -------
         DataFrame
             A DataFrame containing timeseries data for each hex ID and date
         """
+        total_boundaries = len(gdf)
         res_all = []
-        for idx, row in gdf.iterrows():
+
+        for boundary_num, (idx, row) in enumerate(gdf.iterrows(), 1):
+            if verbose:
+                print(
+                    f"Fetching data for boundary {boundary_num} of {total_boundaries}..."
+                )
+
             request_payload = {
                 "aoi": {
                     "type": "Feature",
@@ -390,7 +481,7 @@ class Space2StatsClient:
 
             response = requests.post(self.timeseries_endpoint, json=request_payload)
             if response.status_code != 200:
-                raise Exception(f"Failed to get timeseries: {response.text}")
+                self._handle_api_error(response)
 
             timeseries_data = response.json()
             if timeseries_data:
@@ -407,10 +498,11 @@ class Space2StatsClient:
     def get_timeseries_by_hexids(
         self,
         hex_ids: List[str],
+        fields: List[str],
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        fields: Optional[List[str]] = None,
         geometry: Optional[Literal["polygon", "point"]] = None,
+        verbose: bool = True,
     ) -> pd.DataFrame:
         """Get timeseries data for specific hex IDs.
 
@@ -418,23 +510,30 @@ class Space2StatsClient:
         ----------
         hex_ids : List[str]
             List of H3 hexagon IDs to query
+        fields : List[str]
+            List of fields to retrieve from the timeseries table
         start_date : Optional[str]
             Start date for filtering data (format: 'YYYY-MM-DD')
         end_date : Optional[str]
             End date for filtering data (format: 'YYYY-MM-DD')
-        fields : Optional[List[str]]
-            List of fields to retrieve. If None, all available fields will be returned.
+        geometry : Optional[Literal["polygon", "point"]]
+            Specifies if the H3 geometries should be included in the response.
+        verbose : bool
+            Whether to display progress messages (default: True)
 
         Returns
         -------
         DataFrame
             A DataFrame containing timeseries data for each hex ID and date
         """
+        if verbose:
+            print(f"Fetching timeseries data for {len(hex_ids)} hex IDs...")
+
         request_payload = {
             "hex_ids": hex_ids,
+            "fields": fields,
             "start_date": start_date,
             "end_date": end_date,
-            "fields": fields,
             "geometry": geometry,
         }
 
@@ -445,7 +544,7 @@ class Space2StatsClient:
             self.timeseries_by_hexids_endpoint, json=request_payload
         )
         if response.status_code != 200:
-            raise Exception(f"Failed to get timeseries by hexids: {response.text}")
+            self._handle_api_error(response)
 
         timeseries_data = response.json()
         return pd.DataFrame(timeseries_data)

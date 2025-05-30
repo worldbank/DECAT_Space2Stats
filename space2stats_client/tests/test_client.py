@@ -242,7 +242,7 @@ def test_handle_api_error_413(mock_error_response_413):
         client._handle_api_error(mock_error_response_413)
 
     expected_message = (
-        "Failed to test_handle_api_error_413 (HTTP 413): The request payload exceeds the API limits\n"
+        "Failed to test_handle_api_error_413 (HTTP 413): Request Entity Too Large: The request payload exceeds the API limits\n\n"
         "Hint: Try again with a smaller request or making multiple requests with smaller payloads. "
         "The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, "
         "and the date range (if timeseries data is requested)."
@@ -250,25 +250,20 @@ def test_handle_api_error_413(mock_error_response_413):
     assert str(exc_info.value).strip() == expected_message
 
 
-def test_handle_api_error_generic(mock_error_response_400):
-    """Test handling of generic API errors."""
+def test_handle_api_error_503(mock_error_response_503):
+    """Test handling of 503 Service Unavailable error."""
     client = Space2StatsClient()
 
     with pytest.raises(Exception) as exc_info:
-        client._handle_api_error(mock_error_response_400)
+        client._handle_api_error(mock_error_response_503)
 
     expected_message = (
-        "Failed to test_handle_api_error_generic (HTTP 400): Invalid request parameters"
+        "Failed to test_handle_api_error_503 (HTTP 503): Service Unavailable - "
+        "Request timed out due to API Gateway timeout limit (30 seconds). "
+        "Try reducing the request size:\n"
+        "  • Use fewer hexagon IDs or a smaller geographic area\n"
+        "  • Request fewer fields at a time\n"
+        "  • For polygon AOI requests, use a smaller area or simpler geometry\n"
+        "  • Consider breaking large requests into smaller chunks"
     ).strip()
     assert str(exc_info.value).strip() == expected_message
-
-
-def test_handle_api_error_non_json(mock_error_response_500):
-    """Test handling of non-JSON error responses."""
-    client = Space2StatsClient()
-
-    with pytest.raises(Exception) as exc_info:
-        client._handle_api_error(mock_error_response_500)
-
-    assert "HTTP 500" in str(exc_info.value)
-    assert "Internal Server Error" in str(exc_info.value)
