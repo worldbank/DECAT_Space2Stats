@@ -68,3 +68,19 @@ def test_validation_exception_handler():
     assert response.status_code == 422
     response_data = json.loads(response.body.decode("utf-8"))
     assert response_data == expected_response
+
+
+def test_http_exception_handler_413():
+    request = None
+    exception = HTTPException(status_code=413, detail="Request Entity Too Large")
+    response = asyncio.run(http_exception_handler(request, exception))
+
+    expected_response = {
+        "error": "Request Entity Too Large",
+        "detail": "The request payload exceeds the API limits",
+        "hint": "Try again with a smaller request or making multiple requests with smaller payloads. The factors to consider are the number of hexIds (ie. AOI), the number of fields requested, and the date range (if timeseries is requested).",
+    }
+
+    assert response.status_code == 413
+    response_data = json.loads(response.body.decode("utf-8"))
+    assert response_data == expected_response
