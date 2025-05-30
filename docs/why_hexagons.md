@@ -6,7 +6,7 @@ The goal of the Space2Stats program is to produce a global database of geospatia
 
 1. [UN-SALB](https://salb.un.org/en): The Second Administrative Level Boundaries (SALB) programme objective is to promote accessible, interoperable and global data and information on subnational units and boundaries, or common geographies, for better decisions, stronger support to people and planet and to monitor the Sustainable Development Goals.
 2. [GeoBoundaries](https://www.geoboundaries.org/): The geoBoundaries Global Database of Political Administrative Boundaries Database is an online, open license (CC BY 4.0) resource of information on administrative boundaries (i.e., state, county) for every country in the world. Since 2016, we have tracked approximately 1 million boundaries within over 200 entities, including all UN member states.
-3. [FAO GAUL](https://developers.google.com/earth-engine/datasets/catalog/FAO_GAUL_2015_level0): While this is a commonly used dataset, it is no longer being updated.
+3. [FAO GAUL](https://www.fao.org/agroinformatics/news/news-detail/now-available--the-global-administrative-unit-layers-(gaul)-dataset---2024-edition/en): In 2024, FAO released an updated version of the Global Administrative Unit Layers (GAUL) dataset al level 1 and 2, as part of its ongoing efforts to strengthen the geospatial foundation of global food and agriculture systems. 
 4. [GADM](https://gadm.org/index.html): GADM provides maps and spatial data for all countries and their sub-divisions
 
 The Space2Stats program will also publish a global database of administrative boundaries at level 0, 1, and 2, in order to comply with the World Bank's strict legal requirements on international boundaries.
