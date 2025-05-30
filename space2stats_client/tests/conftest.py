@@ -1,5 +1,3 @@
-import json
-
 import geopandas as gpd
 import pandas as pd
 import pytest
