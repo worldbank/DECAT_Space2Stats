@@ -493,6 +493,11 @@ class Space2StatsClient:
             return pd.DataFrame()
 
         result = pd.concat(res_all, ignore_index=True)
+
+        gdf_copy = gdf.copy()
+        gdf_copy.drop(columns=["geometry"], inplace=True)
+        result = gdf_copy.merge(result, left_index=True, right_on="area_id")
+
         return result
 
     def get_timeseries_by_hexids(
