@@ -99,7 +99,41 @@ Gets timeseries data for specific H3 hexagon IDs.
 
 ## Interactive Widgets
 
-Space2Stats provides interactive widgets that make it easy to explore and select data fields in Jupyter notebooks.
+Space2Stats provides interactive widgets that make it easy to explore, select data fields, and define areas of interest in Jupyter notebooks.
+
+### AOISelector
+
+This widget provides an interactive map interface for selecting Areas of Interest (AOI) by drawing polygons or rectangles directly on the map. The AOI is automatically captured in a GeoDataFrame that can be used directly with Space2Stats API calls.
+
+```python
+from space2stats_client import AOISelector
+
+# Create the AOI selector widget and container
+widget, aoi = AOISelector(center=(27.0, 29.7), zoom=6)
+display(widget)
+
+# After drawing on the map, the aoi container is automatically populated
+# Check if an AOI has been selected
+if aoi:
+    print(f"AOI selected with {len(aoi.gdf)} polygon(s)")
+    print(aoi.gdf)
+    
+    # Use the AOI directly in API calls
+    client = Space2StatsClient()
+    summary = client.get_summary(
+        gdf=aoi.gdf,
+        spatial_join_method="centroid",
+        fields=["population", "gdp"]
+    )
+```
+
+**Key Features:**
+- Interactive map with drawing tools (polygon and rectangle)
+- Real-time feedback on selected area with approximate area calculation
+- Support for multiple polygons in a single AOI
+- Clear button to reset the selection
+- Collapsible instructions panel
+- Automatic population of GeoDataFrame for immediate use
 
 ### CrossSectionFieldSelector
 
@@ -176,11 +210,7 @@ client = Space2StatsClient()
 topics = client.get_topics()
 print(topics)
 
-<<<<<<< HEAD
 # Get fields for all datasets
-=======
-# Get fields for a specific dataset
->>>>>>> main
 fields = client.get_fields()
 print(fields)
 
