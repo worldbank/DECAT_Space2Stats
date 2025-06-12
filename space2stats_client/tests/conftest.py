@@ -230,3 +230,146 @@ def mock_error_response_503(mocker):
         ],
     }
     return mock_response
+
+
+@pytest.fixture
+def mock_adm2_response(mocker):
+    """Mock ADM2 API responses for testing."""
+
+    def mock_ddh_response(*args, **kwargs):
+        mock = mocker.Mock()
+        mock.status_code = 200
+        mock.raise_for_status.return_value = None
+
+        # Determine dataset type from URL
+        url = str(args[0])
+
+        if "DR0095354" in url:  # population
+            mock_data = {
+                "value": [
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Los Angeles County",
+                        "population_total": 10000000,
+                        "population_male": 5000000,
+                        "population_female": 5000000,
+                    },
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Cook County",
+                        "population_total": 5000000,
+                        "population_male": 2500000,
+                        "population_female": 2500000,
+                    },
+                    {
+                        "ISO3": "BRA",
+                        "ADM2_NAME": "São Paulo",
+                        "population_total": 12000000,
+                        "population_male": 6000000,
+                        "population_female": 6000000,
+                    },
+                ],
+                "count": 3,
+            }
+        elif "DR0095357" in url:  # urbanization
+            mock_data = {
+                "value": [
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Los Angeles County",
+                        "urban_extent_km2": 1500.5,
+                        "rural_extent_km2": 500.2,
+                        "total_built_up_km2": 800.3,
+                    },
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Cook County",
+                        "urban_extent_km2": 1200.1,
+                        "rural_extent_km2": 300.8,
+                        "total_built_up_km2": 600.5,
+                    },
+                ],
+                "count": 2,
+            }
+        elif "DR0095356" in url:  # nighttimelights
+            mock_data = {
+                "value": [
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Los Angeles County",
+                        "mean_luminosity": 15.5,
+                        "total_luminosity": 25000.8,
+                        "max_luminosity": 63.2,
+                    },
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Cook County",
+                        "mean_luminosity": 12.3,
+                        "total_luminosity": 18500.4,
+                        "max_luminosity": 55.1,
+                    },
+                ],
+                "count": 2,
+            }
+        elif "DR0095355" in url:  # flood_exposure
+            mock_data = {
+                "value": [
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Los Angeles County",
+                        "flood_risk_high": 250.5,
+                        "flood_risk_medium": 500.2,
+                        "flood_risk_low": 1000.8,
+                        "population_exposed": 50000,
+                    },
+                    {
+                        "ISO3": "USA",
+                        "ADM2_NAME": "Cook County",
+                        "flood_risk_high": 180.3,
+                        "flood_risk_medium": 350.7,
+                        "flood_risk_low": 800.1,
+                        "population_exposed": 35000,
+                    },
+                ],
+                "count": 2,
+            }
+        else:
+            mock_data = {"value": [], "count": 0}
+
+        # Apply ISO3 filter if present
+        params = kwargs.get("params", {})
+        if "filter" in params and "ISO3" in params["filter"]:
+            # Extract ISO3 code from filter string like "ISO3='USA'"
+            iso3_code = params["filter"].split("'")[1]
+            filtered_records = [
+                record
+                for record in mock_data["value"]
+                if record.get("ISO3") == iso3_code
+            ]
+            mock_data = {"value": filtered_records, "count": len(filtered_records)}
+
+        mock.json.return_value = mock_data
+        return mock
+
+    mocker.patch("requests.get", side_effect=mock_ddh_response)
+    return mock_ddh_response
+
+
+@pytest.fixture
+def mock_adm2_error_response(mocker):
+    """Mock ADM2 API error response for testing."""
+
+    def mock_error_response(*args, **kwargs):
+        mock = mocker.Mock()
+        mock.status_code = 404
+
+        # Create a proper HTTPError
+        import requests
+
+        http_error = requests.HTTPError("404 Client Error: Not Found for url")
+        mock.raise_for_status.side_effect = http_error
+
+        return mock
+
+    mocker.patch("requests.get", side_effect=mock_error_response)
+    return mock_error_response
