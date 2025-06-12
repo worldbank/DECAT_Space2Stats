@@ -60,6 +60,7 @@ jobs:
         working-directory: ./space2stats_client
         run: |
           poetry install --with test
+          poetry run pip install -e .[widgets]
 
       - name: Run pre-commit for Client 
         working-directory: ./space2stats_client
