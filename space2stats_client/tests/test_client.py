@@ -267,3 +267,132 @@ def test_handle_api_error_503(mock_error_response_503):
         "  • Consider breaking large requests into smaller chunks"
     ).strip()
     assert str(exc_info.value).strip() == expected_message
+
+
+def test_get_adm2_dataset_info():
+    """Test get_adm2_dataset_info returns correct DataFrame structure."""
+    client = Space2StatsClient()
+    result = client.get_adm2_dataset_info()
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) == 4  # Four datasets available
+
+    # Check required columns
+    expected_columns = ["dataset", "resource_id", "description", "url"]
+    for col in expected_columns:
+        assert col in result.columns
+
+    # Check all expected datasets are present
+    expected_datasets = [
+        "urbanization",
+        "nighttimelights",
+        "population",
+        "flood_exposure",
+    ]
+    for dataset in expected_datasets:
+        assert dataset in result["dataset"].values
+
+    # Check resource IDs format
+    assert all(result["resource_id"].str.startswith("DR"))
+
+
+def test_get_adm2_summaries_invalid_dataset():
+    """Test that invalid dataset raises ValueError."""
+    client = Space2StatsClient()
+    with pytest.raises(ValueError, match="Invalid dataset. Must be one of:"):
+        client.get_adm2_summaries(dataset="invalid_dataset")
+
+
+def test_get_adm2_summaries_population(mock_adm2_response):
+    """Test get_adm2_summaries with population dataset."""
+    client = Space2StatsClient()
+    result = client.get_adm2_summaries(dataset="population")
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) > 0
+
+    # Check expected columns are present
+    expected_columns = ["ISO3", "ADM2_NAME", "population_total"]
+    for col in expected_columns:
+        assert col in result.columns
+
+
+def test_get_adm2_summaries_with_iso3_filter(mock_adm2_response):
+    """Test get_adm2_summaries with ISO3 filter."""
+    client = Space2StatsClient()
+    result = client.get_adm2_summaries(dataset="population", iso3_filter="USA")
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) > 0
+
+    # All records should be for USA when filter is applied
+    assert all(result["ISO3"] == "USA")
+
+
+def test_get_adm2_summaries_urbanization(mock_adm2_response):
+    """Test get_adm2_summaries with urbanization dataset."""
+    client = Space2StatsClient()
+    result = client.get_adm2_summaries(dataset="urbanization")
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) > 0
+
+    # Check expected columns for urbanization data
+    expected_columns = ["ISO3", "ADM2_NAME", "urban_extent_km2", "rural_extent_km2"]
+    for col in expected_columns:
+        assert col in result.columns
+
+
+def test_get_adm2_summaries_nighttimelights(mock_adm2_response):
+    """Test get_adm2_summaries with nighttime lights dataset."""
+    client = Space2StatsClient()
+    result = client.get_adm2_summaries(dataset="nighttimelights")
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) > 0
+
+    # Check expected columns for nighttime lights data
+    expected_columns = ["ISO3", "ADM2_NAME", "mean_luminosity", "total_luminosity"]
+    for col in expected_columns:
+        assert col in result.columns
+
+
+def test_get_adm2_summaries_flood_exposure(mock_adm2_response):
+    """Test get_adm2_summaries with flood exposure dataset."""
+    client = Space2StatsClient()
+    result = client.get_adm2_summaries(dataset="flood_exposure")
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) > 0
+
+    # Check expected columns for flood exposure data
+    expected_columns = ["ISO3", "ADM2_NAME", "flood_risk_high", "flood_risk_medium"]
+    for col in expected_columns:
+        assert col in result.columns
+
+
+def test_get_adm2_summaries_http_error(mock_adm2_error_response):
+    """Test get_adm2_summaries handles HTTP errors properly."""
+    client = Space2StatsClient()
+
+    with pytest.raises(Exception, match="Failed to fetch data from World Bank DDH API"):
+        client.get_adm2_summaries(dataset="population")
+
+
+def test_get_adm2_summaries_verbose_output(mock_adm2_response, capsys):
+    """Test that verbose mode produces output."""
+    client = Space2StatsClient()
+    client.get_adm2_summaries(dataset="population", verbose=True)
+
+    captured = capsys.readouterr()
+    assert "Fetching population data from World Bank DDH API" in captured.out
+
+
+def test_get_adm2_summaries_verbose_with_filter(mock_adm2_response, capsys):
+    """Test that verbose mode with ISO3 filter produces correct output."""
+    client = Space2StatsClient()
+    client.get_adm2_summaries(dataset="population", iso3_filter="USA", verbose=True)
+
+    captured = capsys.readouterr()
+    assert "Fetching population data from World Bank DDH API" in captured.out
+    assert "Filtering by ISO3: USA" in captured.out
