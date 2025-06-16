@@ -553,3 +553,127 @@ class Space2StatsClient:
 
         timeseries_data = response.json()
         return pd.DataFrame(timeseries_data)
+
+    # ADM2 Summaries functionality for World Bank DDH API
+    WORLD_BANK_DDH_DATASETS = {
+        "urbanization": "DR0095357",
+        "nighttimelights": "DR0095356",
+        "population": "DR0095354",
+        "flood_exposure": "DR0095355",
+    }
+
+    WORLD_BANK_DDH_BASE_URL = (
+        "https://datacatalogapi.worldbank.org/ddhxext/v3/resources"
+    )
+
+    def get_adm2_summaries(
+        self,
+        dataset: Literal[
+            "urbanization", "nighttimelights", "population", "flood_exposure"
+        ],
+        iso3_filter: Optional[str] = None,
+        verbose: bool = True,
+    ) -> pd.DataFrame:
+        """Retrieve ADM2 summaries from World Bank DDH API.
+
+        Parameters
+        ----------
+        dataset : Literal["urbanization", "nighttimelights", "population", "flood_exposure"]
+            The dataset to retrieve:
+            - "urbanization": Urban and rural settlement data
+            - "nighttimelights": Nighttime lights intensity data
+            - "population": Population statistics
+            - "flood_exposure": Flood exposure risk data
+        iso3_filter : Optional[str]
+            ISO3 country code to filter by (e.g., 'AND' for Andorra, 'USA' for United States)
+        verbose : bool
+            Whether to display progress messages (default: True)
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame containing ADM2-level statistics records
+
+        Raises
+        ------
+        ValueError
+            If an invalid dataset is specified
+        Exception
+            If the API request fails
+        """
+        if dataset not in self.WORLD_BANK_DDH_DATASETS:
+            raise ValueError(
+                f"Invalid dataset. Must be one of: {list(self.WORLD_BANK_DDH_DATASETS.keys())}"
+            )
+
+        if verbose:
+            print(f"Fetching {dataset} data from World Bank DDH API...")
+            if iso3_filter:
+                print(f"Filtering by ISO3: {iso3_filter}")
+
+        resource_id = self.WORLD_BANK_DDH_DATASETS[dataset]
+        url = f"{self.WORLD_BANK_DDH_BASE_URL}/{resource_id}/data"
+
+        # Build query parameters
+        params = {}
+        if iso3_filter:
+            params["filter"] = f"ISO3='{iso3_filter}'"
+
+        try:
+            response = requests.get(
+                url, params=params, verify=self.verify_ssl, timeout=30.0
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            records = data.get("value", [])
+
+            if verbose:
+                total_count = data.get("count", len(records))
+                print(
+                    f"Retrieved {len(records)} records (total available: {total_count})"
+                )
+
+            return pd.DataFrame(records)
+
+        except requests.HTTPError as e:
+            raise Exception(f"Failed to fetch data from World Bank DDH API: {e}")
+        except Exception as e:
+            raise Exception(f"Error processing World Bank DDH API response: {e}")
+
+    def get_adm2_dataset_info(self) -> pd.DataFrame:
+        """Get information about available ADM2 datasets.
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame with information about each available ADM2 dataset
+        """
+        datasets_info = [
+            {
+                "dataset": "urbanization",
+                "resource_id": "DR0095357",
+                "description": "Urban and rural settlement data - GHS settlement model data",
+                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095357/data",
+            },
+            {
+                "dataset": "nighttimelights",
+                "resource_id": "DR0095356",
+                "description": "Nighttime lights intensity data - satellite-derived luminosity measurements",
+                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095356/data",
+            },
+            {
+                "dataset": "population",
+                "resource_id": "DR0095354",
+                "description": "Population statistics - demographic data",
+                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095354/data",
+            },
+            {
+                "dataset": "flood_exposure",
+                "resource_id": "DR0095355",
+                "description": "Flood exposure risk data - flood hazard and exposure metrics",
+                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095355/data",
+            },
+        ]
+
+        return pd.DataFrame(datasets_info)
