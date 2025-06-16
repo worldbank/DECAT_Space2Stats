@@ -110,6 +110,30 @@ Gets timeseries data for specific H3 hexagon IDs.
   - `geometry`: Optional "polygon" or "point" to include H3 geometries
   - `verbose`: Optional boolean to display progress messages
 
+---
+
+## ADM2 Summaries
+
+Access pre-computed administrative level 2 (ADM2) summaries from the World Bank Development Data Hub.
+
+### `get_adm2_dataset_info()`
+Returns information about available ADM2 datasets.
+- **Returns:** DataFrame with dataset names, resource IDs, descriptions, and URLs
+
+---
+
+### `get_adm2_summaries(dataset, iso3_filter=None)`
+Retrieves ADM2-level summary statistics from the World Bank DDH API.
+- **Parameters:**
+  - `dataset`: Dataset to retrieve. Options:
+    - `"urbanization"`: Urban and rural settlement data (GHS settlement model)
+    - `"nighttimelights"`: Nighttime lights intensity data (satellite-derived luminosity)
+    - `"population"`: Population statistics (demographic data)
+    - `"flood_exposure"`: Flood exposure risk data (flood hazard and exposure metrics)
+  - `iso3_filter`: Optional ISO3 country code to filter by (e.g., 'USA', 'BRA', 'IND')
+  - `verbose`: Optional boolean to display progress messages
+- **Returns:** DataFrame containing ADM2-level statistics records
+
 ## Interactive Widgets
 
 > **Note:** Widgets are optional components that require additional dependencies. Install with `pip install space2stats-client[widgets]`
@@ -273,14 +297,15 @@ timeseries = client.get_timeseries(
     geometry="polygon"         # Optional
 )
 
-# Get time series data
-timeseries = client.get_timeseries(
-    gdf=gdf,
-    spatial_join_method="centroid",
-    fields=["spi"],
-    start_date="2020-01-01",
-    end_date="2020-12-31"
+# Get ADM2 summaries for a specific country
+adm2_pop = client.get_adm2_summaries(
+    dataset="population",
+    iso3_filter="USA"  # Optional country filter
 )
+
+# Get all available ADM2 datasets info
+adm2_info = client.get_adm2_dataset_info()
+print(adm2_info)
 ```
 ## Documentation
 
