@@ -25,10 +25,16 @@ dependencies = [
     "pandas>=1.5.0",
     "geopandas>=0.12.0",
     "requests>=2.25.0",
-    "pystac>=1.0.0",
-    "ipywidgets>=8.0.0"
+    "pystac>=1.0.0"
 ]
 requires-python = ">=3.9,<=3.13"
+
+[project.optional-dependencies]
+widgets = [
+    "ipywidgets>=8.0.0",
+    "ipyleaflet>=0.17.0",
+    "IPython>=7.0.0"
+]
 
 [project.urls]
 Homepage = "https://github.com/worldbank/DECAT_Space2Stats.git"

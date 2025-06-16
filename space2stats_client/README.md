@@ -2,6 +2,19 @@
 
 A Python client for accessing the Space2Stats API, providing easy access to consistent, comparable, and authoritative sub-national variation data from the World Bank.
 
+## Installation
+
+### Core package only
+```bash
+pip install space2stats-client
+```
+
+### With optional interactive widgets
+```bash
+pip install space2stats-client[widgets]
+```
+
+The widgets provide interactive Jupyter notebook components for data exploration and area selection. They require additional dependencies (`ipywidgets`, `ipyleaflet`, `IPython`) that are not needed for core API functionality.
 
 ## API Methods
 
@@ -123,14 +136,65 @@ Retrieves ADM2-level summary statistics from the World Bank DDH API.
 
 ## Interactive Widgets
 
-Space2Stats provides interactive widgets that make it easy to explore and select data fields in Jupyter notebooks.
+> **Note:** Widgets are optional components that require additional dependencies. Install with `pip install space2stats-client[widgets]`
+
+Space2Stats provides interactive widgets that make it easy to explore, select data fields, and define areas of interest in Jupyter notebooks.
+
+
+### AOISelector
+
+This widget provides an interactive map interface for selecting Areas of Interest (AOI) by drawing polygons or rectangles directly on the map. The AOI is automatically captured in a GeoDataFrame that can be used directly with Space2Stats API calls.
+
+```python
+from space2stats_client.widgets.aoi_selector import AOISelector
+from space2stats_client import Space2StatsClient
+
+# Create and display the AOI selector
+aoi_selector = AOISelector(center=(27.0, 29.7), zoom=6)
+aoi_selector.display()
+
+# After drawing on the map, access the AOI data
+if aoi_selector.aoi:
+    print(f"AOI selected with {len(aoi_selector.aoi.gdf)} polygon(s)")
+    print(aoi_selector.aoi.gdf)
+    
+    # Use the AOI directly in API calls
+    client = Space2StatsClient()
+    summary = client.get_summary(
+        gdf=aoi_selector.aoi.gdf,
+        spatial_join_method="centroid",
+        fields=["population", "gdp"]
+    )
+
+# Programmatically clear the AOI if needed
+aoi_selector.clear_aoi()
+```
+
+**Key Features:**
+- Interactive map with drawing tools (polygon and rectangle)
+- Real-time feedback on selected area with approximate area calculation
+- Support for multiple polygons in a single AOI
+- Clear button to reset the selection
+- Collapsible instructions panel
+- Automatic population of GeoDataFrame for immediate use
+- Consistent API with other widgets using `.display()` method
+
+**Area Calculation:**
+The approximate area is calculated by projecting the geometry from WGS84 (EPSG:4326) to Web Mercator (EPSG:3857) and computing the planar area. This provides a quick estimation but has inherent accuracy limitations:
+- **Equatorial regions**: Generally accurate within 5-10%
+- **Mid-latitudes (30°-60°)**: May have 10-40% error
+- **High latitudes (>60°)**: May have >50% error
+
+For precise area calculations, consider using appropriate local coordinate reference systems or geodesic calculations.
 
 ### CrossSectionFieldSelector
 
 This widget helps users interactively select fields from the Space2Stats API for cross-sectional data. Fields are organized by their source STAC items for easier navigation.
 
 ```python
-from space2stats_client import Space2StatsClient, CrossSectionFieldSelector
+from space2stats_client.widgets.cross_section_field_selector import CrossSectionFieldSelector
+from space2stats_client import Space2StatsClient
+import geopandas as gpd
 
 # Initialize the client
 client = Space2StatsClient()
@@ -158,7 +222,9 @@ summary = client.get_summary(
 This widget allows users to interactively select fields for time series data and specify a valid time period based on the available data range.
 
 ```python
-from space2stats_client import Space2StatsClient, TimeSeriesFieldSelector
+from space2stats_client.widgets.time_series_field_selector import TimeSeriesFieldSelector
+from space2stats_client import Space2StatsClient
+import geopandas as gpd
 
 # Initialize the client
 client = Space2StatsClient()
@@ -200,7 +266,7 @@ client = Space2StatsClient()
 topics = client.get_topics()
 print(topics)
 
-# Get fields for a specific dataset
+# Get fields for all datasets
 fields = client.get_fields()
 print(fields)
 
@@ -241,7 +307,6 @@ adm2_pop = client.get_adm2_summaries(
 adm2_info = client.get_adm2_dataset_info()
 print(adm2_info)
 ```
-
 ## Documentation
 
 For full documentation, visit [Space2Stats Documentation](https://worldbank.github.io/DECAT_Space2Stats/).
