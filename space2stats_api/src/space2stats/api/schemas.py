@@ -3,7 +3,7 @@ from typing import List, Literal, Optional
 from geojson_pydantic import Feature
 from pydantic import BaseModel
 
-from ..types import AoiModel
+from ..model_types import AoiModel
 
 
 class SummaryRequest(BaseModel):
@@ -30,3 +30,20 @@ class HexIdAggregateRequest(BaseModel):
     hex_ids: List[str]
     fields: List[str]
     aggregation_type: Literal["sum", "avg", "count", "max", "min"]
+
+
+class TimeseriesRequest(BaseModel):
+    aoi: Feature
+    spatial_join_method: Literal["touches", "centroid", "within"]
+    fields: List[str]
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    geometry: Optional[Literal["polygon", "point"]] = None
+
+
+class HexIdTimeseriesRequest(BaseModel):
+    hex_ids: List[str]
+    fields: List[str]
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    geometry: Optional[Literal["polygon", "point"]] = None

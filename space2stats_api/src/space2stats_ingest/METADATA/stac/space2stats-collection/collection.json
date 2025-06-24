@@ -42,6 +42,12 @@
     },
     {
       "rel": "item",
+      "href": "./climate/climate.json",
+      "type": "application/json",
+      "title": "Standardized Precipitation Index (SPI)"
+    },
+    {
+      "rel": "item",
       "href": "./builtarea_ghsl/builtarea_ghsl.json",
       "type": "application/json",
       "title": "Built area"

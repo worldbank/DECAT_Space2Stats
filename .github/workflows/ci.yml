@@ -54,11 +54,13 @@ jobs:
           PGPASSWORD: mypassword
           PGTABLENAME: space2stats
           S3_BUCKET_NAME: test-bucket
+          TIMESERIES_TABLE_NAME: climate
 
       - name: Install dependencies for Client
         working-directory: ./space2stats_client
         run: |
           poetry install --with test
+          poetry run pip install -e .[widgets]
 
       - name: Run pre-commit for Client 
         working-directory: ./space2stats_client
