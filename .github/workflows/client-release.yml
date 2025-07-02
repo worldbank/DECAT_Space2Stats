@@ -3,6 +3,7 @@ name: Client Release
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -26,7 +27,8 @@ jobs:
         
       - name: Install dependencies
         run: |
-          poetry install --with test,widgets
+          poetry install --with test
+          poetry run pip install -e .[widgets]
 
       - name: Run tests
         run: poetry run pytest
