@@ -51,11 +51,15 @@ def summarize_landcover(h0_lbl, h0_level, catalog, s3_client, lc_bucket, out_lc_
             if h0_level.crs != cur_lc.crs:
                 h0_level = h0_level.to_crs(cur_lc.crs)            
             lc_box = gpd.GeoDataFrame(pd.DataFrame([[1, box(*cur_lc.bounds)]], columns=['id', 'geometry']), crs=cur_lc.crs, geometry='geometry')
-            sel_hexes = gpd.sjoin(h0_level, lc_box, how='inner', predicate='intersects')
-            lc_res = rMisc.zonalStats(sel_hexes, cur_lc, rastType='C', unqVals=list(range(1, 13))) 
-            lc_res = pd.DataFrame(lc_res, columns=[f'c_{x}' for x in range(1, 13)])       
-            lc_res['shape_id'] = sel_hexes['shape_id'].values
-            all_res.append(lc_res)
+            try:
+                sel_hexes = gpd.sjoin(h0_level, lc_box, how='inner', predicate='intersects')
+                lc_res = rMisc.zonalStats(sel_hexes, cur_lc, rastType='C', unqVals=list(range(1, 13))) 
+                lc_res = pd.DataFrame(lc_res, columns=[f'c_{x}' for x in range(1, 13)])       
+                lc_res['shape_id'] = sel_hexes['shape_id'].values
+                all_res.append(lc_res)
+            except:
+                print(f"Error processing {lc_label} for {h0_lbl}, skipping")
+                continue
     # Concatenate all results for the current h0
     if len(all_res) > 0:
         cur_h0_res = pd.concat(all_res, ignore_index=True)
