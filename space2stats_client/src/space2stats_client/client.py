@@ -1,5 +1,5 @@
 """Space2Stats client for accessing the World Bank's spatial statistics API."""
-
+import urllib, json
 import inspect
 from typing import Dict, List, Literal, Optional
 
@@ -7,6 +7,59 @@ import geopandas as gpd
 import pandas as pd
 import requests
 from pystac import Catalog
+
+def download_esri_boundaries(url, layer, iso3) -> gpd.GeoDataFrame:
+    """_summary_
+
+    Parameters
+    ----------
+    url : _type_
+        _description_
+    layer : _type_
+        _description_
+    iso3 : _type_
+        _description_
+
+    Returns
+    -------
+    gpd.GeoDataFrame
+        _description_
+    """
+    # Look at metadata of url 
+    with urllib.request.urlopen(f'{url}/?f=pjson') as service_url:
+        service_data = json.loads(service_url.read().decode())
+
+    queryable = ['Query' in service_data['capabilities']]
+
+    if queryable:
+        query_url = f"{url}/{layer}/query"
+        # get total number of records in complete service
+        n_queries = service_data['maxRecordCount']
+        count_query = {"outFields": "*", "where": f"ISO_A3='{iso3}'", "returnCountOnly": True, 'f':'json'}
+        count_str = urllib.parse.urlencode(count_query)
+        with urllib.request.urlopen(f'{query_url}?{count_str}') as count_url:
+            count_json = json.loads(count_url.read().decode())
+            n_records = count_json['count']
+        if n_records < n_queries: #We can download all the data in a single query
+            all_records_query = {"outFields": "*", "where": f"ISO_A3='{iso3}'", "returnGeometry": True, "f": "geojson"}
+            query_str = urllib.parse.urlencode(all_records_query)
+            all_query_url = f"{query_url}?{query_str}"
+            return gpd.read_file(all_query_url)
+        else:
+            step_query = {"outFields": "*", "where": f"ISO_A3='{iso3}'", "returnGeometry": True,"f": "geojson",
+                        'resultRecordCount': n_queries, "resultOffset": 0}
+            for offset in range(0, n_records, n_queries):
+                step_query['resultOffset'] = offset
+                query_str = urllib.parse.urlencode(step_query)
+                step_query_url = f"{query_url}?{query_str}"                
+                cur_res = gpd.read_file(step_query_url)
+                if offset == 0:
+                    gdf = cur_res
+                else:
+                    gdf = pd.concat([gdf, cur_res])
+            return gdf
+    else:
+        raise ValueError("Service is not queryable :(")
 
 
 class Space2StatsClient:
@@ -155,11 +208,37 @@ class Space2StatsClient:
 
         return response.json()
 
-    def fetch_admin_boundaries(self, iso3: str, adm: str) -> gpd.GeoDataFrame:
-        """Fetch administrative boundaries from GeoBoundaries API."""
-        url = f"https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{adm}/"
-        res = requests.get(url, verify=self.verify_ssl).json()
-        return gpd.read_file(res["gjDownloadURL"])
+    def fetch_admin_boundaries(self, iso3, adm, source="WB") -> gpd.GeoDataFrame:
+        """ Fetch administrative boundaries as geopandas GeoDataFrame.
+
+        Parameters
+        ----------
+        iso3 : str
+            Country code
+        adm : str
+            Administrative level (e.g., "ADM0", "ADM1", "ADM2")
+        source : str
+            Data source options are "WB" for World Bank or "GB" for GeoBoundaries (default: "WB")
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            A GeoDataFrame containing the administrative boundaries.
+        """
+        if source == "WB":            
+            esri_url = "https://services.arcgis.com/iQ1dY19aHwbSDYIF/arcgis/rest/services/World_Bank_Global_Administrative_Divisions/FeatureServer"
+            layer = 1
+            if adm == "ADM1":
+                layer = 2
+            elif adm == "ADM2":
+                layer = 3
+            return download_esri_boundaries(esri_url, layer, iso3)
+        elif source == "GB":
+            url = f"https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{adm}/"
+            res = requests.get(url, verify=self.verify_ssl).json()
+            return gpd.read_file(res["gjDownloadURL"])
+        else:
+            raise ValueError("Source must be 'WB' or 'GB'")
 
     def get_summary(
         self,
