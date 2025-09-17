@@ -14,6 +14,7 @@ from botocore import UNSIGNED
 from botocore.config import Config
 from pystac_client import Client
 
+
 sys.path.append("../../src")
 import global_zonal
 import h3_helper
@@ -83,7 +84,6 @@ def summarize_landcover(h0_lbl, h0_level, catalog, s3_client, lc_bucket, out_lc_
             final_h0_res.to_parquet(out_lc_file, index=False)
     return(1)
 
-
 if __name__ == "__main__":
     # Define local variables
     verbose = True
@@ -108,7 +108,6 @@ if __name__ == "__main__":
         tPrint("H3_0 list generated")
 
     catalog = Client.open("https://planetarycomputer.microsoft.com/api/stac/v1")
-
     # Setup multi-processing arguments
     built_args = []    
     for h0_lbl, h0_level in h3_0_list.items():
@@ -125,7 +124,6 @@ if __name__ == "__main__":
             pass
         if not file_exists:
             built_args.append([h0_lbl, h0_level, catalog, s3_client, landcover_bucket, out_lc_file])
-                    
     # Run multi processing
     if multiprocess:
         nCores = min([70, len(built_args), multiprocessing.cpu_count() - 2])
