@@ -1,7 +1,11 @@
+import json
+
+import geopandas as gpd
 import pandas as pd
 import pytest
 
 from space2stats_client import Space2StatsClient
+from space2stats_client.utils import download_esri_boundaries
 
 
 def test_client_initialization():
@@ -39,13 +43,6 @@ def test_get_properties(mock_api_response):
     assert "name" in properties
     assert "description" in properties
     assert "sum_pop_2020" in properties["name"].values
-
-
-def test_fetch_admin_boundaries(mock_api_response):
-    """Test fetching admin boundaries."""
-    client = Space2StatsClient()
-    boundaries = client.fetch_admin_boundaries("USA", "ADM1")
-    assert "geometry" in boundaries.columns
 
 
 def test_get_summary(mock_api_response, sample_geodataframe):
@@ -396,3 +393,195 @@ def test_get_adm2_summaries_verbose_with_filter(mock_adm2_response, capsys):
     captured = capsys.readouterr()
     assert "Fetching population data from World Bank DDH API" in captured.out
     assert "Filtering by ISO3: USA" in captured.out
+
+
+def test_fetch_admin_boundaries_wb_source_adm0(mock_api_response):
+    """Test fetching admin boundaries from World Bank source for ADM0."""
+    client = Space2StatsClient()
+    boundaries = client.fetch_admin_boundaries("USA", "ADM0", source="WB")
+
+    assert isinstance(boundaries, gpd.GeoDataFrame)
+    assert "geometry" in boundaries.columns
+    assert "name" in boundaries.columns
+    assert len(boundaries) == 1
+    assert boundaries.iloc[0]["name"] == "Test Area"
+
+
+def test_fetch_admin_boundaries_wb_source_adm1(mock_api_response):
+    """Test fetching admin boundaries from World Bank source for ADM1."""
+    client = Space2StatsClient()
+    boundaries = client.fetch_admin_boundaries("USA", "ADM1", source="WB")
+
+    assert isinstance(boundaries, gpd.GeoDataFrame)
+    assert "geometry" in boundaries.columns
+
+
+def test_fetch_admin_boundaries_wb_source_adm2(mock_api_response):
+    """Test fetching admin boundaries from World Bank source for ADM2."""
+    client = Space2StatsClient()
+    boundaries = client.fetch_admin_boundaries("USA", "ADM2", source="WB")
+
+    assert isinstance(boundaries, gpd.GeoDataFrame)
+    assert "geometry" in boundaries.columns
+
+
+def test_fetch_admin_boundaries_gb_source(mock_api_response):
+    """Test fetching admin boundaries from GeoBoundaries source."""
+    client = Space2StatsClient()
+    boundaries = client.fetch_admin_boundaries("USA", "ADM1", source="GB")
+
+    assert isinstance(boundaries, gpd.GeoDataFrame)
+    assert "geometry" in boundaries.columns
+
+
+def test_fetch_admin_boundaries_default_source(mock_api_response):
+    """Test fetching admin boundaries with default (WB) source."""
+    client = Space2StatsClient()
+    boundaries = client.fetch_admin_boundaries("USA", "ADM1")
+
+    assert isinstance(boundaries, gpd.GeoDataFrame)
+    assert "geometry" in boundaries.columns
+
+
+def test_fetch_admin_boundaries_invalid_source():
+    """Test that invalid source raises ValueError."""
+    client = Space2StatsClient()
+    with pytest.raises(ValueError, match="Source must be 'WB' or 'GB'"):
+        client.fetch_admin_boundaries("USA", "ADM1", source="INVALID")
+
+
+def test_download_esri_boundaries_basic_functionality(mock_esri_service):
+    """Test download_esri_boundaries basic functionality."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    result = download_esri_boundaries(url, layer, iso3)
+
+    assert isinstance(result, gpd.GeoDataFrame)
+    assert "geometry" in result.columns
+    assert len(result) == 1
+
+
+def test_download_esri_boundaries_non_queryable_service(mock_esri_non_queryable):
+    """Test download_esri_boundaries with non-queryable service."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(ValueError, match="Service is not queryable"):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_metadata_http_error(mock_esri_metadata_http_error):
+    """Test download_esri_boundaries with HTTP error fetching metadata."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(RuntimeError, match="Failed to fetch layer metadata.*HTTP 404"):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_metadata_url_error(mock_esri_metadata_url_error):
+    """Test download_esri_boundaries with URL error fetching metadata."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(
+        RuntimeError,
+        match="Failed to reach ESRI service for metadata.*Connection refused",
+    ):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_metadata_json_error(mock_esri_metadata_json_error):
+    """Test download_esri_boundaries with invalid JSON in metadata response."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(ValueError, match="Invalid JSON in layer metadata"):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_count_http_error(mock_esri_count_http_error):
+    """Test download_esri_boundaries with HTTP error fetching count."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(RuntimeError, match="Failed to fetch feature count.*HTTP 500"):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_count_url_error(mock_esri_count_url_error):
+    """Test download_esri_boundaries with URL error fetching count."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(
+        RuntimeError,
+        match="Failed to reach ESRI service for count.*Network unreachable",
+    ):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_count_json_error(mock_esri_count_json_error):
+    """Test download_esri_boundaries with invalid JSON in count response."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(ValueError, match="Invalid JSON in feature count response"):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_zero_count(mock_esri_zero_count):
+    """Test download_esri_boundaries when no features are found."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "XXX"  # Non-existent country
+
+    result = download_esri_boundaries(url, layer, iso3)
+
+    assert isinstance(result, gpd.GeoDataFrame)
+    assert len(result) == 0
+    assert "geometry" in result.columns
+
+
+def test_download_esri_boundaries_geojson_error(mock_esri_geojson_error):
+    """Test download_esri_boundaries with error reading GeoJSON."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(
+        RuntimeError, match="Failed to read GeoJSON for single-page download"
+    ):
+        download_esri_boundaries(url, layer, iso3)
+
+
+def test_download_esri_boundaries_pagination_success(mock_esri_pagination_needed):
+    """Test download_esri_boundaries with successful pagination."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    result = download_esri_boundaries(url, layer, iso3)
+
+    assert isinstance(result, gpd.GeoDataFrame)
+    assert len(result) == 2  # Should have concatenated 2 pages
+    assert "geometry" in result.columns
+
+
+def test_download_esri_boundaries_pagination_error(mock_esri_pagination_error):
+    """Test download_esri_boundaries with error during pagination."""
+    url = "https://services.arcgis.com/test/FeatureServer"
+    layer = 1
+    iso3 = "USA"
+
+    with pytest.raises(RuntimeError, match="Failed to read GeoJSON page at offset 1"):
+        download_esri_boundaries(url, layer, iso3)
