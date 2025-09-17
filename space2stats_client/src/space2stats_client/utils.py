@@ -76,8 +76,9 @@ def download_esri_boundaries(url, layer, iso3) -> gpd.GeoDataFrame:
 
     n_records = int(count_json.get("count", 0))
     if n_records == 0:
-        # Return an empty GeoDataFrame with a geometry column
-        return gpd.GeoDataFrame(pd.DataFrame(columns=["geometry"]), geometry="geometry")
+        raise ValueError(
+            f"No features found for ISO3 code '{iso3}' in the specified layer"
+        )
 
     # 5) If everything fits in one request, pull as GeoJSON in a single read
     if n_records <= max_records:

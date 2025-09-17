@@ -545,11 +545,10 @@ def test_download_esri_boundaries_zero_count(mock_esri_zero_count):
     layer = 1
     iso3 = "XXX"  # Non-existent country
 
-    result = download_esri_boundaries(url, layer, iso3)
-
-    assert isinstance(result, gpd.GeoDataFrame)
-    assert len(result) == 0
-    assert "geometry" in result.columns
+    with pytest.raises(
+        ValueError, match="No features found for ISO3 code 'XXX' in the specified layer"
+    ):
+        download_esri_boundaries(url, layer, iso3)
 
 
 def test_download_esri_boundaries_geojson_error(mock_esri_geojson_error):
