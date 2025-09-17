@@ -1,20 +1,15 @@
-import importlib
-import json
 import os
 import pickle
 import sys
 from urllib.request import urlopen
 
 import contextily as ctx
-import folium
 import geopandas as gpd
 import h3
 import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import pandas as pd
-import rasterio
-import shapely
 from GOSTrocks.misc import tPrint
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from rasterio.crs import CRS
@@ -186,20 +181,18 @@ def generate_lvl1_lists(
             )
 
     # Get list of all h3 lvl 0 cells
-    h3_lvl0 = list(h3.get_res0_indexes())
+    h3_lvl0 = list(h3.get_res0_cells())
 
     # Generate list of all children of h3 lvl 1 cells
     h3_lvl1_children = {}
     for h3_0 in h3_lvl0:  # Identify all lvl 0 cells
-        h3_children = list(h3.h3_to_children(h3_0, 1))
+        h3_children = list(h3.cell_to_children(h3_0, 1))
         for (
             h3_1
         ) in h3_children:  # For current lvl 0 cell, loop through all level 1 children
-            h3_children_1 = list(h3.h3_to_children(h3_1, h3_lvl))
+            h3_children_1 = list(h3.cell_to_children(h3_1, h3_lvl))
             if return_gdf:
-                hex_poly = lambda hex_id: Polygon(
-                    h3.h3_to_geo_boundary(hex_id, geo_json=True)
-                )
+                hex_poly = lambda hex_id: Polygon(h3.cell_to_boundary(hex_id))
                 all_polys = gpd.GeoSeries(
                     list(map(hex_poly, h3_children_1)), index=h3_children_1, crs=4326
                 )

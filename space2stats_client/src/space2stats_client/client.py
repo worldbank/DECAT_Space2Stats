@@ -1,12 +1,16 @@
 """Space2Stats client for accessing the World Bank's spatial statistics API."""
 
 import inspect
+import json
+import urllib
 from typing import Dict, List, Literal, Optional
 
 import geopandas as gpd
 import pandas as pd
 import requests
 from pystac import Catalog
+
+from .utils import download_esri_boundaries
 
 
 class Space2StatsClient:
@@ -155,11 +159,54 @@ class Space2StatsClient:
 
         return response.json()
 
-    def fetch_admin_boundaries(self, iso3: str, adm: str) -> gpd.GeoDataFrame:
-        """Fetch administrative boundaries from GeoBoundaries API."""
-        url = f"https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{adm}/"
-        res = requests.get(url, verify=self.verify_ssl).json()
-        return gpd.read_file(res["gjDownloadURL"])
+    def fetch_admin_boundaries(self, iso3, adm, source="WB") -> gpd.GeoDataFrame:
+        """Fetch administrative boundaries as geopandas GeoDataFrame.
+
+        Parameters
+        ----------
+        iso3 : str
+            Country code
+        adm : str
+            Administrative level (e.g., "ADM0", "ADM1", "ADM2")
+        source : str
+            Data source options are "WB" for World Bank or "GB" for GeoBoundaries (default: "WB")
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            A GeoDataFrame containing the administrative boundaries.
+        """
+        if source == "WB":
+            esri_url = "https://services.arcgis.com/iQ1dY19aHwbSDYIF/arcgis/rest/services/World_Bank_Global_Administrative_Divisions/FeatureServer"
+            layer_map = {"ADM0": 1, "ADM1": 2, "ADM2": 3}
+            try:
+                layer = layer_map[adm]
+            except KeyError:
+                raise ValueError(
+                    f"Invalid administrative level '{adm}'. Must be one of: {list(layer_map.keys())}"
+                )
+            return download_esri_boundaries(esri_url, layer, iso3)
+        elif source == "GB":
+            url = f"https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{adm}/"
+            try:
+                res = requests.get(url, verify=self.verify_ssl)
+                res.raise_for_status()  # Raises HTTPError for bad HTTP status codes
+                data = res.json()
+                return gpd.read_file(data["gjDownloadURL"])
+            except requests.exceptions.RequestException as e:
+                raise RuntimeError(
+                    f"Failed to fetch boundaries from GeoBoundaries API ({url}): {e}"
+                ) from e
+            except (KeyError, ValueError) as e:
+                raise ValueError(
+                    f"Invalid response from GeoBoundaries API ({url}): {e}"
+                ) from e
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to read boundary data from GeoBoundaries: {e}"
+                ) from e
+        else:
+            raise ValueError("Source must be 'WB' or 'GB'")
 
     def get_summary(
         self,

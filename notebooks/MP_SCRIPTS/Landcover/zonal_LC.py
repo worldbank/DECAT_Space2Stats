@@ -58,13 +58,19 @@ def summarize_landcover(h0_lbl, h0_level, catalog, s3_client, lc_bucket, out_lc_
                 crs=cur_lc.crs,
                 geometry="geometry",
             )
-            sel_hexes = gpd.sjoin(h0_level, lc_box, how="inner", predicate="intersects")
-            lc_res = rMisc.zonalStats(
-                sel_hexes, cur_lc, rastType="C", unqVals=list(range(1, 13))
-            )
-            lc_res = pd.DataFrame(lc_res, columns=[f"c_{x}" for x in range(1, 13)])
-            lc_res["shape_id"] = sel_hexes["shape_id"].values
-            all_res.append(lc_res)
+            try:
+                sel_hexes = gpd.sjoin(
+                    h0_level, lc_box, how="inner", predicate="intersects"
+                )
+                lc_res = rMisc.zonalStats(
+                    sel_hexes, cur_lc, rastType="C", unqVals=list(range(1, 13))
+                )
+                lc_res = pd.DataFrame(lc_res, columns=[f"c_{x}" for x in range(1, 13)])
+                lc_res["shape_id"] = sel_hexes["shape_id"].values
+                all_res.append(lc_res)
+            except:
+                print(f"Error processing {lc_label} for {h0_lbl}, skipping")
+                continue
     # Concatenate all results for the current h0
     if len(all_res) > 0:
         cur_h0_res = pd.concat(all_res, ignore_index=True)
@@ -115,7 +121,6 @@ if __name__ == "__main__":
         tPrint("H3_0 list generated")
 
     catalog = Client.open("https://planetarycomputer.microsoft.com/api/stac/v1")
-
     # Setup multi-processing arguments
     built_args = []
     for h0_lbl, h0_level in h3_0_list.items():
@@ -134,7 +139,6 @@ if __name__ == "__main__":
             built_args.append(
                 [h0_lbl, h0_level, catalog, s3_client, landcover_bucket, out_lc_file]
             )
-
     # Run multi processing
     if multiprocess:
         nCores = min([70, len(built_args), multiprocessing.cpu_count() - 2])
