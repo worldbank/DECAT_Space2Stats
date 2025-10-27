@@ -2,6 +2,12 @@ format: jb-book
 root: readme.md
 
 parts:
+  - caption: Project Overview
+    numbered: False
+    chapters:
+      - file: Introduction.md
+      - file: why_hexagons.md
+      #- file: annexA.md   
   - caption: Getting Started
     numbered: False
     chapters:
@@ -9,26 +15,20 @@ parts:
           title: STAC Metadata
         - url: https://space2stats.ds.io/docs
           title: API Docs
-        - file: pythonclient.rst
-  - caption: Project Overview
+        - file: pythonclient.rst 
+  - caption: Notebook Examples
     numbered: False
     chapters:
-      - file: Introduction.md
-      - file: why_hexagons.md
-      - file: annexA.md    
+      - file: user-docs/space2stats_walkthrough.ipynb
+      - file: user-docs/space2stats_api_demo.ipynb
+      - file: user-docs/space2stats_api_demo_R.md
+      - file: user-docs/space2stats_api_demo_pop_pyramid.ipynb
+      - file: user-docs/space2stats_api_demo_urban_flood_risk.ipynb
+      - file: user-docs/space2stats_floods_with_client.ipynb
+      - file: user-docs/space2stats_api_demo_spi_droughts.ipynb      
   - caption: S2S Sub-tasks
     numbered: False
     chapters:
       - file: sub_tasks/admin_bounds.md
       - file: sub_tasks/geest.md
       - file: sub_tasks/geo_enhancement.md
-  - caption: Notebook Examples
-    numbered: False
-    chapters:
-      - file: user-docs/space2stats_api_demo.ipynb
-      - file: user-docs/space2stats_api_demo_R.md
-      - file: user-docs/space2stats_api_demo_pop_pyramid.ipynb
-      - file: user-docs/space2stats_api_demo_urban_flood_risk.ipynb
-      - file: user-docs/space2stats_floods_with_client.ipynb
-      - file: user-docs/space2stats_api_demo_spi_droughts.ipynb
-      - file: user-docs/space2stats_walkthrough.ipynb
