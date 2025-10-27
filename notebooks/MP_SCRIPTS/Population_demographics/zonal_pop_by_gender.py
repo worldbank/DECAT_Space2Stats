@@ -1,17 +1,19 @@
 import importlib
 import math
 import multiprocessing
-import os
+import os, io, urllib3
 import sys
+import s3fs, boto3
 
 import geojson
 import geopandas as gpd
 import GOSTrocks.rasterMisc as rMisc
 import numpy as np
 import pandas as pd
-import rasterio
+import awswrangler as wr
+
 from GOSTrocks.misc import tPrint
-from h3 import h3
+
 from shapely.geometry import Polygon
 from tqdm import tqdm
 
@@ -22,6 +24,11 @@ AWS_S3_BUCKET = "wbg-geography01"
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_SESSION_TOKEN = os.getenv("AWS_SESSION_TOKEN")
+s3 = s3fs.S3FileSystem(anon=False, key=AWS_ACCESS_KEY_ID, secret=AWS_SECRET_ACCESS_KEY, use_ssl=False)
+s3session = boto3.Session()
+s3client = s3session.client('s3', verify=False)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 
 def run_zonal(gdf, cur_raster_file, out_file, buffer0=False, verbose=False):
@@ -32,7 +39,7 @@ def run_zonal(gdf, cur_raster_file, out_file, buffer0=False, verbose=False):
         gdf["geometry"] = gdf["geometry"].buffer(0)
     res = rMisc.zonalStats(gdf, cur_raster_file, minVal=0, verbose=False)
     res = pd.DataFrame(res, columns=["SUM", "MIN", "MAX", "MEAN"])
-    res["id"] = gdf["id"].values
+    res["shape_id"] = gdf["shape_id"].values
     if verbose:
         tPrint(f"**** finished {cName}")
     return {out_file: res}
@@ -43,31 +50,15 @@ if __name__ == "__main__":
     verbose = True
     tPrint("Starting")
     h3_level = 6
-    data_prefix = "WorldPop_2020_Demographics"
+    data_prefix = "WorldPop_2025_Demographics"
+    h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False, pickle_file="h0_dictionary_of_h6_geodata_frames_land.pickle")
 
-    admin_bounds = "/home/wb411133/data/Global/ADMIN/Admin2_Polys.shp"
-
-    """
-    global_urban = "/home/public/Data/GLOBAL/GHSL/SMOD/GHS_SMOD_E2020_GLOBE_R2023A_54009_1000_V1_0.tif"
-    """
-    # Define input raster variables
-    population_folder = (
-        "/home/public/Data/GLOBAL/Population/WorldPop_PPP_2020/GLOBAL_1km_Demographics"
-    )
+    pop_folder = r"C:\WBG\Work\data\POP\WorldPop\Demographics"
     pop_files = [
-        os.path.join(population_folder, x)
-        for x in os.listdir(population_folder)
-        if x.endswith("1km.tif")
+        os.path.join(pop_folder, f)
+        for f in os.listdir(pop_folder)
+        if f.endswith(".tif")
     ]
-
-    # h3_0_list = h3_helper.generate_lvl0_lists(h3_level, return_gdf=True, buffer0=False)
-
-    # Generate a list from the global admin boundaries
-    inA = gpd.read_file(admin_bounds)
-    inA["id"] = list(inA.index)
-    h3_0_list = {}
-    for region, countries in inA.groupby("WB_REGION"):
-        h3_0_list[region] = countries
 
     if verbose:
         tPrint("H3_0 list generated")
@@ -77,34 +68,27 @@ if __name__ == "__main__":
         arg_list = []
         processed_list = []
         for pop_file in pop_files:
-            filename = os.path.basename(f'{pop_file.replace(".tif", "")}_zonal.csv')
-            # out_s3_key = f'Space2Stats/h3_stats_data/GLOBAL/{data_prefix}/{h3_0_key}/{filename}'
-            out_s3_key = f"Space2Stats/h3_stats_data/ADM_GLOBAL/{data_prefix}/{h3_0_key}/{filename}"
-            full_path = os.path.join("s3://", AWS_S3_BUCKET, out_s3_key)
-            """
+            filename = os.path.basename(pop_file).replace(".tif", ".parquet")
+            out_s3_key = f'Space2Stats/h3_stats_data/GLOBAL/{data_prefix}/{h3_0_key}/{filename}'
+            full_path = f"s3://{AWS_S3_BUCKET}/{out_s3_key}"
             try:
-                tempPD = pd.read_csv(full_path)
+                s3client.head_object(Bucket=AWS_S3_BUCKET, Key=out_s3_key)
                 processed_list.append(filename)
             except:
-            """
-            arg_list.append([cur_gdf, pop_file, out_s3_key, True, verbose])
+                arg_list.append([cur_gdf, pop_file, out_s3_key, True, verbose])
+        tPrint(f"{h3_0_key} - {len(arg_list)} files to process, {len(processed_list)} already processed")
+        if len(arg_list) > 0:    
+            if multiprocess:
+                with multiprocessing.Pool(processes=min([70, len(arg_list)])) as pool:
+                    results = pool.starmap(run_zonal, arg_list)
+            else:
+                for a in arg_list:
+                    results = run_zonal(*a)
 
-        if multiprocess:
-            with multiprocessing.Pool(processes=min([70, len(pop_files)])) as pool:
-                results = pool.starmap(run_zonal, arg_list)
-        else:
-            for a in arg_list:
-                results = run_zonal(*a)
-
-        for combo in results:
-            out_file = list(combo.keys())[0]
-            res = combo[out_file]
-            res.to_csv(
-                f"s3://{AWS_S3_BUCKET}/{out_file}",
-                index=False,
-                storage_options={
-                    "key": AWS_ACCESS_KEY_ID,
-                    "secret": AWS_SECRET_ACCESS_KEY,
-                    "token": AWS_SESSION_TOKEN,
-                },
-            )
+            for combo in results:
+                out_file = list(combo.keys())[0]
+                res = combo[out_file]
+                
+                parquet_buffer = io.BytesIO()
+                res.to_parquet(parquet_buffer, index=False)
+                s3client.put_object(Bucket=AWS_S3_BUCKET, Key=out_file, Body=parquet_buffer.getvalue())
