@@ -11,11 +11,6 @@ cd dev-db
 # Start the development database
 make up
 
-# Verify everything is working
-make verify
-
-# Generate additional sample data (optional)
-make generate
 ```
 
 ## Available Commands
@@ -26,7 +21,6 @@ Run `make help` to see all available commands:
 - `make down` - Stop database
 - `make logs` - Show database logs
 - `make reset` - Reset database (removes all data)
-- `make verify` - Verify database setup
 - `make generate` - Generate additional sample data
 - `make clean` - Stop and remove everything
 
@@ -42,14 +36,14 @@ The seeding script loads two parquet datasets into the development database:
 - `space2stats_sample_cs.parquet` → inserted into the `space2stats` table. It contains administrative boundaries, demographic breakdowns, nighttime lights, built area statistics, GHS indicators, and flood exposure metrics.
 - `space2stats_sample_ts.parquet` → inserted into the `climate` table. It provides Standardized Precipitation Index (SPI) climate time series aggregated by H3 hexagon.
 
-The default table names can be overridden by setting the `PGTABLENAME` and `TIMESERIES_TABLE_NAME` environment variables before running `make seed`.
+The latest copies of these parquet files are stored in `s3://wbg-geography01/Space2Stats/sample_data/local_db/`.
 
 ## Troubleshooting
 
 - **Database won't start**: Check if port 5439 is available
 - **Connection issues**: Verify the connection string
 - **Sample data missing**: Run `make seed` to load data from parquet file
-- **Reset everything**: Run `make clean` then `make up`
+- **Reset everything**: Run `make reset` or Run `make clean` then `make up`
 
 ## Integration with Main Project
 

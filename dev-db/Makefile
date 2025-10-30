@@ -8,8 +8,6 @@ help:
 	@echo "  make down      - Stop database"
 	@echo "  make logs      - Show database logs"
 	@echo "  make reset     - Reset database (removes all data)"
-	@echo "  make verify    - Verify database setup"
-	@echo "  make generate  - Generate additional sample data"
 	@echo "  make clean     - Stop and remove everything"
 
 up:
