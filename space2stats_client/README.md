@@ -16,6 +16,21 @@ pip install space2stats-client[widgets]
 
 The widgets provide interactive Jupyter notebook components for data exploration and area selection. They require additional dependencies (`ipywidgets`, `ipyleaflet`, `IPython`) that are not needed for core API functionality.
 
+## Configuration
+
+When creating a `Space2StatsClient`, you can adjust how it connects to the API:
+
+```python
+from space2stats_client import Space2StatsClient
+
+client = Space2StatsClient(
+    base_url="https://space2stats.ds.io",  # point to a staging endpoint if needed
+    verify_ssl=True,                        # set to False when working behind intercepting proxies
+)
+```
+
+Both arguments are optional. `base_url` defaults to the production API endpoint and `verify_ssl` defaults to `True` for secure requests.
+
 ## API Methods
 
 ### `get_topics()`
@@ -33,8 +48,10 @@ Returns a DataFrame with descriptions of variables for a specific dataset.
 
 ---
 
-### `fetch_admin_boundaries(iso3: str, adm: str)`
-Fetches administrative boundaries from GeoBoundaries API for a given country and admin level.
+### `fetch_admin_boundaries(iso3: str, adm: str, source="WB")`
+Fetches administrative boundaries for a given country and admin level.
+- **Parameters:**
+  - `source`: Data source for the boundaries. `"WB"` (default) uses the World Bank Global Administrative Divisions feature service, `"GB"` uses GeoBoundaries.
 
 ---
 
@@ -92,7 +109,7 @@ Gets timeseries data for areas of interest.
 - **Parameters:**
   - `gdf`: GeoDataFrame containing areas of interest
   - `spatial_join_method`: "touches", "centroid", or "within"
-  - `fields`: List of field names to retrieve
+  - `fields`: List of fields to return.
   - `start_date`: Optional start date (format: 'YYYY-MM-DD')
   - `end_date`: Optional end date (format: 'YYYY-MM-DD')
   - `geometry`: Optional "polygon" or "point" to include H3 geometries
@@ -100,7 +117,7 @@ Gets timeseries data for areas of interest.
 
 ---
 
-### `get_timeseries_by_hexids(hex_ids, fields, start_date=None, end_date=None)`
+### `get_timeseries_by_hexids(hex_ids, fields, start_date=None, end_date=None, geometry=None)`
 Gets timeseries data for specific H3 hexagon IDs.
 - **Parameters:**
   - `hex_ids`: List of H3 hexagon IDs to query

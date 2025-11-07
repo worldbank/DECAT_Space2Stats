@@ -211,11 +211,13 @@ poetry install --with docs # Installs space2stats, dependencies and jupyter-book
 pip install folium matplotlib mapclassify # for additional notebook visualizations
 ```
 
-To build the documentation locally, run the following command:
+To build the documentation locally, run the following command from the **repository root** (not inside `space2stats_api/src`). This is important because the `docs/` folder lives at the top level.
 
 ```bash
 sphinx-build docs _build/html -b html
 ```
+
+After the build completes, open `_build/html/index.html` in your browser. This renders the same Jupyter Book site that is deployed to GitHub Pages.
 
 To remove the generated files:
 

@@ -26,8 +26,8 @@ Use the client to access the Space2Stats API:
     topics = client.get_topics()
     print(topics)
 
-    # Get fields for a specific dataset
-    fields = client.get_fields("dataset_id")
+    # Get available fields
+    fields = client.get_fields()
     print(fields)
 
     # Get data for an area of interest

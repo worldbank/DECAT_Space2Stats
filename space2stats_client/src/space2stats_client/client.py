@@ -1,12 +1,15 @@
 """Space2Stats client for accessing the World Bank's spatial statistics API."""
-import urllib, json
+
 import inspect
+import json
+import urllib
 from typing import Dict, List, Literal, Optional
 
 import geopandas as gpd
 import pandas as pd
 import requests
 from pystac import Catalog
+
 
 def download_esri_boundaries(url, layer, iso3) -> gpd.GeoDataFrame:
     """_summary_
@@ -25,33 +28,49 @@ def download_esri_boundaries(url, layer, iso3) -> gpd.GeoDataFrame:
     gpd.GeoDataFrame
         _description_
     """
-    # Look at metadata of url 
-    with urllib.request.urlopen(f'{url}/?f=pjson') as service_url:
+    # Look at metadata of url
+    with urllib.request.urlopen(f"{url}/?f=pjson") as service_url:
         service_data = json.loads(service_url.read().decode())
 
-    queryable = ['Query' in service_data['capabilities']]
+    queryable = ["Query" in service_data["capabilities"]]
 
     if queryable:
         query_url = f"{url}/{layer}/query"
         # get total number of records in complete service
-        n_queries = service_data['maxRecordCount']
-        count_query = {"outFields": "*", "where": f"ISO_A3='{iso3}'", "returnCountOnly": True, 'f':'json'}
+        n_queries = service_data["maxRecordCount"]
+        count_query = {
+            "outFields": "*",
+            "where": f"ISO_A3='{iso3}'",
+            "returnCountOnly": True,
+            "f": "json",
+        }
         count_str = urllib.parse.urlencode(count_query)
-        with urllib.request.urlopen(f'{query_url}?{count_str}') as count_url:
+        with urllib.request.urlopen(f"{query_url}?{count_str}") as count_url:
             count_json = json.loads(count_url.read().decode())
-            n_records = count_json['count']
-        if n_records < n_queries: #We can download all the data in a single query
-            all_records_query = {"outFields": "*", "where": f"ISO_A3='{iso3}'", "returnGeometry": True, "f": "geojson"}
+            n_records = count_json["count"]
+        if n_records < n_queries:  # We can download all the data in a single query
+            all_records_query = {
+                "outFields": "*",
+                "where": f"ISO_A3='{iso3}'",
+                "returnGeometry": True,
+                "f": "geojson",
+            }
             query_str = urllib.parse.urlencode(all_records_query)
             all_query_url = f"{query_url}?{query_str}"
             return gpd.read_file(all_query_url)
         else:
-            step_query = {"outFields": "*", "where": f"ISO_A3='{iso3}'", "returnGeometry": True,"f": "geojson",
-                        'resultRecordCount': n_queries, "resultOffset": 0}
+            step_query = {
+                "outFields": "*",
+                "where": f"ISO_A3='{iso3}'",
+                "returnGeometry": True,
+                "f": "geojson",
+                "resultRecordCount": n_queries,
+                "resultOffset": 0,
+            }
             for offset in range(0, n_records, n_queries):
-                step_query['resultOffset'] = offset
+                step_query["resultOffset"] = offset
                 query_str = urllib.parse.urlencode(step_query)
-                step_query_url = f"{query_url}?{query_str}"                
+                step_query_url = f"{query_url}?{query_str}"
                 cur_res = gpd.read_file(step_query_url)
                 if offset == 0:
                     gdf = cur_res
@@ -209,7 +228,7 @@ class Space2StatsClient:
         return response.json()
 
     def fetch_admin_boundaries(self, iso3, adm, source="WB") -> gpd.GeoDataFrame:
-        """ Fetch administrative boundaries as geopandas GeoDataFrame.
+        """Fetch administrative boundaries as geopandas GeoDataFrame.
 
         Parameters
         ----------
@@ -225,7 +244,7 @@ class Space2StatsClient:
         gpd.GeoDataFrame
             A GeoDataFrame containing the administrative boundaries.
         """
-        if source == "WB":            
+        if source == "WB":
             esri_url = "https://services.arcgis.com/iQ1dY19aHwbSDYIF/arcgis/rest/services/World_Bank_Global_Administrative_Divisions/FeatureServer"
             layer = 1
             if adm == "ADM1":
@@ -505,9 +524,9 @@ class Space2StatsClient:
         self,
         gdf: gpd.GeoDataFrame,
         spatial_join_method: Literal["touches", "centroid", "within"],
+        fields: List[str],
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        fields: Optional[List[str]] = None,
         geometry: Optional[Literal["polygon", "point"]] = None,
         verbose: bool = True,
     ) -> pd.DataFrame:
@@ -522,12 +541,12 @@ class Space2StatsClient:
                 - "touches": Includes H3 cells that touch the AOI
                 - "centroid": Includes H3 cells where the centroid falls within the AOI
                 - "within": Includes H3 cells entirely within the AOI
+        fields : List[str]
+            List of fields to retrieve.
         start_date : Optional[str]
             Start date for filtering data (format: 'YYYY-MM-DD')
         end_date : Optional[str]
             End date for filtering data (format: 'YYYY-MM-DD')
-        fields : Optional[List[str]]
-            List of fields to retrieve. If None, all available fields will be returned.
         verbose : bool
             Whether to display progress messages (default: True)
 
