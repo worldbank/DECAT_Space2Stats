@@ -10,7 +10,6 @@ import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import pandas as pd
-
 from GOSTrocks.misc import tPrint
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from rasterio.crs import CRS
@@ -193,9 +192,7 @@ def generate_lvl1_lists(
         ) in h3_children:  # For current lvl 0 cell, loop through all level 1 children
             h3_children_1 = list(h3.cell_to_children(h3_1, h3_lvl))
             if return_gdf:
-                hex_poly = lambda hex_id: Polygon(
-                    h3.cell_to_boundary(hex_id)
-                )
+                hex_poly = lambda hex_id: Polygon(h3.cell_to_boundary(hex_id))
                 all_polys = gpd.GeoSeries(
                     list(map(hex_poly, h3_children_1)), index=h3_children_1, crs=4326
                 )
@@ -318,4 +315,3 @@ def static_map_h3(sub, map_epsg=3857, legend_loc="upper right"):
     )  # zorder=-10, 'EPSG:4326'
     ax = ax.set_axis_off()
     return ax
-

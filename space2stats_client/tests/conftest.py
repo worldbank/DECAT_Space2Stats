@@ -1,3 +1,6 @@
+import json
+import urllib.error
+
 import geopandas as gpd
 import pandas as pd
 import pytest
@@ -373,3 +376,367 @@ def mock_adm2_error_response(mocker):
 
     mocker.patch("requests.get", side_effect=mock_error_response)
     return mock_error_response
+
+
+@pytest.fixture
+def mock_esri_service(mocker):
+    """Simple mock for ESRI service that covers basic functionality."""
+
+    def mock_urlopen(url, **kwargs):  # Accept **kwargs to handle timeout
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        # Service metadata - always queryable
+        if "?f=pjson" in url_str:
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1000,
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+        # Count query - always return 1 record
+        elif "returnCountOnly=True" in url_str:
+            count_response = {"count": 1}
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                count_response
+            )
+        # Data query - return simple geojson
+        else:
+            data_response = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]],
+                        },
+                        "properties": {"ISO_A3": "USA", "NAME": "Test Area"},
+                    }
+                ],
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                data_response
+            )
+
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+
+        return mock_response
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    mocker.patch("geopandas.read_file", return_value=MOCK_GDF)
+
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_non_queryable(mocker):
+    """Mock ESRI service that is not queryable - tests error handling."""
+
+    def mock_urlopen(url, **kwargs):  # Accept **kwargs to handle timeout
+        mock_response = mocker.Mock()
+        # Only respond to metadata requests with non-queryable service
+        service_metadata = {
+            "capabilities": "Create,Update,Delete",  # No Query capability
+            "maxRecordCount": 1000,
+        }
+        mock_response.read.return_value.decode.return_value = json.dumps(
+            service_metadata
+        )
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+        return mock_response
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_metadata_http_error(mocker):
+    """Mock ESRI service that returns HTTP error for metadata request."""
+
+    def mock_urlopen(url, **kwargs):
+        if "?f=pjson" in str(url):
+            error = urllib.error.HTTPError(url, 404, "Not Found", {}, None)
+            raise error
+        # Shouldn't reach other requests
+        return mocker.Mock()
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_metadata_url_error(mocker):
+    """Mock ESRI service that returns URL error for metadata request."""
+
+    def mock_urlopen(url, **kwargs):
+        if "?f=pjson" in str(url):
+            error = urllib.error.URLError("Connection refused")
+            raise error
+        # Shouldn't reach other requests
+        return mocker.Mock()
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_metadata_json_error(mocker):
+    """Mock ESRI service that returns invalid JSON for metadata."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        if "?f=pjson" in str(url):
+            mock_response.read.return_value.decode.return_value = "invalid json{"
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+        return mock_response
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_count_http_error(mocker):
+    """Mock ESRI service that returns HTTP error for count request."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        if "?f=pjson" in url_str:
+            # Return valid metadata
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1000,
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+            mock_response.__enter__ = lambda self: mock_response
+            mock_response.__exit__ = lambda self, *args: None
+            return mock_response
+        elif "returnCountOnly=True" in url_str:
+            # Raise HTTP error for count request
+            error = urllib.error.HTTPError(url, 500, "Internal Server Error", {}, None)
+            raise error
+
+        return mock_response
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_count_url_error(mocker):
+    """Mock ESRI service that returns URL error for count request."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        if "?f=pjson" in url_str:
+            # Return valid metadata
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1000,
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+            mock_response.__enter__ = lambda self: mock_response
+            mock_response.__exit__ = lambda self, *args: None
+            return mock_response
+        elif "returnCountOnly=True" in url_str:
+            # Raise URL error for count request
+            error = urllib.error.URLError("Network unreachable")
+            raise error
+
+        return mock_response
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_count_json_error(mocker):
+    """Mock ESRI service that returns invalid JSON for count request."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        if "?f=pjson" in url_str:
+            # Return valid metadata
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1000,
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+        elif "returnCountOnly=True" in url_str:
+            # Return invalid JSON for count request
+            mock_response.read.return_value.decode.return_value = "invalid json{"
+
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+        return mock_response
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_zero_count(mocker):
+    """Mock ESRI service that returns zero count (no features found)."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        if "?f=pjson" in url_str:
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1000,
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+        elif "returnCountOnly=True" in url_str:
+            count_response = {"count": 0}  # No features found
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                count_response
+            )
+
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+        return mock_response
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_geojson_error(mocker):
+    """Mock ESRI service that fails when reading GeoJSON."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        if "?f=pjson" in url_str:
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1000,
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+        elif "returnCountOnly=True" in url_str:
+            count_response = {"count": 1}
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                count_response
+            )
+
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+        return mock_response
+
+    # Mock geopandas.read_file to raise an exception
+    def mock_read_file_error(url):
+        raise Exception("Failed to read GeoJSON")
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    mocker.patch("geopandas.read_file", side_effect=mock_read_file_error)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_pagination_needed(mocker):
+    """Mock ESRI service that requires pagination (more records than max)."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        if "?f=pjson" in url_str:
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1,  # Force pagination
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+        elif "returnCountOnly=True" in url_str:
+            count_response = {"count": 2}  # More than maxRecordCount
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                count_response
+            )
+
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+        return mock_response
+
+    # Mock geopandas.read_file to return different data for each page
+    page_count = 0
+
+    def mock_read_file_pagination(url):
+        nonlocal page_count
+        page_count += 1
+        return gpd.GeoDataFrame(
+            {"name": [f"Test Area {page_count}"]},
+            geometry=[MOCK_GEOMETRY],
+            crs="EPSG:4326",
+        )
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    mocker.patch("geopandas.read_file", side_effect=mock_read_file_pagination)
+    return mock_urlopen
+
+
+@pytest.fixture
+def mock_esri_pagination_error(mocker):
+    """Mock ESRI service that fails during pagination."""
+
+    def mock_urlopen(url, **kwargs):
+        mock_response = mocker.Mock()
+        url_str = str(url)
+
+        if "?f=pjson" in url_str:
+            service_metadata = {
+                "capabilities": "Query,Create,Update,Delete",
+                "maxRecordCount": 1,  # Force pagination
+            }
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                service_metadata
+            )
+        elif "returnCountOnly=True" in url_str:
+            count_response = {"count": 2}  # More than maxRecordCount
+            mock_response.read.return_value.decode.return_value = json.dumps(
+                count_response
+            )
+
+        mock_response.__enter__ = lambda self: mock_response
+        mock_response.__exit__ = lambda self, *args: None
+        return mock_response
+
+    # Mock geopandas.read_file to fail on second page
+    page_count = 0
+
+    def mock_read_file_fail_on_second(url):
+        nonlocal page_count
+        page_count += 1
+        if page_count == 1:
+            return gpd.GeoDataFrame(
+                {"name": ["Test Area 1"]}, geometry=[MOCK_GEOMETRY], crs="EPSG:4326"
+            )
+        else:
+            raise Exception("Failed to read second page")
+
+    mocker.patch("urllib.request.urlopen", side_effect=mock_urlopen)
+    mocker.patch("geopandas.read_file", side_effect=mock_read_file_fail_on_second)
+    return mock_urlopen
