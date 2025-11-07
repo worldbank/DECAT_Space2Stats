@@ -473,9 +473,9 @@ class Space2StatsClient:
         self,
         gdf: gpd.GeoDataFrame,
         spatial_join_method: Literal["touches", "centroid", "within"],
+        fields: List[str],
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        fields: Optional[List[str]] = None,
         geometry: Optional[Literal["polygon", "point"]] = None,
         verbose: bool = True,
     ) -> pd.DataFrame:
@@ -490,12 +490,12 @@ class Space2StatsClient:
                 - "touches": Includes H3 cells that touch the AOI
                 - "centroid": Includes H3 cells where the centroid falls within the AOI
                 - "within": Includes H3 cells entirely within the AOI
+        fields : List[str]
+            List of fields to retrieve.
         start_date : Optional[str]
             Start date for filtering data (format: 'YYYY-MM-DD')
         end_date : Optional[str]
             End date for filtering data (format: 'YYYY-MM-DD')
-        fields : Optional[List[str]]
-            List of fields to retrieve. If None, all available fields will be returned.
         verbose : bool
             Whether to display progress messages (default: True)
 

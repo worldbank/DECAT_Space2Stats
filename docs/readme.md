@@ -754,7 +754,7 @@ Or, from source:
 conda create -n s2s python=3.11
 conda activate s2s
 pip install poetry
-cd space2stats_client/src
+cd space2stats_client
 poetry install
 ```
 

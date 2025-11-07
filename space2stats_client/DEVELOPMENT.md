@@ -4,25 +4,8 @@ This document provides guidelines for developers working on the Space2StatsClien
 
 ## Using Tags
 
-Tags are used to mark specific points in the repository's history, typically for releases. The Space2StatsClient project uses these tags to automatically publish to PyPI when a release is created on GitHub. This github action is triggered by the `release.yml` workflow.   
+Tags are used to mark specific points in the repository's history, typically for releases. The Space2StatsClient project uses these tags to automatically publish to PyPI when a release is created on GitHub. This github action is triggered by the `client-release.yml` workflow.   
 
-1. **Create a Tag**
-
-   Before creating a tag, ensure your working directory is clean and all changes are committed. 
-
-   - **Lightweight Tag**: A simple tag without a message.
-
-     ```bash
-     git tag v1.0.0
-     ```
-
-2. **Push Tags to Remote**
-
-   Push the created tag to the remote repository:
-
-   ```bash
-   git push origin v1.0.0
-   ```
 
 ## Creating a Release
 
@@ -32,7 +15,23 @@ Tags are used to mark specific points in the repository's history, typically for
 
 2. **Create and Push a Tag**
 
-   Follow the steps in the "Using Tags" section to create and push a tag.
+   1. **Create a Tag**
+
+      Before creating a tag, ensure your working directory is clean and all changes are committed. 
+
+   - **Lightweight Tag**: A simple tag without a message.
+
+     ```bash
+     git tag v1.0.0
+     ```
+
+   2. **Push Tags to Remote**
+
+      Push the created tag to the remote repository:
+
+      ```bash
+      git push origin v1.0.0
+      ```
 
 3. **Create a Release on GitHub**
 
