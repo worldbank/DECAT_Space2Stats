@@ -1,0 +1,371 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
+  ],
+  "id": "world_pop",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
+  "properties": {
+    "name": "Population",
+    "description": "Gridded population disaggregated by gender.",
+    "methodological_notes": "Global raster files are processed for each hexagonal grid using zonal statistics.",
+    "source_data": "WorldPop gridded population, 2025, Unconstrained, UN-Adjusted, https://www.worldpop.org/methods/top_down_constrained_vs_unconstrained/",
+    "sci:citation": "Stevens FR, Gaughan AE, Linard C, Tatem AJ (2015) Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data. ",
+    "method": "sum",
+    "resolution": "100 mts",
+    "themes": "Demographics",
+    "table:columns": [
+      {
+        "name": "hex_id",
+        "description": "H3 index at resolution 6",
+        "type": "string"
+      },
+      {
+        "name": "sum_f_00_2025",
+        "description": "Total population female, ages 0 to 1, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_01_2025",
+        "description": "Total population female, ages 1 to 10, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_05_2025",
+        "description": "Total population female, ages 5 to 10, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_10_2025",
+        "description": "Total population female, ages 10 to 15, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_15_2025",
+        "description": "Total population female, ages 15 to 20, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_20_2025",
+        "description": "Total population female, ages 20 to 25, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_25_2025",
+        "description": "Total population female, ages 25 to 30, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_30_2025",
+        "description": "Total population female, ages 30 to 35, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_35_2025",
+        "description": "Total population female, ages 35 to 40, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_40_2025",
+        "description": "Total population female, ages 40 to 45, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_45_2025",
+        "description": "Total population female, ages 45 to 50, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_50_2025",
+        "description": "Total population female, ages 50 to 55, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_55_2025",
+        "description": "Total population female, ages 55 to 60, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_60_2025",
+        "description": "Total population female, ages 60 to 65, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_65_2025",
+        "description": "Total population female, ages 65 to 70, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_70_2025",
+        "description": "Total population female, ages 70 to 75, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_75_2025",
+        "description": "Total population female, ages 75 to 80, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_80_2025",
+        "description": "Total population female, ages 80 to 85, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_85_2025",
+        "description": "Total population female, ages 85 to 90, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_f_90_2025",
+        "description": "Total population female, ages 90 and above, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_00_2025",
+        "description": "Total population male, ages 0 to 1, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_01_2025",
+        "description": "Total population male, ages 1 to 10, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_05_2025",
+        "description": "Total population male, ages 5 to 10, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_10_2025",
+        "description": "Total population male, ages 10 to 15, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_15_2025",
+        "description": "Total population male, ages 15 to 20, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_20_2025",
+        "description": "Total population male, ages 20 to 25, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_25_2025",
+        "description": "Total population male, ages 25 to 30, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_30_2025",
+        "description": "Total population male, ages 30 to 35, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_35_2025",
+        "description": "Total population male, ages 35 to 40, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_40_2025",
+        "description": "Total population male, ages 40 to 45, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_45_2025",
+        "description": "Total population male, ages 45 to 50, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_50_2025",
+        "description": "Total population male, ages 50 to 55, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_55_2025",
+        "description": "Total population male, ages 55 to 60, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_60_2025",
+        "description": "Total population male, ages 60 to 65, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_65_2025",
+        "description": "Total population male, ages 65 to 70, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_70_2025",
+        "description": "Total population male, ages 70 to 75, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_75_2025",
+        "description": "Total population male, ages 75 to 80, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_80_2025",
+        "description": "Total population male, ages 80 to 85, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_85_2025",
+        "description": "Total population male, ages 85 to 90, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_90_2025",
+        "description": "Total population male, ages 90 and above, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2015",
+        "description": "Total population, 2015",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2016",
+        "description": "Total population, 2016",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2017",
+        "description": "Total population, 2017",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2018",
+        "description": "Total population, 2018",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2019",
+        "description": "Total population, 2019",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2021",
+        "description": "Total population, 2021",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2022",
+        "description": "Total population, 2022",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2023",
+        "description": "Total population, 2023",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2024",
+        "description": "Total population, 2024",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2025",
+        "description": "Total population, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2026",
+        "description": "Total population, 2026",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2027",
+        "description": "Total population, 2027",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2028",
+        "description": "Total population, 2028",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2029",
+        "description": "Total population, 2029",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2030",
+        "description": "Total population, 2030",
+        "type": "float64"
+      },
+      {
+        "name": "sum_pop_2020_2",
+        "description": "Total population, 2020",
+        "type": "float64"
+      }
+    ],
+    "datetime": "2025-11-09T08:04:37.395173Z"
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    }
+  ],
+  "assets": {
+    "api-docs": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "collection": "space2stats-collection"
+}

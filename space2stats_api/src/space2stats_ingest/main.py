@@ -8,7 +8,7 @@ import pyarrow.parquet as pq
 from pystac import Item, STACValidationError
 from tqdm import tqdm
 
-TABLE_NAME = "space2stats"
+TABLE_NAME = "space2stats_temp"
 
 
 def read_parquet_file(file_path: str) -> pa.Table:
