@@ -12,7 +12,7 @@ help:
 
 up:
 	@echo "Starting development database..."
-	docker-compose up -d
+	docker compose up -d
 	@echo "Waiting for database to be ready..."
 	@$(MAKE) wait
 	@echo "Database ready at localhost:5439"
@@ -20,10 +20,10 @@ up:
 	@$(MAKE) seed
 
 down:
-	docker-compose down
+	docker compose down
 
 logs:
-	docker-compose logs -f database
+	docker compose logs -f database
 
 reset:
 	@echo "Resetting database (this removes all data)..."
@@ -33,15 +33,13 @@ reset:
 
 apply-schema:
 	@echo "Applying database schema updates..."
-	docker-compose exec -T database psql -U username -d postgres -f /docker-entrypoint-initdb.d/01-init.sql
+	docker compose exec -T database psql -U username -d postgres -f /docker-entrypoint-initdb.d/01-init.sql
 
 seed:
 	@python seed_sample_data.py
 
 clean:
-	docker-compose down -v --remove-orphans
-	@echo "Removing local database files..."
-	@rm -rf .pgdata
+	docker compose down -v --remove-orphans
 
 # Cross-platform wait command
 wait:
