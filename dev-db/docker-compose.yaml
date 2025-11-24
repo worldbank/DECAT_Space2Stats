@@ -32,7 +32,6 @@ services:
     volumes:
       - dev_db_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
-      - ./space2stats_sample_cs.parquet:/docker-entrypoint-initdb.d/data/space2stats_sample_cs.parquet
       
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U username -d postgres"]
