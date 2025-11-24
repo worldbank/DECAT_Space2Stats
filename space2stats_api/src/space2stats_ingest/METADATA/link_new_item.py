@@ -29,6 +29,7 @@ def get_types(parquet_file: str):
     pf = ParquetFile(parquet_file)
     first_ten_rows = next(pf.iter_batches(batch_size=10))
     df = pa.Table.from_batches([first_ten_rows]).to_pandas()
+    df.columns = df.columns.str.lower()
 
     # Get the column names and their types
     column_types = {col: str(df[col].dtype) for col in df.columns}
