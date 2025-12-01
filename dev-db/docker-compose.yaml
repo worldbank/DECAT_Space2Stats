@@ -1,13 +1,14 @@
 services:
-  database:
+  db:
+    container_name: dev-db
     platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      - POSTGRES_USER=username
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=postgres
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
     ports:
       - 5439:5432
     command: >
@@ -29,9 +30,8 @@ services:
       -c min_wal_size=1GB
       -c max_wal_size=4GB
     volumes:
-      - ./.pgdata:/var/lib/postgresql/data
+      - dev_db_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
-      - ./space2stats_sample_cs.parquet:/docker-entrypoint-initdb.d/data/space2stats_sample_cs.parquet
       
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U username -d postgres"]
@@ -43,15 +43,17 @@ services:
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@space2stats.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
+      PGADMIN_DEFAULT_EMAIL: admin@space2stats.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - 8080:80
     depends_on:
-      database:
+      db:
         condition: service_healthy
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin-servers.json:/pgadmin4/servers.json:ro
 
 volumes:
   pgadmin_data:
+  dev_db_data:

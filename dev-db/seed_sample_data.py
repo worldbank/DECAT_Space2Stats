@@ -134,12 +134,13 @@ def insert_data_to_db(
 def main() -> None:
     """Load the Space2Stats sample datasets into the development database."""
     script_dir = Path(__file__).parent
+    data_dir = script_dir / "init-scripts" / "data"
 
     main_table = get_table_name("PGTABLENAME", DEFAULT_MAIN_TABLE)
     ts_table = get_table_name("TIMESERIES_TABLE_NAME", DEFAULT_TS_TABLE)
 
-    cs_file = script_dir / "space2stats_sample_cs.parquet"
-    ts_file = script_dir / "space2stats_sample_ts.parquet"
+    cs_file = data_dir / "space2stats_sample_cs.parquet"
+    ts_file = data_dir / "space2stats_sample_ts.parquet"
 
     print(f"Preparing to seed cross-sectional data into '{main_table}'.")
     cs_df = load_parquet_data(cs_file)

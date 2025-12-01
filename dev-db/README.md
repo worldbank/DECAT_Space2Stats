@@ -36,6 +36,8 @@ The seeding script loads two parquet datasets into the development database:
 - `space2stats_sample_cs.parquet` → inserted into the `space2stats` table. It contains administrative boundaries, demographic breakdowns, nighttime lights, built area statistics, GHS indicators, and flood exposure metrics.
 - `space2stats_sample_ts.parquet` → inserted into the `climate` table. It provides Standardized Precipitation Index (SPI) climate time series aggregated by H3 hexagon.
 
+Both parquet files must live in `init-scripts/data/` with the exact filenames above (the seed script reads from that directory).
+
 The latest copies of these parquet files are stored in `s3://wbg-geography01/Space2Stats/sample_data/local_db/`.
 
 ## Troubleshooting
