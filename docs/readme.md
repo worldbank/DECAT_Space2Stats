@@ -25,7 +25,7 @@ The database currently contains four datasets with global coverage:
 
 Population Demographics
 ^^^
-Total Population, 2020, disaggregated by age and gender. (WorldPop)
+Total Population, 2025, disaggregated by age and gender. (WorldPop)
 :::
 
 :::{grid-item-card}

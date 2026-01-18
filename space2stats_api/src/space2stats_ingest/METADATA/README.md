@@ -27,7 +27,7 @@ To add a new STAC Item, update the Excel spreadsheet with the relevant fields, a
 
 1. **Update Metadata File**:
    - In the **Feature Catalog** sheet of `Space2Stats Metadata Content.xlsx`, add a description for each new variable in your dataset.
-   - Create an item id for the new set of variables, for example *space2stats_population_2020* or *nighttime_lights_2013*.
+   - Create an item id for the new set of variables, for example *world_pop_2025* or *nighttime_lights_2013*.
    - Add a new entry in the **Sources** sheet if it doesn’t exist already.
 > [!IMPORTANT]  
 > Make sure that the Item column in **Sources** corresponds to the same item id you created in the **Feature Catalog** sheet. This will be used to retrieve relevant information.

@@ -280,6 +280,11 @@
         "type": "float64"
       },
       {
+        "name": "sum_pop_2020",
+        "description": "Total population, 2020",
+        "type": "float64"
+      },
+      {
         "name": "sum_pop_2021",
         "description": "Total population, 2021",
         "type": "float64"
@@ -330,8 +335,13 @@
         "type": "float64"
       },
       {
-        "name": "sum_pop_2020_2",
-        "description": "Total population, 2020",
+        "name": "sum_f_2025",
+        "description": "Total female population, all ages, 2025",
+        "type": "float64"
+      },
+      {
+        "name": "sum_m_2025",
+        "description": "Total male population, all ages, 2025",
         "type": "float64"
       }
     ],
