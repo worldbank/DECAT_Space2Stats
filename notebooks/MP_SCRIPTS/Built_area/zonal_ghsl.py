@@ -3,7 +3,6 @@ import os
 import sys
 
 # Modify sys.path before importing custom modules
-sys.path.append("C:/WBG/Work/Code/GOSTrocks/src")
 sys.path.append("../../src")
 
 import global_zonal

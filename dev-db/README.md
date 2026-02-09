@@ -61,3 +61,23 @@ PGTABLENAME=space2stats
 TIMESERIES_TABLE_NAME=climate
 ```
 ```
+
+## Command to Run the Server and Local DB
+
+Run this entire command from root. Ensure the docker container for the DB is up and running.
+
+```bash
+cd ./space2stats_api/src
+
+PGHOST=localhost \
+PGPORT=5439 \
+PGDATABASE=postgres \
+PGUSER=username \
+PGPASSWORD=password \
+PGTABLENAME=space2stats \
+TIMESERIES_TABLE_NAME=climate \
+S3_BUCKET_NAME=mybucket \
+
+poetry run python -m space2stats
+```
+

@@ -51,6 +51,12 @@
       "href": "./builtarea_ghsl/builtarea_ghsl.json",
       "type": "application/json",
       "title": "Built area"
+    },
+    {
+      "rel": "item",
+      "href": "./landslide_susceptibility/landslide_susceptibility.json",
+      "type": "application/json",
+      "title": "Landslide Susceptibility Index"
     }
   ],
   "Title": "Space2Stats Database",

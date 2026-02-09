@@ -2,7 +2,6 @@ import multiprocessing
 import os
 import sys
 
-sys.path.append("C:/WBG/Work/Code/GOSTrocks/src")
 from GOSTrocks.misc import tPrint
 
 sys.path.append("../../src")
