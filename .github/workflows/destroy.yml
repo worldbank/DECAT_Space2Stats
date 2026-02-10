@@ -49,6 +49,7 @@ jobs:
           CDK_DEFAULT_ACCOUNT: ${{ vars.CDK_DEFAULT_ACCOUNT }}
           CDK_DEFAULT_REGION: ${{ vars.CDK_DEFAULT_REGION }}
           CDK_DOMAIN_NAME: ${{ vars.CDK_DOMAIN_NAME }}
+          CDK_DISABLE_CLI_TELEMETRY: "true" 
         run: cdk destroy --require-approval never
 
       - name: Find Comment
