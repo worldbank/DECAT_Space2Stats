@@ -57,6 +57,12 @@
       "href": "./landslide_susceptibility/landslide_susceptibility.json",
       "type": "application/json",
       "title": "Landslide Susceptibility Index"
+    },
+    {
+      "rel": "item",
+      "href": "./world_pop/world_pop.json",
+      "type": "application/json",
+      "title": "Population"
     }
   ],
   "Title": "Space2Stats Database",

@@ -8,6 +8,9 @@ This directory contains everything needed to run a local PostgreSQL development 
 # Navigate to dev-db directory
 cd dev-db
 
+# Download the sample data
+aws s3 sync s3://wbg-geography01/Space2Stats/sample_data/local_db/ .
+
 # Start the development database
 make up
 
