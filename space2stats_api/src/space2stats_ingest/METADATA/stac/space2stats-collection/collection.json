@@ -51,6 +51,12 @@
       "href": "./builtarea_ghsl/builtarea_ghsl.json",
       "type": "application/json",
       "title": "Built area"
+    },
+    {
+      "rel": "item",
+      "href": "./world_pop/world_pop.json",
+      "type": "application/json",
+      "title": "Population"
     }
   ],
   "Title": "Space2Stats Database",

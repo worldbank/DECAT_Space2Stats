@@ -21,6 +21,8 @@ def load_parquet_data_subset(parquet_file: str, num_rows: int) -> pd.DataFrame:
 
 def save_parquet_types_to_json(parquet_file: str, json_file: str):
     df = pd.read_parquet(parquet_file)
+    # Ensure everything is lowercase
+    df.columns = df.columns.str.lower()
     # Get the column names and their types
     column_types = {col: str(df[col].dtype) for col in df.columns}
 
@@ -33,7 +35,10 @@ def save_parquet_types_to_json(parquet_file: str, json_file: str):
 
 if __name__ == "__main__":
     git_root = get_git_root()
-    parquet_file = join(git_root, "space2stats_api/src/space2stats.parquet")
+    parquet_file = join(
+        git_root,
+        "space2stats_api/src/space2stats_ingest/METADATA/WorldPop_2025_Demographics_with_dup.parquet",
+    )
     json_file = join(
         git_root, "space2stats_api/src/space2stats_ingest/METADATA/types.json"
     )
