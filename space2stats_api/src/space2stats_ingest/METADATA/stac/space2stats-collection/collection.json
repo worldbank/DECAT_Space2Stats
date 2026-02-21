@@ -18,12 +18,6 @@
     },
     {
       "rel": "item",
-      "href": "./space2stats_population_2020/space2stats_population_2020.json",
-      "type": "application/json",
-      "title": "Population"
-    },
-    {
-      "rel": "item",
       "href": "./flood_exposure_15cm_1in100/flood_exposure_15cm_1in100.json",
       "type": "application/json",
       "title": "Population Exposed to Floods"
@@ -63,6 +57,30 @@
       "href": "./world_pop/world_pop.json",
       "type": "application/json",
       "title": "Population"
+    },
+    {
+      "rel": "item",
+      "href": "./cyclones/cyclones.json",
+      "type": "application/json",
+      "title": "Tropical Cyclone Frequency"
+    },
+    {
+      "rel": "item",
+      "href": "./cyclones/cyclones.json",
+      "type": "application/json",
+      "title": "Tropical Cyclone Frequency"
+    },
+    {
+      "rel": "item",
+      "href": "./drought/drought.json",
+      "type": "application/json",
+      "title": "Drought hazard (SPEI ≤ -1.5, 100-year return period)"
+    },
+    {
+      "rel": "item",
+      "href": "./fires/fires.json",
+      "type": "application/json",
+      "title": "Fire Density"
     }
   ],
   "Title": "Space2Stats Database",
