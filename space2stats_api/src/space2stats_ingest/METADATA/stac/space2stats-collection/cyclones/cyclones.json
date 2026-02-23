@@ -1,0 +1,98 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json"
+  ],
+  "id": "cyclones",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          89.98750455101016
+        ],
+        [
+          179.99999096313272,
+          -89.98750455101016
+        ],
+        [
+          -179.99999561620714,
+          -89.98750455101016
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -179.99999561620714,
+    -89.98750455101016,
+    179.99999096313272,
+    89.98750455101016
+  ],
+  "properties": {
+    "name": "Tropical Cyclone Frequency",
+    "description": "Global tropical cyclone frequency summarized to H3 level 6 hexagons as mean frequency per hexagon.",
+    "methodological_notes": "Derived by converting an IBTrACS-based global cyclone frequency raster to H3 and computing zonal mean value within each hexagon.",
+    "source_data": "International Best Track Archive for Climate Stewardship (IBTrACS), NOAA NCEI, https://www.ncei.noaa.gov/products/international-best-track-archive",
+    "sci:citation": "Knapp, K. R., et al. (2010). The International Best Track Archive for Climate Stewardship (IBTrACS). https://doi.org/10.25921/82ty-9e16",
+    "method": "mean",
+    "resolution": "0.017333333 degree (~1.9km)",
+    "themes": "Climate",
+    "start_datetime": "1969-01-01T00:00:00Z",
+    "end_datetime": "2009-12-31T00:00:00Z",
+    "table:columns": [
+      {
+        "name": "hex_id",
+        "description": "H3 unique identifier",
+        "type": "object"
+      },
+      {
+        "name": "cy_frequency_mean",
+        "description": "Tropical Cyclone Frequency",
+        "type": "float64"
+      }
+    ],
+    "datetime": null
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "Space2Stats Database"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Space2Stats Collection"
+    }
+  ],
+  "assets": {
+    "api-docs": {
+      "href": "https://space2stats.ds.io/docs",
+      "type": "text/html",
+      "title": "API Documentation",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "collection": "space2stats-collection"
+}
