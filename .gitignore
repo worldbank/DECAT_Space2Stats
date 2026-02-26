@@ -100,6 +100,7 @@ db.env
 # data
 *.parquet
 *.duckdb
+*ffff.csv
 .pgdata
 space2stats_api/space2stats_env
 *.env
