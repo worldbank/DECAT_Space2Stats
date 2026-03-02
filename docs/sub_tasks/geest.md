@@ -1,18 +1,18 @@
-# GEEST - Assessing women's employment opportunities
+# GeoE3 - Geospatial mapping of Enabling Environments for Employment
 [For complete project information, please click here](https://worldbank.github.io/GEEST/README.html)
 
-With support from the [Canada Clean Energy and Forest Climate Facility (CCEFCF)](https://www.worldbank.org/en/topic/climatechange/brief/canada-world-bank-clean-energy-and-forests-climate-facility), the [Geospatial Operational Support Team (GOST, DECSC)](https://worldbank.github.io/GOST) launched the project "Geospatial Assessment of Women Employment and Business Opportunities in the Renewable Energy Sector." The project proposes a novel methodology for mapping the enabling environments for women's employment. The goal is to inform new energy projects in client countries to support the advancement of women's economic empowerment while contributing to closing gender gaps in employment in the RE sector.
+With support from the [Canada Clean Energy and Forest Climate Facility (CCEFCF)](https://www.worldbank.org/en/topic/climatechange/brief/canada-world-bank-clean-energy-and-forests-climate-facility) and the [Global Data Facility (GDF)](https://www.worldbank.org/en/programs/global-data-facility), the [Geospatial Operational Support Team (GOST, DECSC)](https://worldbank.github.io/GOST) launched the project "Geospatial Assessment of Women Employment and Business Opportunities in the Renewable Energy Sector." The project proposed a novel methodology for mapping the enabling environments for women's employment that evolved into the current GeoE3 initiative. 
 
-In addition to the methodology, the project has generated a geospatial open-source, QGIS tool for implementing the methodology. For more details, visit the GEEST project directly.
+In addition to the methodology, the project has generated a geospatial open-source, QGIS tool for implementing the methodology. For more details, visit the GeoE3 project directly.
 
-```{figure} ../images/WEE_PNG.png
+```{figure} ../images/Turkey_GeoWEAF.png
 ---
-alt: GEEST score
+alt: GeoE3 score
 ---
-GEEST was used to calculate the enabling score in Comoros, Dominican Republic, and Papua New Guinea
+Most recently, GeoE3 was used to calculate the enabling scores for employment in Albania, Bulgaria and Turkey
 ```
 
-Countries included in the project:
+Countries included in the first phase of the project:
 
 | AFRICA | LATIN AMERICA AND CARIBBEAN | EAST ASIA AND PACIFIC | SOUTH ASIA |
 | --- | --- | --- | --- |
