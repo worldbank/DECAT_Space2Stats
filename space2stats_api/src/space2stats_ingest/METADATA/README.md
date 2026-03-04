@@ -23,14 +23,14 @@ Follow these steps to create the initial STAC metadata:
 
 ## Adding a New STAC Item
 
-To add a new STAC Item, update the Excel spreadsheet with the relevant fields, and pass your new Parquet dataset to the `link_new_item.py` script.
+To add a new STAC Item, update the CSV metadata files in the `metadata_content/` folder, and pass your new Parquet dataset to the `link_new_item.py` script.
 
-1. **Update Metadata File**:
-   - In the **Feature Catalog** sheet of `Space2Stats Metadata Content.xlsx`, add a description for each new variable in your dataset.
-   - Create an item id for the new set of variables, for example *world_pop_2025* or *nighttime_lights_2013*.
-   - Add a new entry in the **Sources** sheet if it doesn’t exist already.
-> [!IMPORTANT]  
-> Make sure that the Item column in **Sources** corresponds to the same item id you created in the **Feature Catalog** sheet. This will be used to retrieve relevant information.
+1. **Update Metadata CSVs**:
+   - In `metadata_content/Space2Stats_Metadata_Feature_Catalog.csv`, add a row for each new variable in your dataset with columns: `variable`, `description`, `nodata`, and `item`.
+   - Create an item id for the new set of variables, for example *world_pop* or *nighttime_lights*.
+   - In `metadata_content/Space2Stats_Metadata_Sources.csv`, add a new row for the item with its name, description, citation, method, resolution, and optional start/end dates.
+> [!IMPORTANT]
+> Make sure that the `Item` column in **Sources** corresponds to the same item id you used in the **Feature Catalog**. This is used to link variables to their source metadata.
 
 2. **Run *link_new_item.py* script**:
    - Navigate to the `METADATA` sub-directory and execute the following command:
