@@ -1,0 +1,111 @@
+variable,description,nodata,item
+hex_id,H3 unique identifier,,all
+ogc_fid,Feature unique identifier,,all
+sum_built_area_m_1975,Total built area (m2) in 1975,,builtarea_ghsl
+sum_built_area_m_1980,Total built area (m2) in 1980,,builtarea_ghsl
+sum_built_area_m_1985,Total built area (m2) in 1985,,builtarea_ghsl
+sum_built_area_m_1990,Total built area (m2) in 1990,,builtarea_ghsl
+sum_built_area_m_1995,Total built area (m2) in 1995,,builtarea_ghsl
+sum_built_area_m_2000,Total built area (m2) in 2000,,builtarea_ghsl
+sum_built_area_m_2005,Total built area (m2) in 2005,,builtarea_ghsl
+sum_built_area_m_2010,Total built area (m2) in 2010,,builtarea_ghsl
+sum_built_area_m_2015,Total built area (m2) in 2015,,builtarea_ghsl
+sum_built_area_m_2020,Total built area (m2) in 2020,,builtarea_ghsl
+sum_built_area_m_2025,Total built area (m2) in 2025,,builtarea_ghsl
+sum_built_area_m_2030,Total built area (m2) in 2030,,builtarea_ghsl
+spi,"Standardized Precipitation Index (SPI), 6-month timescale",,climate
+date,"Month, formatted as YYYY-MM-DD",,climate
+cy_frequency_mean,Tropical Cyclone Frequency,,cyclones
+drought_spei_1_5_rp100_mean,"Drought hazard (SPEI ≤ -1.5, 100-year return period)",,drought
+fires_density_mean,Fire Density,,fires
+pop,"Sum of Gridded Population, 2020",,flood_exposure_15cm_1in100
+pop_flood,"Sum of population exposed to floods greater than 15 cm, 1 in 100 return period",,flood_exposure_15cm_1in100
+pop_flood_pct,"Percent of population exposed to floods greater than 15 cm, 1 in 100 return period",,flood_exposure_15cm_1in100
+landslide_susceptibility_mean_2023,Landslide Susceptibility Index,,landslide_susceptibility
+sum_viirs_ntl_2012,Sum of VIIRS nighttlime lights brightness for 2012,,nighttime_lights
+sum_viirs_ntl_2013,Sum of VIIRS nighttlime lights brightness for 2013,,nighttime_lights
+sum_viirs_ntl_2014,Sum of VIIRS nighttlime lights brightness for 2014,,nighttime_lights
+sum_viirs_ntl_2015,Sum of VIIRS nighttlime lights brightness for 2015,,nighttime_lights
+sum_viirs_ntl_2016,Sum of VIIRS nighttlime lights brightness for 2016,,nighttime_lights
+sum_viirs_ntl_2017,Sum of VIIRS nighttlime lights brightness for 2017,,nighttime_lights
+sum_viirs_ntl_2018,Sum of VIIRS nighttlime lights brightness for 2018,,nighttime_lights
+sum_viirs_ntl_2019,Sum of VIIRS nighttlime lights brightness for 2019,,nighttime_lights
+sum_viirs_ntl_2020,Sum of VIIRS nighttlime lights brightness for 2020,,nighttime_lights
+sum_viirs_ntl_2021,Sum of VIIRS nighttlime lights brightness for 2021,,nighttime_lights
+sum_viirs_ntl_2022,Sum of VIIRS nighttlime lights brightness for 2022,,nighttime_lights
+sum_viirs_ntl_2023,Sum of VIIRS nighttlime lights brightness for 2023,,nighttime_lights
+sum_viirs_ntl_2024,Sum of VIIRS nighttlime lights brightness for 2024,,nighttime_lights
+ghs_11_count,Total number of cells in very low density areas,,urbanization_ghssmod
+ghs_12_count,Total number of cells in low density rural areas,,urbanization_ghssmod
+ghs_13_count,Total number of cells in rural areas,,urbanization_ghssmod
+ghs_21_count,Total number of cells in suburban grid cells,,urbanization_ghssmod
+ghs_22_count,Total number of cells in semi-dense urban clusters,,urbanization_ghssmod
+ghs_23_count,Total number of cells in dense urban clusters,,urbanization_ghssmod
+ghs_30_count,Total number of cells in urban centres,,urbanization_ghssmod
+ghs_total_count,Total number of cells in all categories in GHS database,,urbanization_ghssmod
+ghs_11_pop,Total population in very low density areas,,urbanization_ghssmod
+ghs_12_pop,Total population in low density rural areas,,urbanization_ghssmod
+ghs_13_pop,Total population in rural areas,,urbanization_ghssmod
+ghs_21_pop,Total population in suburban grid cells,,urbanization_ghssmod
+ghs_22_pop,Total population in semi-dense urban clusters,,urbanization_ghssmod
+ghs_23_pop,Total population in dense urban clusters,,urbanization_ghssmod
+ghs_30_pop,Total population in urban centres,,urbanization_ghssmod
+ghs_total_pop,Total population based on GHS-Pop population,,urbanization_ghssmod
+sum_f_00_2025,"Total population female, ages 0 to 1, 2025",,world_pop
+sum_f_01_2025,"Total population female, ages 1 to 10, 2025",,world_pop
+sum_f_05_2025,"Total population female, ages 5 to 10, 2025",,world_pop
+sum_f_10_2025,"Total population female, ages 10 to 15, 2025",,world_pop
+sum_f_15_2025,"Total population female, ages 15 to 20, 2025",,world_pop
+sum_f_20_2025,"Total population female, ages 20 to 25, 2025",,world_pop
+sum_f_25_2025,"Total population female, ages 25 to 30, 2025",,world_pop
+sum_f_30_2025,"Total population female, ages 30 to 35, 2025",,world_pop
+sum_f_35_2025,"Total population female, ages 35 to 40, 2025",,world_pop
+sum_f_40_2025,"Total population female, ages 40 to 45, 2025",,world_pop
+sum_f_45_2025,"Total population female, ages 45 to 50, 2025",,world_pop
+sum_f_50_2025,"Total population female, ages 50 to 55, 2025",,world_pop
+sum_f_55_2025,"Total population female, ages 55 to 60, 2025",,world_pop
+sum_f_60_2025,"Total population female, ages 60 to 65, 2025",,world_pop
+sum_f_65_2025,"Total population female, ages 65 to 70, 2025",,world_pop
+sum_f_70_2025,"Total population female, ages 70 to 75, 2025",,world_pop
+sum_f_75_2025,"Total population female, ages 75 to 80, 2025",,world_pop
+sum_f_80_2025,"Total population female, ages 80 to 85, 2025",,world_pop
+sum_f_85_2025,"Total population female, ages 85 to 90, 2025",,world_pop
+sum_f_90_2025,"Total population female, ages 90 and above, 2025",,world_pop
+sum_m_00_2025,"Total population male, ages 0 to 1, 2025",,world_pop
+sum_m_01_2025,"Total population male, ages 1 to 10, 2025",,world_pop
+sum_m_05_2025,"Total population male, ages 5 to 10, 2025",,world_pop
+sum_m_10_2025,"Total population male, ages 10 to 15, 2025",,world_pop
+sum_m_15_2025,"Total population male, ages 15 to 20, 2025",,world_pop
+sum_m_20_2025,"Total population male, ages 20 to 25, 2025",,world_pop
+sum_m_25_2025,"Total population male, ages 25 to 30, 2025",,world_pop
+sum_m_30_2025,"Total population male, ages 30 to 35, 2025",,world_pop
+sum_m_35_2025,"Total population male, ages 35 to 40, 2025",,world_pop
+sum_m_40_2025,"Total population male, ages 40 to 45, 2025",,world_pop
+sum_m_45_2025,"Total population male, ages 45 to 50, 2025",,world_pop
+sum_m_50_2025,"Total population male, ages 50 to 55, 2025",,world_pop
+sum_m_55_2025,"Total population male, ages 55 to 60, 2025",,world_pop
+sum_m_60_2025,"Total population male, ages 60 to 65, 2025",,world_pop
+sum_m_65_2025,"Total population male, ages 65 to 70, 2025",,world_pop
+sum_m_70_2025,"Total population male, ages 70 to 75, 2025",,world_pop
+sum_m_75_2025,"Total population male, ages 75 to 80, 2025",,world_pop
+sum_m_80_2025,"Total population male, ages 80 to 85, 2025",,world_pop
+sum_m_85_2025,"Total population male, ages 85 to 90, 2025",,world_pop
+sum_m_90_2025,"Total population male, ages 90 and above, 2025",,world_pop
+sum_pop_2015,"Total population, 2015",,world_pop
+sum_pop_2016,"Total population, 2016",,world_pop
+sum_pop_2017,"Total population, 2017",,world_pop
+sum_pop_2018,"Total population, 2018",,world_pop
+sum_pop_2019,"Total population, 2019",,world_pop
+sum_pop_2020,"Total population, 2020",,world_pop
+sum_pop_2021,"Total population, 2021",,world_pop
+sum_pop_2022,"Total population, 2022",,world_pop
+sum_pop_2023,"Total population, 2023",,world_pop
+sum_pop_2024,"Total population, 2024",,world_pop
+sum_pop_2025,"Total population, 2025",,world_pop
+sum_pop_2026,"Total population, 2026",,world_pop
+sum_pop_2027,"Total population, 2027",,world_pop
+sum_pop_2028,"Total population, 2028",,world_pop
+sum_pop_2029,"Total population, 2029",,world_pop
+sum_pop_2030,"Total population, 2030",,world_pop
+sum_f_2025,"Total female population, all ages, 2025",,world_pop
+sum_m_2025,"Total male population, all ages, 2025",,world_pop

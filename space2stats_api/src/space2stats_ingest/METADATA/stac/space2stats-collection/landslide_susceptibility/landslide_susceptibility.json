@@ -41,13 +41,15 @@
   ],
   "properties": {
     "name": "Landslide Susceptibility Index",
-    "description": "Global landslide susceptibility raster (relative index) intended for regional screening and landslide nowcasting workflows. ",
+    "description": "Global landslide susceptibility raster (relative index) intended for regional screening and landslide nowcasting workflows.",
     "methodological_notes": "Derived from a heuristic/fuzzy overlay of static factors including terrain slope, geology, proximity to faults and roads, and forest loss.",
     "source_data": "NASA GPM Landslides Program — Global Landslide Susceptibility Map (GeoTIFF). (https://gpm.nasa.gov/sites/default/files/downloads/global-landslide-susceptibility-map-2-27-23.tif)",
-    "sci:citation": "Stanley, T., & Kirschbaum, D. B. (2017). A heuristic approach to global landslide susceptibility mapping. Natural Hazards, 87(1), 145–164. doi:10.1007/s11069-017-2757-y ",
+    "sci:citation": "Stanley, T., & Kirschbaum, D. B. (2017). A heuristic approach to global landslide susceptibility mapping. Natural Hazards, 87(1), 145–164. doi:10.1007/s11069-017-2757-y",
     "method": "mean",
     "resolution": "30 arc-seconds (~1km)",
     "themes": "Landslides",
+    "start_datetime": "2017-01-01T00:00:00Z",
+    "end_datetime": "2017-12-31T00:00:00Z",
     "table:columns": [
       {
         "name": "hex_id",
@@ -60,7 +62,7 @@
         "type": "float64"
       }
     ],
-    "datetime": "2026-02-08T18:21:53.658868Z"
+    "datetime": null
   },
   "links": [
     {
