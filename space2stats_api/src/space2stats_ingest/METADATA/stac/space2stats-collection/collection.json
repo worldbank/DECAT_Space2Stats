@@ -48,21 +48,9 @@
     },
     {
       "rel": "item",
-      "href": "./landslide_susceptibility/landslide_susceptibility.json",
-      "type": "application/json",
-      "title": "Landslide Susceptibility Index"
-    },
-    {
-      "rel": "item",
       "href": "./world_pop/world_pop.json",
       "type": "application/json",
       "title": "Population"
-    },
-    {
-      "rel": "item",
-      "href": "./cyclones/cyclones.json",
-      "type": "application/json",
-      "title": "Tropical Cyclone Frequency"
     },
     {
       "rel": "item",
@@ -81,6 +69,12 @@
       "href": "./fires/fires.json",
       "type": "application/json",
       "title": "Fire Density"
+    },
+    {
+      "rel": "item",
+      "href": "./landslide_susceptibility/landslide_susceptibility.json",
+      "type": "application/json",
+      "title": "Landslide Susceptibility Index"
     }
   ],
   "Title": "Space2Stats Database",

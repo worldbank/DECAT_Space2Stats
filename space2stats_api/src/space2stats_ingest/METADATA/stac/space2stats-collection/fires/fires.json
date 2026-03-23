@@ -41,13 +41,15 @@
   ],
   "properties": {
     "name": "Fire Density",
-    "description": "Average global fire-event density (expected fire events per 0.1° pixel per year; values scaled ×100), averaged over 1997–2010.\n",
-    "methodological_notes": "UNEP/GRID-Europe aggregated monthly World Fire Atlas (ESA-ESRIN) fire detections into a global mean fire-density raster for 1997–2010.",
-    "source_data": "World Fire Atlas (WFA, ESA-ESRIN) monthly products (modified algorithm 1), compiled and processed by UNEP/GRID-Europe into global fire density (1997–2010).",
-    "sci:citation": "UNEP/GRID-Geneva/Europe. Fires density 1997–2010 (derived from ESA-ESRIN World Fire Atlas).",
-    "method": "sum",
-    "resolution": "0.1 decimal degree (~11 km)\n",
+    "description": "Fire density (number of fires/km²)",
+    "methodological_notes": "count of fires per km2 occurred into pixels ",
+    "source_data": "NASA MODIS Fire data (https://firms.modaps.eosdis.nasa.gov/active_fire/ )",
+    "sci:citation": "L Giglio, W Schroeder, CO Justice. Remote sensing of environment 178, 31-41, 2016. 1625, 2016. The Collection 6 MODIS burned area mapping algorithm and product.",
+    "method": "mean",
+    "resolution": "0.1 deg",
     "themes": "Fires",
+    "start_datetime": "2003-01-01T00:00:00Z",
+    "end_datetime": "2025-12-31T00:00:00Z",
     "table:columns": [
       {
         "name": "hex_id",
@@ -60,7 +62,7 @@
         "type": "float64"
       }
     ],
-    "datetime": "2026-02-25T20:20:37.073528Z"
+    "datetime": null
   },
   "links": [
     {

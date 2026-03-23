@@ -1,0 +1,48 @@
+Group,Field,Value
+Identification,Title,Space2Stats Database
+Identification,Identifier,GLO_2024_SPACE2STATS_GEO_v01
+Identification,Hierarchy level,dataset
+Identification,Edition,v.1
+Identification,Edition Date,"45,541"
+Identification,Status,
+Identification,Language,ENG
+Identification,Characterset,utf-8
+Identification,Date,
+Identification,"45,541",creation
+Identification,Graphic overview,
+Identification,Responsible party,"Ben Stewart (Task Leader), Andres Chamorro (Collaborator), Development Data Group (DECDG), World Bank"
+Identification,Presentation form,API
+Identification,Series name,Space2Stats Hexagonal Grid Database
+Identification,Citation,
+Identification,Abstract,"This database contains geospatial statistics for the entire globe standardized to a hexagonal grid. The spatial unit of the dataset is the H3 level 6 (approximately 36 sq. km. per cell). The variables cover a wide range of geographic themes relevant to international development, including demographic, socio-economic, environmental, climate, and infrastructure. An API enables users to query, access, and aggregate statistics from the Space2Stats database."
+Identification,Purpose,The purpose of this API is to facilitate the generation of sub-national geospatial aggregates for any administrative boundary set.
+Identification,Point of contact,"Andres Chamorro (Collaborator)
+World Bank, Development Data Group (DECDG)
+achamorroelizond@worldbank.org"
+Identification,Resource maintenance,
+Identification,Update frequency,As needed
+Identification,Descriptive keywords,?
+Identification,Spatial representation type,vector
+Spatial extent,Place,Global
+Spatial extent,East,180.00
+Spatial extent,West,-180.00
+Spatial extent,North,89.99
+Spatial extent,South,-89.99
+Spatial extent,Reference system,
+Spatial extent,Code,"4,326"
+Spatial extent,Code space,EPSG
+Constraints,Access constraints,unrestricted
+Constraints,Use constraints,unrestricted
+Constraints,Use limitations,The information contained in this dataset is for general information purpose only.
+Distribution,Distribution format,
+Distribution,Name,json
+Distribution,Specification,API response. Docs: https://space2stats.ds.io/docs
+Distribution,Distributor,Development Seed
+Data quality,Lineage statement,TBD: description of dataset creation
+Data quality,Lineage process step,TBD: methodology
+Data quality,Processor,GOST and DevSeed
+Metadata,Metadata standard,ISO 19115-1:2014
+Metadata,Date stamp,"45,541"
+Metadata,Language,ENG
+Metadata,Contacts,"Andres Chamorro (collaborator)
+World Bank, Development Data Group (DECDG)"

@@ -1,13 +1,13 @@
 import argparse
-import json
+import csv
 import os
 from datetime import datetime
 from os.path import join
-from typing import Dict
+from typing import Dict, List
 
 import git
-import pandas as pd
 import pyarrow as pa
+from dateutil.parser import parse as dtparse  # type: ignore[import-untyped]
 from pyarrow.parquet import ParquetFile
 from pystac import Asset, CatalogType, Collection, Item
 from pystac.extensions.table import TableExtension
@@ -36,37 +36,23 @@ def get_types(parquet_file: str):
     return column_types
 
 
-# Function to save an updated dictionary of column types. Will not be used for now.
-def save_parquet_types_to_json(parquet_file: str):
-    git_root = get_git_root()
-    json_file = join(
-        git_root, "space2stats_api/src/space2stats_ingest/METADATA/types.json"
+def _read_csv(path: str) -> List[dict]:
+    """Read a CSV file and return a list of row dicts."""
+    with open(path, newline="") as f:
+        return list(csv.DictReader(f))
+
+
+# Function to load metadata from CSV files
+def load_metadata(metadata_dir: str) -> Dict[str, object]:
+    feature_rows = _read_csv(
+        join(metadata_dir, "Space2Stats_Metadata_Feature_Catalog.csv")
     )
-    df = pd.read_parquet(parquet_file, nrow=10)
+    sources = _read_csv(join(metadata_dir, "Space2Stats_Metadata_Sources.csv"))
 
-    # Get the column names and their types
-    column_types = {col: str(df[col].dtype) for col in df.columns}
+    # Build feature_catalog as a dict keyed by variable name
+    feature_catalog = {row["variable"]: row for row in feature_rows}
 
-    # Save the column types to a JSON file
-    with open(json_file, "r+") as f:
-        data_types = json.load(f)  # Read the existing data
-        data_types.update(column_types)  # Update with new columns
-        f.seek(0)  # Move to the start of the file
-        json.dump(data_types, f, indent=4)  # Write updated data
-        f.truncate()
-
-    print(f"Column types saved to {json_file}")
-
-
-# Function to load metadata from the Excel file
-def load_metadata(file: str) -> Dict[str, pd.DataFrame]:
-    overview = pd.read_excel(file, sheet_name="DDH Dataset", index_col="Field")
-    nada = pd.read_excel(file, sheet_name="NADA", index_col="Field")
-    feature_catalog = pd.read_excel(file, sheet_name="Feature Catalog")
-    sources = pd.read_excel(file, sheet_name="Sources")
     return {
-        "overview": overview,
-        "nada": nada,
         "feature_catalog": feature_catalog,
         "sources": sources,
     }
@@ -79,10 +65,10 @@ def load_existing_collection(collection_path: str) -> Collection:
 
 # Function to create a new STAC item
 def create_new_item(
-    sources: pd.DataFrame,
+    sources: List[dict],
     column_types: dict,
     item_id: str,
-    feature_catalog: pd.DataFrame,
+    feature_catalog: Dict[str, dict],
 ) -> tuple[Item, str]:
     # Define geometry and bounding box (you may want to customize these)
     geom = {
@@ -105,12 +91,15 @@ def create_new_item(
     ]
 
     # Get metadata for the new item
-    try:
-        src_metadata = sources[sources["Item"] == item_id].iloc[0]
-    except IndexError:
+    src_metadata = None
+    for row in sources:
+        if row["Item"] == item_id:
+            src_metadata = row
+            break
+    if src_metadata is None:
         raise IndexError(f"Item '{item_id}' not found in the metadata sources sheet")
 
-    if pd.isna(src_metadata["End Date"]):
+    if not src_metadata["Start Date"] or not src_metadata["End Date"]:
         # Define the item
         item = Item(
             id=item_id,
@@ -134,13 +123,16 @@ def create_new_item(
         )
     else:
         # Define the item with a time range
+        def _parse_date(val):
+            return dtparse(str(val).strip())
+
         item = Item(
             id=item_id,
             geometry=geom,
             bbox=bbox,
             datetime=None,
-            start_datetime=src_metadata["Start Date"],
-            end_datetime=src_metadata["End Date"],
+            start_datetime=_parse_date(src_metadata["Start Date"]),
+            end_datetime=_parse_date(src_metadata["End Date"]),
             properties={
                 "name": src_metadata["Name"],
                 "description": src_metadata["Description"],
@@ -163,7 +155,7 @@ def create_new_item(
     table_extension.columns = [
         {
             "name": col,
-            "description": feature_catalog.loc[col, "description"],
+            "description": feature_catalog[col]["description"],
             "type": dtype,
         }
         for col, dtype in column_types.items()
@@ -205,24 +197,28 @@ def main():
 
     # Paths and metadata setup
     collection_path = join(metadata_dir, "stac/space2stats-collection/collection.json")
-    excel_path = join(metadata_dir, "Space2Stats Metadata Content.xlsx")
     column_types = get_types(input_parquet)
 
-    # Load metadata and column types
-    metadata = load_metadata(excel_path)
+    # Load metadata from CSVs
+    metadata = load_metadata(join(metadata_dir, "metadata_content"))
     feature_catalog = metadata["feature_catalog"]
 
     # Find item name and metadata based on column names
-    feature_catalog.set_index("variable", inplace=True)
-    try:
-        feature_catalog = feature_catalog.loc[column_types.keys()]
-    except KeyError as e:
-        raise KeyError(f"Column '{e}' not found in the metadata feature catalog sheet")
-    item_ids = feature_catalog["item"].unique()
-    item_id = [id for id in item_ids if id != "all"]
-    if len(item_id) != 1:
-        raise ValueError(f"Expected one item name, found {len(item_id)}")
-    item_id = item_id[0]
+    for col in column_types:
+        if col not in feature_catalog:
+            raise KeyError(
+                f"Column '{col}' not found in the metadata feature catalog sheet"
+            )
+    item_ids = {feature_catalog[col]["item"] for col in column_types}
+    item_ids.discard("all")
+    if len(item_ids) != 1:
+        raise ValueError(f"Expected one item name, found {len(item_ids)}")
+    item_id = item_ids.pop()
+
+    # Filter feature_catalog to only columns in the parquet
+    feature_catalog = {
+        col: feature_catalog[col] for col in column_types if col in feature_catalog
+    }
 
     # Load existing collection
     collection = load_existing_collection(collection_path)

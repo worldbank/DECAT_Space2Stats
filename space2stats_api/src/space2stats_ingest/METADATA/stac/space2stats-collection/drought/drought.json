@@ -48,7 +48,7 @@
     "method": "mean",
     "resolution": "~0.5 degree (~55 km)",
     "themes": "Drought",
-    "start_datetime": "2002-01-01T00:00:00Z",
+    "start_datetime": "1998-01-01T00:00:00Z",
     "end_datetime": "2018-12-31T00:00:00Z",
     "table:columns": [
       {
