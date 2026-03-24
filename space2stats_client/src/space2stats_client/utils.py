@@ -1,3 +1,4 @@
+from io import BytesIO
 import json
 import urllib.parse
 import urllib.request
@@ -5,9 +6,10 @@ from typing import Optional
 
 import geopandas as gpd
 import pandas as pd
+import requests
 
 
-def download_esri_boundaries(url, layer, iso3) -> gpd.GeoDataFrame:
+def download_esri_boundaries(url, layer, iso3, verify_ssl=True) -> gpd.GeoDataFrame:
     """Download admin boundaries from ESRI REST API
 
     Parameters
@@ -91,7 +93,8 @@ def download_esri_boundaries(url, layer, iso3) -> gpd.GeoDataFrame:
         all_qs = urllib.parse.urlencode(all_params)
         all_url = f"{query_url}?{all_qs}"
         try:
-            return gpd.read_file(all_url)
+            response = requests.get(all_url, verify=verify_ssl) # <--- Use verify_ssl parameter
+            return gpd.read_file(BytesIO(response.content))
         except Exception as e:
             raise RuntimeError(
                 f"Failed to read GeoJSON for single-page download ({all_url}): {e}"

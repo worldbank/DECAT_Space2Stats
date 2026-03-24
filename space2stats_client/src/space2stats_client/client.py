@@ -185,7 +185,7 @@ class Space2StatsClient:
                 raise ValueError(
                     f"Invalid administrative level '{adm}'. Must be one of: {list(layer_map.keys())}"
                 )
-            return download_esri_boundaries(esri_url, layer, iso3)
+            return download_esri_boundaries(esri_url, layer, iso3, verify_ssl=self.verify_ssl)
         elif source == "GB":
             url = f"https://www.geoboundaries.org/api/current/gbOpen/{iso3}/{adm}/"
             try:
