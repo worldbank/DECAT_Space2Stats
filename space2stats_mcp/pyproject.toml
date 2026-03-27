@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "space2stats-mcp"
+version = "0.1.0"
+description = "MCP server for querying World Bank Space2Stats spatial statistics"
+authors = [{name = "Gabe Levin", email = "glevin@worldbank.org"}]
+license = {text = "World Bank Master Community License Agreement"}
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "requests>=2.25.0",
+    "pystac>=1.0.0",
+]
+requires-python = ">=3.10"
+
+[project.scripts]
+space2stats-mcp = "space2stats_mcp.server:main"
