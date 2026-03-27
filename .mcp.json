@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "space2stats": {
+      "command": "space2stats-mcp",
+      "args": []
+    }
+  }
+}
