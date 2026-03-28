@@ -133,13 +133,13 @@ Gets timeseries data for specific H3 hexagon IDs.
 
 Access pre-computed administrative level 2 (ADM2) summaries from the World Bank Development Data Hub.
 
-### `get_adm2_dataset_info()`
-Returns information about available ADM2 datasets.
-- **Returns:** DataFrame with dataset names, resource IDs, descriptions, and URLs
+### `get_adm2_datasets()`
+Returns information about available ADM2 datasets from the World Bank DDH catalog.
+- **Returns:** DataFrame indexed by dataset name with columns: `description`, `metadata`, `resources` (dict of year → resource ID), and `data_urls` (dict of year → full API URL)
 
 ---
 
-### `get_adm2_summaries(dataset, iso3_filter=None)`
+### `get_adm2_summaries(dataset, year=None, iso3_filter=None)`
 Retrieves ADM2-level summary statistics from the World Bank DDH API.
 - **Parameters:**
   - `dataset`: Dataset to retrieve. Options:
@@ -147,6 +147,7 @@ Retrieves ADM2-level summary statistics from the World Bank DDH API.
     - `"nighttimelights"`: Nighttime lights intensity data (satellite-derived luminosity)
     - `"population"`: Population statistics (demographic data)
     - `"flood_exposure"`: Flood exposure risk data (flood hazard and exposure metrics)
+  - `year`: Optional year/version of the dataset. Defaults to the latest available. See `get_adm2_datasets()` for available years.
   - `iso3_filter`: Optional ISO3 country code to filter by (e.g., 'USA', 'BRA', 'IND')
   - `verbose`: Optional boolean to display progress messages
 - **Returns:** DataFrame containing ADM2-level statistics records
@@ -314,15 +315,16 @@ timeseries = client.get_timeseries(
     geometry="polygon"         # Optional
 )
 
+# Browse available ADM2 datasets
+adm2_info = client.get_adm2_datasets()
+print(adm2_info)
+
 # Get ADM2 summaries for a specific country
 adm2_pop = client.get_adm2_summaries(
     dataset="population",
-    iso3_filter="USA"  # Optional country filter
+    year="2020",           # Optional year selection
+    iso3_filter="USA"      # Optional country filter
 )
-
-# Get all available ADM2 datasets info
-adm2_info = client.get_adm2_dataset_info()
-print(adm2_info)
 ```
 ## Documentation
 
