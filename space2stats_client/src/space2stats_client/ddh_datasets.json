@@ -1,0 +1,33 @@
+{
+  "base_url": "https://datacatalogapi.worldbank.org/ddhxext/v3/resources",
+  "datasets": {
+    "urbanization": {
+      "description": "Urban and rural settlement data - GHS settlement model data",
+      "metadata": "https://datacatalog.worldbank.org/search/dataset/DR0095357",
+      "datasets": {
+        "2012": "DR0095357"
+      }
+    },
+    "nighttimelights": {
+      "description": "Nighttime lights intensity data - satellite-derived luminosity measurements",
+      "metadata": "https://datacatalog.worldbank.org/search/dataset/DR0095356",
+      "datasets": {
+        "2020": "DR0095356"
+      }
+    },
+    "population": {
+      "description": "Population statistics - demographic data",
+      "metadata": "https://datacatalog.worldbank.org/search/dataset/DR0095354",
+      "datasets": {
+        "2020": "DR0095354"
+      }
+    },
+    "flood_exposure": {
+      "description": "Flood exposure risk data - flood hazard and exposure metrics",
+      "metadata": "https://datacatalog.worldbank.org/search/dataset/DR0095355",
+      "datasets": {
+        "2020": "DR0095355"
+      }
+    }
+  }
+}

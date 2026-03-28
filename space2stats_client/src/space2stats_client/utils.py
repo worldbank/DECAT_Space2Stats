@@ -1,7 +1,7 @@
-from io import BytesIO
 import json
 import urllib.parse
 import urllib.request
+from io import BytesIO
 from typing import Optional
 
 import geopandas as gpd
@@ -93,7 +93,9 @@ def download_esri_boundaries(url, layer, iso3, verify_ssl=True) -> gpd.GeoDataFr
         all_qs = urllib.parse.urlencode(all_params)
         all_url = f"{query_url}?{all_qs}"
         try:
-            response = requests.get(all_url, verify=verify_ssl) # <--- Use verify_ssl parameter
+            response = requests.get(
+                all_url, verify=verify_ssl
+            )  # <--- Use verify_ssl parameter
             return gpd.read_file(BytesIO(response.content))
         except Exception as e:
             raise RuntimeError(

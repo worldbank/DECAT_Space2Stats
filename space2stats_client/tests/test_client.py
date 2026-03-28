@@ -266,16 +266,17 @@ def test_handle_api_error_503(mock_error_response_503):
     assert str(exc_info.value).strip() == expected_message
 
 
-def test_get_adm2_dataset_info():
-    """Test get_adm2_dataset_info returns correct DataFrame structure."""
+def test_get_adm2_datasets():
+    """Test get_adm2_datasets returns correct DataFrame structure."""
     client = Space2StatsClient()
-    result = client.get_adm2_dataset_info()
+    result = client.get_adm2_datasets()
 
     assert isinstance(result, pd.DataFrame)
-    assert len(result) == 4  # Four datasets available
+    assert result.index.name == "dataset"
+    assert len(result) == 4
 
     # Check required columns
-    expected_columns = ["dataset", "resource_id", "description", "url"]
+    expected_columns = ["description", "metadata", "resources", "data_urls"]
     for col in expected_columns:
         assert col in result.columns
 
@@ -287,10 +288,22 @@ def test_get_adm2_dataset_info():
         "flood_exposure",
     ]
     for dataset in expected_datasets:
-        assert dataset in result["dataset"].values
+        assert dataset in result.index
 
-    # Check resource IDs format
-    assert all(result["resource_id"].str.startswith("DR"))
+    # Check resources are dicts with resource IDs
+    for dataset in expected_datasets:
+        resources = result.loc[dataset, "resources"]
+        assert isinstance(resources, dict)
+        assert len(resources) > 0
+        for rid in resources.values():
+            assert rid.startswith("DR")
+
+    # Check data_urls are constructed correctly
+    for dataset in expected_datasets:
+        data_urls = result.loc[dataset, "data_urls"]
+        assert isinstance(data_urls, dict)
+        for url in data_urls.values():
+            assert "datacatalogapi.worldbank.org" in url
 
 
 def test_get_adm2_summaries_invalid_dataset():
@@ -298,6 +311,22 @@ def test_get_adm2_summaries_invalid_dataset():
     client = Space2StatsClient()
     with pytest.raises(ValueError, match="Invalid dataset. Must be one of:"):
         client.get_adm2_summaries(dataset="invalid_dataset")
+
+
+def test_get_adm2_summaries_invalid_year():
+    """Test that invalid year raises ValueError."""
+    client = Space2StatsClient()
+    with pytest.raises(ValueError, match="Year .* not available for"):
+        client.get_adm2_summaries(dataset="population", year="9999")
+
+
+def test_get_adm2_summaries_with_year(mock_adm2_response):
+    """Test get_adm2_summaries with explicit year parameter."""
+    client = Space2StatsClient()
+    result = client.get_adm2_summaries(dataset="population", year="2020")
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) > 0
 
 
 def test_get_adm2_summaries_population(mock_adm2_response):
