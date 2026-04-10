@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple
 
 import geopandas as gpd
 import ipywidgets as widgets
-from ipyleaflet import DrawControl, Map
+from ipyleaflet import DrawControl, Map, basemaps
 from IPython.display import display
 
 
@@ -81,15 +81,19 @@ class AOISelector:
         ```
     """
 
-    def __init__(self, center: Tuple[float, float] = (27.0, 29.7), zoom: int = 6):
+    def __init__(
+        self, center: Tuple[float, float] = (27.0, 29.7), zoom: int = 6, basemap=None
+    ):
         """Initialize the AOI selector widget.
 
         Args:
             center: Initial map center as (lat, lon) tuple
             zoom: Initial zoom level
+            basemap: Basemap tile layer (default: CartoDB Positron)
         """
         self.center = center
         self.zoom = zoom
+        self.basemap = basemap or basemaps.CartoDB.Positron
 
         # Create the AOI container that will be populated
         self.aoi_container = AOIContainer()
@@ -105,7 +109,7 @@ class AOISelector:
         self.info_display = widgets.HTML()
 
         # Initialize map
-        self.map_widget = Map(center=self.center, zoom=self.zoom)
+        self.map_widget = Map(center=self.center, zoom=self.zoom, basemap=self.basemap)
 
         # Create drawing control
         self.draw_control = DrawControl(
