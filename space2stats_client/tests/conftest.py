@@ -56,6 +56,7 @@ def mock_api_response(mocker, mock_catalog):
     def mock_response(*args, **kwargs):
         mock = mocker.Mock()
         mock.status_code = 200
+        mock.content = b"{}"
 
         if "geoboundaries.org" in str(args[0]):
             mock.json.return_value = {
