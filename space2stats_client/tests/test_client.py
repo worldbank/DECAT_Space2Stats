@@ -368,6 +368,19 @@ def test_get_adm2_summaries_flood_exposure(mock_adm2_response):
         assert col in result.columns
 
 
+def test_get_adm2_summaries_pagination(mock_adm2_paginated_response):
+    """Test that get_adm2_summaries paginates through all records."""
+    client = Space2StatsClient()
+    result = client.get_adm2_summaries(dataset="population")
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result) == 5  # All 5 records across 3 pages (2 + 2 + 1)
+
+    # Verify all counties are present
+    expected_names = [f"County_{i}" for i in range(5)]
+    assert sorted(result["ADM2_NAME"].tolist()) == sorted(expected_names)
+
+
 def test_get_adm2_summaries_http_error(mock_adm2_error_response):
     """Test get_adm2_summaries handles HTTP errors properly."""
     client = Space2StatsClient()
