@@ -41,6 +41,9 @@ Homepage = "https://github.com/worldbank/DECAT_Space2Stats.git"
 Documentation = "https://worldbank.github.io/DECAT_Space2Stats/"
 Repository = "https://github.com/worldbank/DECAT_Space2Stats.git"
 
+[tool.setuptools.package-data]
+space2stats_client = ["*.json"]
+
 [tool.poetry.group.test.dependencies]
 pytest = "*"
 pytest-mock = "*"
