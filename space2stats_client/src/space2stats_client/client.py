@@ -683,21 +683,28 @@ class Space2StatsClient:
             params["filter"] = f"ISO3='{iso3_filter}'"
 
         try:
-            response = requests.get(
-                url, params=params, verify=self.verify_ssl, timeout=30.0
-            )
-            response.raise_for_status()
+            all_records = []
 
-            data = response.json()
-            records = data.get("value", [])
+            while True:
+                params["skip"] = len(all_records)
 
-            if verbose:
-                total_count = data.get("count", len(records))
-                print(
-                    f"Retrieved {len(records)} records (total available: {total_count})"
+                response = requests.get(
+                    url, params=params, verify=self.verify_ssl, timeout=30.0
                 )
+                response.raise_for_status()
 
-            return pd.DataFrame(records)
+                data = response.json()
+                records = data.get("value", [])
+                total_count = data.get("count", len(records))
+                all_records.extend(records)
+
+                if verbose:
+                    print(f"Retrieved {len(all_records)} of {total_count} records...")
+
+                if len(all_records) >= total_count or len(records) == 0:
+                    break
+
+            return pd.DataFrame(all_records)
 
         except requests.HTTPError as e:
             raise Exception(f"Failed to fetch data from World Bank DDH API: {e}")
