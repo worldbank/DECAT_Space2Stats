@@ -3,6 +3,7 @@
 import inspect
 import json
 import urllib
+from pathlib import Path
 from typing import Dict, List, Literal, Optional
 
 import geopandas as gpd
@@ -11,6 +12,10 @@ import requests
 from pystac import Catalog
 
 from .utils import download_esri_boundaries
+
+_DDH_CONFIG_PATH = Path(__file__).parent / "ddh_datasets.json"
+with open(_DDH_CONFIG_PATH, encoding="utf-8") as _f:
+    _DDH_CONFIG = json.load(_f)
 
 
 class Space2StatsClient:
@@ -604,22 +609,13 @@ class Space2StatsClient:
         return pd.DataFrame(timeseries_data)
 
     # ADM2 Summaries functionality for World Bank DDH API
-    WORLD_BANK_DDH_DATASETS = {
-        "urbanization": "DR0095357",
-        "nighttimelights": "DR0095356",
-        "population": "DR0095354",
-        "flood_exposure": "DR0095355",
-    }
-
-    WORLD_BANK_DDH_BASE_URL = (
-        "https://datacatalogapi.worldbank.org/ddhxext/v3/resources"
-    )
 
     def get_adm2_summaries(
         self,
         dataset: Literal[
             "urbanization", "nighttimelights", "population", "flood_exposure"
         ],
+        year: Optional[str] = None,
         iso3_filter: Optional[str] = None,
         verbose: bool = True,
     ) -> pd.DataFrame:
@@ -633,6 +629,9 @@ class Space2StatsClient:
             - "nighttimelights": Nighttime lights intensity data
             - "population": Population statistics
             - "flood_exposure": Flood exposure risk data
+        year : Optional[str]
+            The year/version of the dataset to retrieve. If None, defaults to the
+            latest available year. Available years can be found via get_adm2_datasets().
         iso3_filter : Optional[str]
             ISO3 country code to filter by (e.g., 'AND' for Andorra, 'USA' for United States)
         verbose : bool
@@ -646,22 +645,37 @@ class Space2StatsClient:
         Raises
         ------
         ValueError
-            If an invalid dataset is specified
+            If an invalid dataset or year is specified
         Exception
             If the API request fails
         """
-        if dataset not in self.WORLD_BANK_DDH_DATASETS:
+        datasets_config = _DDH_CONFIG["datasets"]
+        base_url = _DDH_CONFIG["base_url"]
+
+        if dataset not in datasets_config:
             raise ValueError(
-                f"Invalid dataset. Must be one of: {list(self.WORLD_BANK_DDH_DATASETS.keys())}"
+                f"Invalid dataset. Must be one of: {list(datasets_config.keys())}"
             )
+
+        available_resources = datasets_config[dataset]["datasets"]
+
+        if year is not None:
+            if year not in available_resources:
+                raise ValueError(
+                    f"Year '{year}' not available for '{dataset}'. "
+                    f"Available: {list(available_resources.keys())}"
+                )
+            resource_id = available_resources[year]
+        else:
+            # Default to the latest (last) entry
+            resource_id = list(available_resources.values())[-1]
 
         if verbose:
             print(f"Fetching {dataset} data from World Bank DDH API...")
             if iso3_filter:
                 print(f"Filtering by ISO3: {iso3_filter}")
 
-        resource_id = self.WORLD_BANK_DDH_DATASETS[dataset]
-        url = f"{self.WORLD_BANK_DDH_BASE_URL}/{resource_id}/data"
+        url = f"{base_url}/{resource_id}/data"
 
         # Build query parameters
         params = {}
@@ -690,39 +704,34 @@ class Space2StatsClient:
         except Exception as e:
             raise Exception(f"Error processing World Bank DDH API response: {e}")
 
-    def get_adm2_dataset_info(self) -> pd.DataFrame:
-        """Get information about available ADM2 datasets.
+    def get_adm2_datasets(self) -> pd.DataFrame:
+        """Get information about available ADM2 datasets from the World Bank DDH catalog.
 
         Returns
         -------
         DataFrame
-            A DataFrame with information about each available ADM2 dataset
+            A DataFrame indexed by dataset name with columns:
+            - description: Human-readable description of the dataset
+            - metadata: Link to the DDH catalog page
+            - resources: Dict of year/version to resource ID
+            - data_urls: Dict of year/version to full API data URL
         """
-        datasets_info = [
-            {
-                "dataset": "urbanization",
-                "resource_id": "DR0095357",
-                "description": "Urban and rural settlement data - GHS settlement model data",
-                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095357/data",
-            },
-            {
-                "dataset": "nighttimelights",
-                "resource_id": "DR0095356",
-                "description": "Nighttime lights intensity data - satellite-derived luminosity measurements",
-                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095356/data",
-            },
-            {
-                "dataset": "population",
-                "resource_id": "DR0095354",
-                "description": "Population statistics - demographic data",
-                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095354/data",
-            },
-            {
-                "dataset": "flood_exposure",
-                "resource_id": "DR0095355",
-                "description": "Flood exposure risk data - flood hazard and exposure metrics",
-                "url": f"{self.WORLD_BANK_DDH_BASE_URL}/DR0095355/data",
-            },
-        ]
+        datasets_config = _DDH_CONFIG["datasets"]
+        base_url = _DDH_CONFIG["base_url"]
 
-        return pd.DataFrame(datasets_info)
+        rows = []
+        for name, info in datasets_config.items():
+            data_urls = {
+                yr: f"{base_url}/{rid}/data" for yr, rid in info["datasets"].items()
+            }
+            rows.append(
+                {
+                    "dataset": name,
+                    "description": info["description"],
+                    "metadata": info["metadata"],
+                    "resources": info["datasets"],
+                    "data_urls": data_urls,
+                }
+            )
+
+        return pd.DataFrame(rows).set_index("dataset")
