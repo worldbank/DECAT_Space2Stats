@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_89683355096c0171c42f2c92c52d10c8 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_89683355096c0171c42f2c92c52d10c8" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_89683355096c0171c42f2c92c52d10c8 = L.map(
+                "map_89683355096c0171c42f2c92c52d10c8",
+                {
+                    center: [8.262020804601319, -1.1167894778161385],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_89683355096c0171c42f2c92c52d10c8);
+
+            
+
+        
+    
+            var tile_layer_8099c1cceba5d4e071e6db40e28c2b4d = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 16,
+  "maxNativeZoom": 16,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Esri, DeLorme, NAVTEQ",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_8099c1cceba5d4e071e6db40e28c2b4d.addTo(map_89683355096c0171c42f2c92c52d10c8);
+        
+    
+            map_89683355096c0171c42f2c92c52d10c8.fitBounds(
+                [[5.622930402717959, -2.616516686195191], [10.901111206484678, 0.38293773056291425]],
+                {}
+            );
+        
+    
+        function geo_json_2160812c5f8d1ab15a570336d9bdcf64_styler(feature) {
+            switch(feature.id) {
+                case "194430": case "194823": 
+                    return {"color": "#63cb5f", "fillColor": "#63cb5f", "fillOpacity": 0.5, "weight": 2};
+                case "194431": 
+                    return {"color": "#86d549", "fillColor": "#86d549", "fillOpacity": 0.5, "weight": 2};
+                case "194432": 
+                    return {"color": "#33628d", "fillColor": "#33628d", "fillOpacity": 0.5, "weight": 2};
+                case "194433": 
+                    return {"color": "#24878e", "fillColor": "#24878e", "fillOpacity": 0.5, "weight": 2};
+                case "194434": 
+                    return {"color": "#306a8e", "fillColor": "#306a8e", "fillOpacity": 0.5, "weight": 2};
+                case "194435": 
+                    return {"color": "#21a585", "fillColor": "#21a585", "fillOpacity": 0.5, "weight": 2};
+                case "194436": 
+                    return {"color": "#1f978b", "fillColor": "#1f978b", "fillOpacity": 0.5, "weight": 2};
+                case "194437": case "194841": 
+                    return {"color": "#277e8e", "fillColor": "#277e8e", "fillOpacity": 0.5, "weight": 2};
+                case "194438": 
+                    return {"color": "#69cd5b", "fillColor": "#69cd5b", "fillOpacity": 0.5, "weight": 2};
+                case "194439": 
+                    return {"color": "#238a8d", "fillColor": "#238a8d", "fillOpacity": 0.5, "weight": 2};
+                case "194440": 
+                    return {"color": "#b5de2b", "fillColor": "#b5de2b", "fillOpacity": 0.5, "weight": 2};
+                case "194441": 
+                    return {"color": "#5ec962", "fillColor": "#5ec962", "fillOpacity": 0.5, "weight": 2};
+                case "194442": 
+                    return {"color": "#cae11f", "fillColor": "#cae11f", "fillOpacity": 0.5, "weight": 2};
+                case "194443": case "194444": 
+                    return {"color": "#d0e11c", "fillColor": "#d0e11c", "fillOpacity": 0.5, "weight": 2};
+                case "194445": 
+                    return {"color": "#d2e21b", "fillColor": "#d2e21b", "fillOpacity": 0.5, "weight": 2};
+                case "194446": 
+                    return {"color": "#1f968b", "fillColor": "#1f968b", "fillOpacity": 0.5, "weight": 2};
+                case "194448": 
+                    return {"color": "#a0da39", "fillColor": "#a0da39", "fillOpacity": 0.5, "weight": 2};
+                case "194449": 
+                    return {"color": "#32b67a", "fillColor": "#32b67a", "fillOpacity": 0.5, "weight": 2};
+                case "194450": 
+                    return {"color": "#2d718e", "fillColor": "#2d718e", "fillOpacity": 0.5, "weight": 2};
+                case "194451": 
+                    return {"color": "#54c568", "fillColor": "#54c568", "fillOpacity": 0.5, "weight": 2};
+                case "194453": 
+                    return {"color": "#3bbb75", "fillColor": "#3bbb75", "fillOpacity": 0.5, "weight": 2};
+                case "194454": case "194713": 
+                    return {"color": "#40bd72", "fillColor": "#40bd72", "fillOpacity": 0.5, "weight": 2};
+                case "194489": 
+                    return {"color": "#fde725", "fillColor": "#fde725", "fillOpacity": 0.5, "weight": 2};
+                case "194709": 
+                    return {"color": "#2fb47c", "fillColor": "#2fb47c", "fillOpacity": 0.5, "weight": 2};
+                case "194710": 
+                    return {"color": "#1e9b8a", "fillColor": "#1e9b8a", "fillOpacity": 0.5, "weight": 2};
+                case "194723": 
+                    return {"color": "#35b779", "fillColor": "#35b779", "fillOpacity": 0.5, "weight": 2};
+                case "194724": 
+                    return {"color": "#3fbc73", "fillColor": "#3fbc73", "fillOpacity": 0.5, "weight": 2};
+                case "194821": 
+                    return {"color": "#453581", "fillColor": "#453581", "fillOpacity": 0.5, "weight": 2};
+                case "194822": 
+                    return {"color": "#addc30", "fillColor": "#addc30", "fillOpacity": 0.5, "weight": 2};
+                case "194824": 
+                    return {"color": "#60ca60", "fillColor": "#60ca60", "fillOpacity": 0.5, "weight": 2};
+                case "194825": 
+                    return {"color": "#20a486", "fillColor": "#20a486", "fillOpacity": 0.5, "weight": 2};
+                case "194826": 
+                    return {"color": "#1fa088", "fillColor": "#1fa088", "fillOpacity": 0.5, "weight": 2};
+                case "194831": 
+                    return {"color": "#9dd93b", "fillColor": "#9dd93b", "fillOpacity": 0.5, "weight": 2};
+                case "194840": 
+                    return {"color": "#e5e419", "fillColor": "#e5e419", "fillOpacity": 0.5, "weight": 2};
+                case "194842": 
+                    return {"color": "#95d840", "fillColor": "#95d840", "fillOpacity": 0.5, "weight": 2};
+                case "194843": 
+                    return {"color": "#440154", "fillColor": "#440154", "fillOpacity": 0.5, "weight": 2};
+                default:
+                    return {"color": "#84d44b", "fillColor": "#84d44b", "fillOpacity": 0.5, "weight": 2};
+            }
+        }
+        function geo_json_2160812c5f8d1ab15a570336d9bdcf64_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {"fillOpacity": 0.75};
+            }
+        }
+        function geo_json_2160812c5f8d1ab15a570336d9bdcf64_pointToLayer(feature, latlng) {
+            var opts = {
+  "stroke": true,
+  "color": "#3388ff",
+  "weight": 3,
+  "opacity": 1.0,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "#3388ff",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "radius": 10,
+};
+            
+            let style = geo_json_2160812c5f8d1ab15a570336d9bdcf64_styler(feature)
+            Object.assign(opts, style)
+            
+            return new L.CircleMarker(latlng, opts)
+        }
+
+        function geo_json_2160812c5f8d1ab15a570336d9bdcf64_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                            geo_json_2160812c5f8d1ab15a570336d9bdcf64.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_2160812c5f8d1ab15a570336d9bdcf64_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_2160812c5f8d1ab15a570336d9bdcf64 = L.geoJson(null, {
+                onEachFeature: geo_json_2160812c5f8d1ab15a570336d9bdcf64_onEachFeature,
+            
+                style: geo_json_2160812c5f8d1ab15a570336d9bdcf64_styler,
+                pointToLayer: geo_json_2160812c5f8d1ab15a570336d9bdcf64_pointToLayer,
+            ...{
+}
+        });
+
+        function geo_json_2160812c5f8d1ab15a570336d9bdcf64_add (data) {
+            geo_json_2160812c5f8d1ab15a570336d9bdcf64
+                .addData(data);
+        }
+            geo_json_2160812c5f8d1ab15a570336d9bdcf64_add({"bbox": [-2.616516686195191, 5.622930402717959, 0.38293773056291425, 10.901111206484678], "features": [{"bbox": [-1.893910244870435, 9.381994153648831, -1.893910244870435, 9.381994153648831], "geometry": {"coordinates": [-1.893910244870435, 9.381994153648831], "type": "Point"}, "id": "194430", "properties": {"__folium_color": "#63cb5f", "h3_index": "868218057ffffff", "index_right": 0, "most_recent_xco2": 417.1368255615234, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": 401.8116226196289, "xco22017": null, "xco22018": 407.0579476129441, "xco22019": 410.3486785888672, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 417.1368255615234, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.123364473010147, 9.39468076335295, -2.123364473010147, 9.39468076335295], "geometry": {"coordinates": [-2.123364473010147, 9.39468076335295], "type": "Point"}, "id": "194431", "properties": {"__folium_color": "#86d549", "h3_index": "868218167ffffff", "index_right": 0, "most_recent_xco2": 418.51156717936203, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 398.1572774251302, "xco22016": 401.2741012573242, "xco22017": null, "xco22018": 407.9906988809275, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 418.51156717936203, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.6111410754100688, 9.124347528878031, -1.6111410754100688, 9.124347528878031], "geometry": {"coordinates": [-1.6111410754100688, 9.124347528878031], "type": "Point"}, "id": "194432", "properties": {"__folium_color": "#33628d", "h3_index": "8682182d7ffffff", "index_right": 0, "most_recent_xco2": 406.9619995117188, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": 402.7761739095052, "xco22017": null, "xco22018": 406.9619995117188, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.3792193360209022, 9.353548324453213, -1.3792193360209022, 9.353548324453213], "geometry": {"coordinates": [-1.3792193360209022, 9.353548324453213], "type": "Point"}, "id": "194433", "properties": {"__folium_color": "#24878e", "h3_index": "8682186cfffffff", "index_right": 0, "most_recent_xco2": 410.4689331054688, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 407.8456813267299, "xco22019": 410.4689331054688, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.607697710641318, 9.366174024975185, -1.607697710641318, 9.366174024975185], "geometry": {"coordinates": [-1.607697710641318, 9.366174024975185], "type": "Point"}, "id": "194434", "properties": {"__folium_color": "#306a8e", "h3_index": "86821875fffffff", "index_right": 0, "most_recent_xco2": 407.7298583984375, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 407.20052083333337, "xco22019": 407.7298583984375, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.3858894988286172, 9.604042201008333, -2.3858894988286172, 9.604042201008333], "geometry": {"coordinates": [-2.3858894988286172, 9.604042201008333], "type": "Point"}, "id": "194435", "properties": {"__folium_color": "#21a585", "h3_index": "8682189afffffff", "index_right": 0, "most_recent_xco2": 413.255810546875, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 397.2231346908881, "xco22016": null, "xco22017": 406.6460876464844, "xco22018": 407.9573137687914, "xco22019": 408.4893646240234, "xco22020": null, "xco22021": 413.255810546875, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.126048141270833, 9.152229404704373, -2.126048141270833, 9.152229404704373], "geometry": {"coordinates": [-2.126048141270833, 9.152229404704373], "type": "Point"}, "id": "194436", "properties": {"__folium_color": "#1f978b", "h3_index": "868218a1fffffff", "index_right": 0, "most_recent_xco2": 411.9420554801209, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 411.9420554801209, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.1206346535423277, 9.63785355508042, -2.1206346535423277, 9.63785355508042], "geometry": {"coordinates": [-2.1206346535423277, 9.63785355508042], "type": "Point"}, "id": "194437", "properties": {"__folium_color": "#277e8e", "h3_index": "868218c6fffffff", "index_right": 0, "most_recent_xco2": 409.5257975260417, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 398.1514391217913, "xco22016": null, "xco22017": null, "xco22018": 409.5257975260417, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.8840638354352971, 9.616586081941486, -0.8840638354352971, 9.616586081941486], "geometry": {"coordinates": [-0.8840638354352971, 9.616586081941486], "type": "Point"}, "id": "194438", "properties": {"__folium_color": "#69cd5b", "h3_index": "86821a247ffffff", "index_right": 0, "most_recent_xco2": 417.4158020019531, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 417.4158020019531}, "type": "Feature"}, {"bbox": [-0.8802825815213318, 8.60461739406428, -0.8802825815213318, 8.60461739406428], "geometry": {"coordinates": [-0.8802825815213318, 8.60461739406428], "type": "Point"}, "id": "194439", "properties": {"__folium_color": "#238a8d", "h3_index": "86821b267ffffff", "index_right": 0, "most_recent_xco2": 410.6792530732996, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 399.45494358698534, "xco22016": null, "xco22017": 403.9929455566406, "xco22018": null, "xco22019": null, "xco22020": 410.6792530732996, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.8975768363558106, 8.893290382393694, -0.8975768363558106, 8.893290382393694], "geometry": {"coordinates": [-0.8975768363558106, 8.893290382393694], "type": "Point"}, "id": "194440", "properties": {"__folium_color": "#b5de2b", "h3_index": "86821b3a7ffffff", "index_right": 0, "most_recent_xco2": 420.065185546875, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 420.065185546875}, "type": "Feature"}, {"bbox": [-0.6047601777918286, 9.359030408141269, -0.6047601777918286, 9.359030408141269], "geometry": {"coordinates": [-0.6047601777918286, 9.359030408141269], "type": "Point"}, "id": "194441", "properties": {"__folium_color": "#5ec962", "h3_index": "86821b4c7ffffff", "index_right": 0, "most_recent_xco2": 417.0276402064732, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 417.0276402064732, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.6096795648833956, 9.118273778714586, -0.6096795648833956, 9.118273778714586], "geometry": {"coordinates": [-0.6096795648833956, 9.118273778714586], "type": "Point"}, "id": "194442", "properties": {"__folium_color": "#cae11f", "h3_index": "86821b637ffffff", "index_right": 0, "most_recent_xco2": 420.8288269042969, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 408.5228433048024, "xco22019": 409.7345733642578, "xco22020": null, "xco22021": 413.4554443359375, "xco22022": null, "xco22023": null, "xco22024": 420.8288269042969}, "type": "Feature"}, {"bbox": [-0.6145735540803529, 8.878235252294584, -0.6145735540803529, 8.878235252294584], "geometry": {"coordinates": [-0.6145735540803529, 8.878235252294584], "type": "Point"}, "id": "194443", "properties": {"__folium_color": "#d0e11c", "h3_index": "86821b66fffffff", "index_right": 0, "most_recent_xco2": 421.0005798339844, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 398.3099381880327, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 421.0005798339844}, "type": "Feature"}, {"bbox": [-1.3829987676326396, 9.11199855440962, -1.3829987676326396, 9.11199855440962], "geometry": {"coordinates": [-1.3829987676326396, 9.11199855440962], "type": "Point"}, "id": "194444", "properties": {"__folium_color": "#d0e11c", "h3_index": "86821b807ffffff", "index_right": 0, "most_recent_xco2": 421.0180740356445, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 406.2917327880859, "xco22019": 409.5553100585938, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 421.0180740356445}, "type": "Feature"}, {"bbox": [-1.1026100496075144, 8.856116265642909, -1.1026100496075144, 8.856116265642909], "geometry": {"coordinates": [-1.1026100496075144, 8.856116265642909], "type": "Point"}, "id": "194445", "properties": {"__folium_color": "#d2e21b", "h3_index": "86821ba87ffffff", "index_right": 0, "most_recent_xco2": 421.0538558959961, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 421.0538558959961}, "type": "Feature"}, {"bbox": [-1.1161811192466233, 9.38739465816879, -1.1161811192466233, 9.38739465816879], "geometry": {"coordinates": [-1.1161811192466233, 9.38739465816879], "type": "Point"}, "id": "194446", "properties": {"__folium_color": "#1f968b", "h3_index": "86821bc0fffffff", "index_right": 0, "most_recent_xco2": 411.9038391113281, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 399.0990498860677, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 411.9038391113281, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.616516686195191, 9.617011783632531, -2.616516686195191, 9.617011783632531], "geometry": {"coordinates": [-2.616516686195191, 9.617011783632531], "type": "Point"}, "id": "194448", "properties": {"__folium_color": "#a0da39", "h3_index": "86821c287ffffff", "index_right": 0, "most_recent_xco2": 419.4235992431641, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 397.4568001883371, "xco22016": null, "xco22017": null, "xco22018": 407.0958251953125, "xco22019": 408.5930786132813, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 419.4235992431641, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.6123646035730443, 10.106426112723398, -2.6123646035730443, 10.106426112723398], "geometry": {"coordinates": [-2.6123646035730443, 10.106426112723398], "type": "Point"}, "id": "194449", "properties": {"__folium_color": "#32b67a", "h3_index": "86821c457ffffff", "index_right": 0, "most_recent_xco2": 414.8333129882813, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 414.8333129882813, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.3835059989157794, 9.848111057672163, -2.3835059989157794, 9.848111057672163], "geometry": {"coordinates": [-2.3835059989157794, 9.848111057672163], "type": "Point"}, "id": "194450", "properties": {"__folium_color": "#2d718e", "h3_index": "86821c6f7ffffff", "index_right": 0, "most_recent_xco2": 408.3287048339844, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 396.2829322814941, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": 408.3287048339844, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.6144674876780494, 9.861362110797733, -2.6144674876780494, 9.861362110797733], "geometry": {"coordinates": [-2.6144674876780494, 9.861362110797733], "type": "Point"}, "id": "194451", "properties": {"__folium_color": "#54c568", "h3_index": "86821c70fffffff", "index_right": 0, "most_recent_xco2": 416.52117919921875, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 397.7468492780413, "xco22016": 400.4469463641827, "xco22017": 404.329736328125, "xco22018": 406.6476821899414, "xco22019": 408.86326260036896, "xco22020": null, "xco22021": 412.0581708635603, "xco22022": 415.8027648925781, "xco22023": 416.52117919921875, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.6085476711534787, 10.882762452953806, -1.6085476711534787, 10.882762452953806], "geometry": {"coordinates": [-1.6085476711534787, 10.882762452953806], "type": "Point"}, "id": "194453", "properties": {"__folium_color": "#3bbb75", "h3_index": "86821e48fffffff", "index_right": 0, "most_recent_xco2": 415.425173441569, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.425173441569, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.8748706879847163, 10.849960728707332, -1.8748706879847163, 10.849960728707332], "geometry": {"coordinates": [-1.8748706879847163, 10.849960728707332], "type": "Point"}, "id": "194454", "properties": {"__folium_color": "#40bd72", "h3_index": "86821e50fffffff", "index_right": 0, "most_recent_xco2": 415.6942355248236, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.6942355248236, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.4014099301698792, 5.622930402717959, -1.4014099301698792, 5.622930402717959], "geometry": {"coordinates": [-1.4014099301698792, 5.622930402717959], "type": "Point"}, "id": "194489", "properties": {"__folium_color": "#fde725", "h3_index": "86825244fffffff", "index_right": 0, "most_recent_xco2": 422.6322415000514, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 399.7632517496745, "xco22016": null, "xco22017": 403.4863484700521, "xco22018": null, "xco22019": 408.3918678433287, "xco22020": null, "xco22021": 412.3502163357205, "xco22022": 415.6625874837239, "xco22023": null, "xco22024": 422.6322415000514}, "type": "Feature"}, {"bbox": [-0.11029692983575895, 10.642495750593834, -0.11029692983575895, 10.642495750593834], "geometry": {"coordinates": [-0.11029692983575895, 10.642495750593834], "type": "Point"}, "id": "194709", "properties": {"__folium_color": "#2fb47c", "h3_index": "8682a9057ffffff", "index_right": 0, "most_recent_xco2": 414.6983032226563, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 414.6983032226563, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.10458241535182695, 10.887141190111363, -0.10458241535182695, 10.887141190111363], "geometry": {"coordinates": [-0.10458241535182695, 10.887141190111363], "type": "Point"}, "id": "194710", "properties": {"__folium_color": "#1e9b8a", "h3_index": "8682a919fffffff", "index_right": 0, "most_recent_xco2": 412.2604064941406, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 404.4385986328125, "xco22019": null, "xco22020": 412.2604064941406, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.37335627401124527, 10.609722351515634, -0.37335627401124527, 10.609722351515634], "geometry": {"coordinates": [-0.37335627401124527, 10.609722351515634], "type": "Point"}, "id": "194713", "properties": {"__folium_color": "#40bd72", "h3_index": "8682a9b97ffffff", "index_right": 0, "most_recent_xco2": 415.6744079589844, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.6744079589844, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.8829586772435073, 10.886751665033387, -0.8829586772435073, 10.886751665033387], "geometry": {"coordinates": [-0.8829586772435073, 10.886751665033387], "type": "Point"}, "id": "194723", "properties": {"__folium_color": "#35b779", "h3_index": "8682ad2a7ffffff", "index_right": 0, "most_recent_xco2": 415.0161590576172, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.0161590576172, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.1125831556185226, 10.901111206484678, -1.1125831556185226, 10.901111206484678], "geometry": {"coordinates": [-1.1125831556185226, 10.901111206484678], "type": "Point"}, "id": "194724", "properties": {"__folium_color": "#3fbc73", "h3_index": "8682ad337ffffff", "index_right": 0, "most_recent_xco2": 415.5596069335937, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.5596069335937, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.10674258757753348, 6.625167721124579, 0.10674258757753348, 6.625167721124579], "geometry": {"coordinates": [0.10674258757753348, 6.625167721124579], "type": "Point"}, "id": "194821", "properties": {"__folium_color": "#453581", "h3_index": "8682e3057ffffff", "index_right": 0, "most_recent_xco2": 403.4827331542969, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 400.0319671630859, "xco22016": null, "xco22017": 403.4827331542969, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.11262942463720675, 6.857321555912023, 0.11262942463720675, 6.857321555912023], "geometry": {"coordinates": [0.11262942463720675, 6.857321555912023], "type": "Point"}, "id": "194822", "properties": {"__folium_color": "#addc30", "h3_index": "8682e319fffffff", "index_right": 0, "most_recent_xco2": 419.8056640625, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 399.2893350290698, "xco22016": 403.7851257324219, "xco22017": 403.6240958077567, "xco22018": null, "xco22019": null, "xco22020": 412.3336680094401, "xco22021": 411.7226969401042, "xco22022": null, "xco22023": 419.8056640625, "xco22024": null}, "type": "Feature"}, {"bbox": [0.3766217621477754, 6.382301718607175, 0.3766217621477754, 6.382301718607175], "geometry": {"coordinates": [0.3766217621477754, 6.382301718607175], "type": "Point"}, "id": "194823", "properties": {"__folium_color": "#63cb5f", "h3_index": "8682e32d7ffffff", "index_right": 0, "most_recent_xco2": 417.1853755070613, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": 417.1853755070613, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.12178121602001743, 6.346674090207786, 0.12178121602001743, 6.346674090207786], "geometry": {"coordinates": [0.12178121602001743, 6.346674090207786], "type": "Point"}, "id": "194824", "properties": {"__folium_color": "#60ca60", "h3_index": "8682e3357ffffff", "index_right": 0, "most_recent_xco2": 417.1048325758714, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": 403.306282043457, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.072021484375, "xco22022": 417.1048325758714, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.3684250669568164, 6.892632113755896, 0.3684250669568164, 6.892632113755896], "geometry": {"coordinates": [0.3684250669568164, 6.892632113755896], "type": "Point"}, "id": "194825", "properties": {"__folium_color": "#20a486", "h3_index": "8682e345fffffff", "index_right": 0, "most_recent_xco2": 413.2105454154636, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 413.2105454154636, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.38293773056291425, 6.613372125393016, 0.38293773056291425, 6.613372125393016], "geometry": {"coordinates": [0.38293773056291425, 6.613372125393016], "type": "Point"}, "id": "194826", "properties": {"__folium_color": "#1fa088", "h3_index": "8682e375fffffff", "index_right": 0, "most_recent_xco2": 412.7266540527344, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 399.5233450995551, "xco22016": 402.2940368652344, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 412.7266540527344, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.36857566604613873, 9.401230373463276, 0.36857566604613873, 9.401230373463276], "geometry": {"coordinates": [0.36857566604613873, 9.401230373463276], "type": "Point"}, "id": "194831", "properties": {"__folium_color": "#9dd93b", "h3_index": "8682f091fffffff", "index_right": 0, "most_recent_xco2": 419.29028566422, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 406.86470540364587, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 419.29028566422, "xco22024": null}, "type": "Feature"}, {"bbox": [0.10846490146953994, 9.367612087135125, 0.10846490146953994, 9.367612087135125], "geometry": {"coordinates": [0.10846490146953994, 9.367612087135125], "type": "Point"}, "id": "194840", "properties": {"__folium_color": "#e5e419", "h3_index": "8682f421fffffff", "index_right": 0, "most_recent_xco2": 421.6982828776042, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 407.7376098632813, "xco22019": 410.1236907958984, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 416.0593414306641, "xco22024": 421.6982828776042}, "type": "Feature"}, {"bbox": [-0.11713306207540745, 9.380172346373833, -0.11713306207540745, 9.380172346373833], "geometry": {"coordinates": [-0.11713306207540745, 9.380172346373833], "type": "Point"}, "id": "194841", "properties": {"__folium_color": "#277e8e", "h3_index": "8682f432fffffff", "index_right": 0, "most_recent_xco2": 409.5767550227618, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": 409.5767550227618, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.37821153174613636, 9.34646762549598, -0.37821153174613636, 9.34646762549598], "geometry": {"coordinates": [-0.37821153174613636, 9.34646762549598], "type": "Point"}, "id": "194842", "properties": {"__folium_color": "#95d840", "h3_index": "8682f4a2fffffff", "index_right": 0, "most_recent_xco2": 419.0582580566406, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 399.4037984212239, "xco22016": 401.8638916015625, "xco22017": 403.2243499755859, "xco22018": null, "xco22019": 409.0227860950289, "xco22020": null, "xco22021": 414.1557159423828, "xco22022": null, "xco22023": 419.0582580566406, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.6194420507013694, 8.638920009102248, -0.6194420507013694, 8.638920009102248], "geometry": {"coordinates": [-0.6194420507013694, 8.638920009102248], "type": "Point"}, "id": "194843", "properties": {"__folium_color": "#440154", "h3_index": "8682f5967ffffff", "index_right": 0, "most_recent_xco2": 399.9375828334263, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 399.9375828334263, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.3834617105255602, 9.105985293866262, -0.3834617105255602, 9.105985293866262], "geometry": {"coordinates": [-0.3834617105255602, 9.105985293866262], "type": "Point"}, "id": "194844", "properties": {"__folium_color": "#84d44b", "h3_index": "8682f5d27ffffff", "index_right": 0, "most_recent_xco2": 418.4395751953125, "shapeGroup": "GHA", "shapeID": "71095829B95122994846054", "shapeISO": "GHA", "shapeName": "Ghana", "shapeType": "ADM0", "xco22014": null, "xco22015": 398.6669616699219, "xco22016": null, "xco22017": 403.3987121582031, "xco22018": 408.4872286814564, "xco22019": 409.69344135040933, "xco22020": 410.3714218139648, "xco22021": 412.8823705212823, "xco22022": null, "xco22023": 418.4395751953125, "xco22024": null}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+    geo_json_2160812c5f8d1ab15a570336d9bdcf64.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["h3_index", "xco22014", "xco22015", "xco22016", "xco22017", "xco22018", "xco22019", "xco22020", "xco22021", "xco22022", "xco22023", "xco22024", "most_recent_xco2", "index_right", "shapeName", "shapeISO", "shapeID", "shapeGroup", "shapeType"];
+    let aliases = ["h3_index", "xco22014", "xco22015", "xco22016", "xco22017", "xco22018", "xco22019", "xco22020", "xco22021", "xco22022", "xco22023", "xco22024", "most_recent_xco2", "index_right", "shapeName", "shapeISO", "shapeID", "shapeGroup", "shapeType"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+            geo_json_2160812c5f8d1ab15a570336d9bdcf64.addTo(map_89683355096c0171c42f2c92c52d10c8);
+        
+    
+    var color_map_ea9bf99324fcc60061ae9342f7044ffc = {};
+
+    
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.color = d3.scale.threshold()
+              .domain([399.9375828334263, 399.98306311131535, 400.02854338920434, 400.0740236670934, 400.1195039449824, 400.16498422287145, 400.21046450076045, 400.2559447786495, 400.3014250565385, 400.34690533442756, 400.39238561231656, 400.4378658902056, 400.4833461680946, 400.52882644598367, 400.57430672387267, 400.6197870017617, 400.6652672796507, 400.7107475575398, 400.7562278354288, 400.80170811331783, 400.8471883912069, 400.8926686690959, 400.93814894698494, 400.98362922487394, 401.029109502763, 401.074589780652, 401.12007005854105, 401.16555033643004, 401.2110306143191, 401.2565108922081, 401.30199117009715, 401.34747144798615, 401.3929517258752, 401.4384320037642, 401.48391228165326, 401.52939255954226, 401.5748728374313, 401.6203531153203, 401.66583339320937, 401.71131367109837, 401.7567939489874, 401.8022742268765, 401.8477545047655, 401.89323478265453, 401.93871506054353, 401.9841953384326, 402.0296756163216, 402.07515589421064, 402.12063617209964, 402.1661164499887, 402.2115967278777, 402.25707700576675, 402.30255728365574, 402.3480375615448, 402.3935178394338, 402.43899811732285, 402.48447839521185, 402.5299586731009, 402.5754389509899, 402.62091922887896, 402.666399506768, 402.711879784657, 402.75736006254607, 402.80284034043507, 402.8483206183241, 402.8938008962131, 402.9392811741022, 402.9847614519912, 403.03024172988023, 403.07572200776923, 403.1212022856583, 403.1666825635473, 403.21216284143634, 403.25764311932534, 403.3031233972144, 403.3486036751034, 403.39408395299245, 403.43956423088144, 403.4850445087705, 403.5305247866595, 403.57600506454855, 403.6214853424376, 403.6669656203266, 403.71244589821566, 403.75792617610466, 403.8034064539937, 403.8488867318827, 403.89436700977177, 403.93984728766077, 403.9853275655498, 404.0308078434388, 404.0762881213279, 404.1217683992169, 404.16724867710593, 404.21272895499493, 404.258209232884, 404.303689510773, 404.34916978866204, 404.39465006655104, 404.4401303444401, 404.48561062232915, 404.53109090021815, 404.5765711781072, 404.6220514559962, 404.66753173388526, 404.71301201177425, 404.7584922896633, 404.8039725675523, 404.84945284544136, 404.89493312333036, 404.9404134012194, 404.9858936791084, 405.03137395699747, 405.07685423488647, 405.1223345127755, 405.1678147906645, 405.2132950685536, 405.2587753464426, 405.30425562433163, 405.34973590222063, 405.3952161801097, 405.44069645799874, 405.48617673588774, 405.5316570137768, 405.5771372916658, 405.62261756955485, 405.66809784744385, 405.7135781253329, 405.7590584032219, 405.80453868111096, 405.85001895899995, 405.895499236889, 405.940979514778, 405.98645979266706, 406.03194007055606, 406.0774203484451, 406.1229006263341, 406.16838090422317, 406.21386118211217, 406.2593414600012, 406.3048217378903, 406.3503020157793, 406.39578229366833, 406.44126257155733, 406.4867428494464, 406.5322231273354, 406.57770340522444, 406.62318368311344, 406.6686639610025, 406.7141442388915, 406.75962451678055, 406.80510479466955, 406.8505850725586, 406.8960653504476, 406.94154562833666, 406.98702590622565, 407.0325061841147, 407.0779864620037, 407.12346673989276, 407.16894701778176, 407.2144272956708, 407.2599075735599, 407.30538785144887, 407.3508681293379, 407.3963484072269, 407.441828685116, 407.487308963005, 407.53278924089403, 407.57826951878303, 407.6237497966721, 407.6692300745611, 407.71471035245014, 407.76019063033914, 407.8056709082282, 407.8511511861172, 407.89663146400625, 407.94211174189525, 407.9875920197843, 408.0330722976733, 408.07855257556236, 408.1240328534514, 408.1695131313404, 408.21499340922946, 408.26047368711846, 408.3059539650075, 408.3514342428965, 408.3969145207856, 408.44239479867457, 408.4878750765636, 408.5333553544526, 408.5788356323417, 408.6243159102307, 408.66979618811973, 408.71527646600873, 408.7607567438978, 408.8062370217868, 408.85171729967584, 408.89719757756484, 408.9426778554539, 408.98815813334295, 409.03363841123195, 409.079118689121, 409.12459896701, 409.17007924489906, 409.21555952278806, 409.2610398006771, 409.3065200785661, 409.35200035645516, 409.39748063434416, 409.4429609122332, 409.4884411901222, 409.5339214680113, 409.57940174590027, 409.6248820237893, 409.6703623016783, 409.7158425795674, 409.7613228574564, 409.80680313534543, 409.85228341323443, 409.8977636911235, 409.94324396901254, 409.98872424690154, 410.0342045247906, 410.0796848026796, 410.12516508056865, 410.17064535845765, 410.2161256363467, 410.2616059142357, 410.30708619212476, 410.35256647001376, 410.3980467479028, 410.4435270257918, 410.48900730368086, 410.53448758156986, 410.5799678594589, 410.6254481373479, 410.670928415237, 410.71640869312597, 410.761888971015, 410.807369248904, 410.8528495267931, 410.89832980468213, 410.94381008257113, 410.9892903604602, 411.0347706383492, 411.08025091623824, 411.12573119412724, 411.1712114720163, 411.2166917499053, 411.26217202779435, 411.30765230568335, 411.3531325835724, 411.3986128614614, 411.44409313935046, 411.48957341723946, 411.5350536951285, 411.5805339730175, 411.62601425090656, 411.67149452879556, 411.7169748066846, 411.7624550845737, 411.8079353624627, 411.8534156403517, 411.8988959182407, 411.9443761961298, 411.9898564740188, 412.03533675190783, 412.08081702979683, 412.1262973076859, 412.1717775855749, 412.21725786346394, 412.26273814135294, 412.308218419242, 412.353698697131, 412.39917897502005, 412.44465925290905, 412.4901395307981, 412.5356198086871, 412.58110008657616, 412.6265803644652, 412.6720606423542, 412.71754092024327, 412.76302119813226, 412.8085014760213, 412.8539817539103, 412.8994620317994, 412.9449423096884, 412.9904225875774, 413.0359028654664, 413.0813831433555, 413.1268634212445, 413.17234369913353, 413.21782397702253, 413.2633042549116, 413.3087845328006, 413.35426481068964, 413.39974508857864, 413.4452253664677, 413.4907056443567, 413.53618592224575, 413.5816662001348, 413.6271464780238, 413.67262675591286, 413.71810703380186, 413.7635873116909, 413.8090675895799, 413.85454786746897, 413.90002814535796, 413.945508423247, 413.990988701136, 414.0364689790251, 414.0819492569141, 414.1274295348031, 414.1729098126921, 414.2183900905812, 414.2638703684702, 414.30935064635923, 414.35483092424823, 414.4003112021373, 414.4457914800263, 414.49127175791534, 414.5367520358044, 414.5822323136934, 414.62771259158245, 414.67319286947145, 414.7186731473605, 414.7641534252495, 414.80963370313856, 414.85511398102756, 414.9005942589166, 414.9460745368056, 414.99155481469467, 415.03703509258366, 415.0825153704727, 415.1279956483617, 415.1734759262508, 415.2189562041398, 415.2644364820288, 415.3099167599178, 415.3553970378069, 415.40087731569594, 415.44635759358493, 415.491837871474, 415.537318149363, 415.58279842725204, 415.62827870514104, 415.6737589830301, 415.7192392609191, 415.76471953880815, 415.81019981669715, 415.8556800945862, 415.9011603724752, 415.94664065036426, 415.99212092825326, 416.0376012061423, 416.0830814840313, 416.12856176192037, 416.17404203980936, 416.2195223176984, 416.2650025955875, 416.3104828734765, 416.35596315136553, 416.4014434292545, 416.4469237071436, 416.4924039850326, 416.53788426292164, 416.58336454081063, 416.6288448186997, 416.6743250965887, 416.71980537447774, 416.76528565236674, 416.8107659302558, 416.8562462081448, 416.90172648603385, 416.94720676392285, 416.9926870418119, 417.0381673197009, 417.08364759758996, 417.12912787547896, 417.174608153368, 417.22008843125707, 417.26556870914607, 417.3110489870351, 417.3565292649241, 417.4020095428132, 417.4474898207022, 417.49297009859123, 417.5384503764802, 417.5839306543693, 417.6294109322583, 417.67489121014734, 417.72037148803633, 417.7658517659254, 417.8113320438144, 417.85681232170344, 417.90229259959244, 417.9477728774815, 417.9932531553705, 418.03873343325955, 418.08421371114855, 418.1296939890376, 418.17517426692666, 418.22065454481566, 418.2661348227047, 418.3116151005937, 418.35709537848277, 418.40257565637177, 418.4480559342608, 418.4935362121498, 418.5390164900389, 418.5844967679279, 418.62997704581693, 418.6754573237059, 418.720937601595, 418.766417879484, 418.81189815737304, 418.85737843526204, 418.9028587131511, 418.94833899104015, 418.99381926892914, 419.03929954681814, 419.0847798247072, 419.13026010259625, 419.17574038048525, 419.2212206583743, 419.2667009362633, 419.31218121415236, 419.35766149204136, 419.4031417699304, 419.4486220478194, 419.49410232570847, 419.53958260359747, 419.5850628814865, 419.6305431593755, 419.6760234372646, 419.7215037151536, 419.76698399304263, 419.8124642709316, 419.8579445488207, 419.90342482670974, 419.94890510459874, 419.9943853824878, 420.0398656603768, 420.08534593826585, 420.13082621615484, 420.1763064940439, 420.2217867719329, 420.26726704982195, 420.31274732771095, 420.3582276056, 420.403707883489, 420.44918816137806, 420.49466843926706, 420.5401487171561, 420.5856289950451, 420.63110927293417, 420.67658955082317, 420.7220698287122, 420.7675501066012, 420.8130303844903, 420.85851066237933, 420.90399094026833, 420.9494712181574, 420.9949514960464, 421.04043177393544, 421.08591205182444, 421.1313923297135, 421.1768726076025, 421.22235288549155, 421.26783316338054, 421.3133134412696, 421.3587937191586, 421.40427399704765, 421.44975427493665, 421.4952345528257, 421.5407148307147, 421.58619510860376, 421.63167538649276, 421.6771556643818, 421.7226359422708, 421.76811622015987, 421.8135964980489, 421.8590767759379, 421.904557053827, 421.950037331716, 421.99551760960503, 422.04099788749403, 422.0864781653831, 422.1319584432721, 422.17743872116114, 422.22291899905014, 422.2683992769392, 422.3138795548282, 422.35935983271725, 422.40484011060624, 422.4503203884953, 422.4958006663843, 422.54128094427335, 422.58676122216235, 422.6322415000514])
+              .range(['#440154ff', '#440155ff', '#440256ff', '#440356ff', '#450457ff', '#450458ff', '#450559ff', '#450659ff', '#46075aff', '#46075bff', '#46085cff', '#46095cff', '#460a5dff', '#460a5eff', '#460b5eff', '#460c5fff', '#470d60ff', '#470d61ff', '#470e61ff', '#470f62ff', '#471063ff', '#471064ff', '#471164ff', '#471265ff', '#471365ff', '#481366ff', '#481467ff', '#481568ff', '#481668ff', '#481669ff', '#481769ff', '#48176aff', '#48186bff', '#48196cff', '#481a6cff', '#481a6dff', '#481b6dff', '#481c6eff', '#481c6eff', '#481d6fff', '#481d6fff', '#481f70ff', '#481f70ff', '#482071ff', '#482072ff', '#482173ff', '#482273ff', '#482374ff', '#482374ff', '#482475ff', '#482476ff', '#482576ff', '#482577ff', '#482677ff', '#482778ff', '#482878ff', '#482879ff', '#482979ff', '#47297aff', '#472a7aff', '#472b7aff', '#472c7aff', '#472c7bff', '#472d7bff', '#472d7cff', '#472e7cff', '#472e7dff', '#472f7dff', '#462f7eff', '#46307eff', '#46317eff', '#46327eff', '#46327fff', '#46337fff', '#463480ff', '#453480ff', '#453581ff', '#453581ff', '#453681ff', '#453781ff', '#453882ff', '#443882ff', '#443983ff', '#443983ff', '#443a83ff', '#443a83ff', '#443b84ff', '#433c84ff', '#433d84ff', '#433d85ff', '#433e85ff', '#423e85ff', '#423f85ff', '#423f86ff', '#424086ff', '#424086ff', '#424186ff', '#414187ff', '#414287ff', '#414387ff', '#414487ff', '#404488ff', '#404588ff', '#404588ff', '#404688ff', '#3f4688ff', '#3f4788ff', '#3f4789ff', '#3f4889ff', '#3e4889ff', '#3e4989ff', '#3e4a89ff', '#3e4a89ff', '#3e4b8aff', '#3d4c8aff', '#3d4d8aff', '#3d4d8aff', '#3d4e8aff', '#3c4e8aff', '#3c4f8aff', '#3c4f8aff', '#3c508bff', '#3b508bff', '#3b518bff', '#3b518bff', '#3b528bff', '#3a528bff', '#3a538bff', '#3a538bff', '#3a548cff', '#39548cff', '#39558cff', '#39558cff', '#39568cff', '#38578cff', '#38588cff', '#38588cff', '#38598cff', '#37598cff', '#375a8cff', '#375a8dff', '#375b8dff', '#365b8dff', '#365c8dff', '#365c8dff', '#365d8dff', '#355d8dff', '#355e8dff', '#355f8dff', '#355f8dff', '#34608dff', '#34608dff', '#34618dff', '#34618dff', '#33628dff', '#33628dff', '#33638dff', '#32638dff', '#32648eff', '#32648eff', '#32658eff', '#31658eff', '#31668eff', '#31668eff', '#31678eff', '#31678eff', '#31688eff', '#30688eff', '#30698eff', '#30698eff', '#306a8eff', '#2f6a8eff', '#2f6b8eff', '#2f6b8eff', '#2f6c8eff', '#2e6c8eff', '#2e6d8eff', '#2e6d8eff', '#2e6e8eff', '#2e6e8eff', '#2e6f8eff', '#2d6f8eff', '#2d708eff', '#2d708eff', '#2d718eff', '#2c718eff', '#2c718eff', '#2c728eff', '#2c728eff', '#2c738eff', '#2c738eff', '#2b748eff', '#2b748eff', '#2b758eff', '#2b758eff', '#2a768eff', '#2a768eff', '#2a778eff', '#2a778eff', '#2a788eff', '#29788eff', '#29798eff', '#29798eff', '#297a8eff', '#297a8eff', '#297b8eff', '#287b8eff', '#287c8eff', '#287c8eff', '#287d8eff', '#277d8eff', '#277e8eff', '#277e8eff', '#277f8eff', '#277f8eff', '#27808eff', '#26808eff', '#26818eff', '#26818eff', '#26828eff', '#26828eff', '#26828eff', '#25828eff', '#25838eff', '#25838eff', '#25848eff', '#25858eff', '#25858eff', '#24868eff', '#24868eff', '#24878eff', '#24878eff', '#23888eff', '#23888eff', '#23898eff', '#23898eff', '#238a8dff', '#238a8dff', '#228b8dff', '#228b8dff', '#228c8dff', '#228c8dff', '#228d8dff', '#218d8dff', '#218e8dff', '#218e8dff', '#218f8dff', '#218f8dff', '#21908dff', '#21908dff', '#21918cff', '#20918cff', '#20928cff', '#20928cff', '#20928cff', '#20928cff', '#20938cff', '#1f938cff', '#1f948cff', '#1f948cff', '#1f958bff', '#1f958bff', '#1f968bff', '#1f968bff', '#1f978bff', '#1f988bff', '#1f988bff', '#1f998bff', '#1f998aff', '#1f9a8aff', '#1f9a8aff', '#1e9b8aff', '#1e9b8aff', '#1e9c8aff', '#1e9c89ff', '#1e9d89ff', '#1e9d89ff', '#1e9e89ff', '#1f9e89ff', '#1f9f88ff', '#1f9f88ff', '#1fa088ff', '#1fa088ff', '#1fa188ff', '#1fa188ff', '#1fa187ff', '#1fa187ff', '#1fa287ff', '#1fa287ff', '#1fa386ff', '#20a386ff', '#20a486ff', '#20a486ff', '#20a585ff', '#21a585ff', '#21a685ff', '#21a685ff', '#21a785ff', '#22a785ff', '#22a884ff', '#22a884ff', '#22a983ff', '#23a983ff', '#23aa83ff', '#24ab83ff', '#25ab82ff', '#25ac82ff', '#25ac82ff', '#25ad82ff', '#26ad81ff', '#26ad81ff', '#27ad81ff', '#27ae81ff', '#28ae80ff', '#28af80ff', '#29af7fff', '#29b07fff', '#2ab07fff', '#2bb17eff', '#2cb17eff', '#2cb27dff', '#2db27dff', '#2db37cff', '#2eb37cff', '#2eb47cff', '#2fb47cff', '#30b57bff', '#31b57bff', '#31b67aff', '#32b67aff', '#33b679ff', '#34b679ff', '#34b779ff', '#35b779ff', '#36b878ff', '#37b878ff', '#37b977ff', '#38b977ff', '#39ba76ff', '#3aba76ff', '#3abb75ff', '#3bbb75ff', '#3cbc74ff', '#3dbc74ff', '#3ebc73ff', '#3fbd73ff', '#40bd72ff', '#40be72ff', '#41be71ff', '#42bf71ff', '#43bf70ff', '#45c070ff', '#46c06fff', '#47c16fff', '#48c16eff', '#49c16eff', '#4ac16dff', '#4bc26cff', '#4cc26cff', '#4dc36bff', '#4ec36bff', '#4fc46aff', '#50c46aff', '#51c569ff', '#52c569ff', '#53c568ff', '#54c568ff', '#55c667ff', '#56c667ff', '#57c766ff', '#58c765ff', '#59c864ff', '#5ac864ff', '#5bc863ff', '#5cc863ff', '#5dc962ff', '#5ec962ff', '#5fca61ff', '#60ca60ff', '#62cb5fff', '#63cb5fff', '#64cb5eff', '#65cc5dff', '#66cc5cff', '#67cd5cff', '#68cd5bff', '#6acd5bff', '#6bcd5aff', '#6cce59ff', '#6ece58ff', '#6fcf58ff', '#70cf57ff', '#71d057ff', '#72d056ff', '#74d055ff', '#75d054ff', '#76d153ff', '#77d153ff', '#78d152ff', '#7ad151ff', '#7bd250ff', '#7cd250ff', '#7dd34fff', '#7fd34eff', '#80d34dff', '#81d34dff', '#82d44cff', '#84d44bff', '#85d54aff', '#86d549ff', '#88d548ff', '#89d548ff', '#8ad647ff', '#8bd646ff', '#8dd645ff', '#8ed645ff', '#8fd744ff', '#90d743ff', '#92d742ff', '#93d741ff', '#94d840ff', '#96d83fff', '#97d83eff', '#99d93dff', '#9ad93cff', '#9bd93cff', '#9dd93bff', '#9eda3aff', '#9fda39ff', '#a1da38ff', '#a2da37ff', '#a3db36ff', '#a4db36ff', '#a6db35ff', '#a8db34ff', '#a9dc33ff', '#aadc32ff', '#abdc31ff', '#addc30ff', '#aedd2fff', '#b0dd2fff', '#b1dd2eff', '#b2dd2dff', '#b3de2cff', '#b5de2bff', '#b6de2aff', '#b8de29ff', '#b9de28ff', '#bade28ff', '#bcdf27ff', '#bddf26ff', '#bfdf25ff', '#c0df25ff', '#c1df24ff', '#c2df23ff', '#c4e022ff', '#c5e021ff', '#c7e020ff', '#c8e020ff', '#c9e11fff', '#cbe11eff', '#cce11dff', '#cee11dff', '#cfe11cff', '#d1e11bff', '#d2e21bff', '#d3e21aff', '#d4e21aff', '#d6e219ff', '#d7e219ff', '#d9e319ff', '#dae319ff', '#dbe318ff', '#dde318ff', '#dee318ff', '#dfe318ff', '#e0e418ff', '#e2e418ff', '#e3e418ff', '#e5e418ff', '#e6e419ff', '#e7e419ff', '#e8e519ff', '#eae519ff', '#ebe51aff', '#ece51aff', '#ede51bff', '#efe51bff', '#f0e51cff', '#f1e51dff', '#f3e61dff', '#f4e61eff', '#f5e61eff', '#f6e61fff', '#f7e620ff', '#f8e621ff', '#fae722ff', '#fbe723ff', '#fce724ff', '#fde725ff']);
+    
+
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.x = d3.scale.linear()
+              .domain([399.9375828334263, 422.6322415000514])
+              .range([0, 450 - 50]);
+
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.legend = L.control({position: 'topright'});
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.legend.addTo(map_89683355096c0171c42f2c92c52d10c8);
+
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.xAxis = d3.svg.axis()
+        .scale(color_map_ea9bf99324fcc60061ae9342f7044ffc.x)
+        .orient("top")
+        .tickSize(1)
+        .tickValues([399.9375828334263, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 402.25154803080767, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 404.56551322818905, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 406.8794784255704, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 409.1934436229518, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 411.50740882033324, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 413.8213740177146, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 416.135339215096, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 418.4493044124774, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 420.76326960985875, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.svg = d3.select(".legend.leaflet-control").append("svg")
+        .attr("id", 'legend')
+        .attr("width", 450)
+        .attr("height", 40);
+
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.g = color_map_ea9bf99324fcc60061ae9342f7044ffc.svg.append("g")
+        .attr("class", "key")
+        .attr("fill", "black")
+        .attr("transform", "translate(25,16)");
+
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.g.selectAll("rect")
+        .data(color_map_ea9bf99324fcc60061ae9342f7044ffc.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_ea9bf99324fcc60061ae9342f7044ffc.x(color_map_ea9bf99324fcc60061ae9342f7044ffc.color.domain()[i - 1]) : color_map_ea9bf99324fcc60061ae9342f7044ffc.x.range()[0],
+            x1: i < color_map_ea9bf99324fcc60061ae9342f7044ffc.color.domain().length ? color_map_ea9bf99324fcc60061ae9342f7044ffc.x(color_map_ea9bf99324fcc60061ae9342f7044ffc.color.domain()[i]) : color_map_ea9bf99324fcc60061ae9342f7044ffc.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 40 - 30)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+
+    color_map_ea9bf99324fcc60061ae9342f7044ffc.g.call(color_map_ea9bf99324fcc60061ae9342f7044ffc.xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", 21)
+        .attr("fill", "black")
+        .text("most_recent_xco2");
+</script>
+</html>
