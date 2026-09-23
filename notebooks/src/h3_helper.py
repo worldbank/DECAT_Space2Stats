@@ -18,6 +18,29 @@ from shapely.ops import unary_union
 from tqdm import tqdm
 
 
+def get_intersecting_h3_from_list(in_gdf, h3_list):
+    """Get list of h3 cells from h3_list that intersect with in_gdf
+
+    :param in_gdf: geodataframe to check for intersection with h3 cells
+    :type in_gdf: geopandas.GeoDataFrame
+    :param h3_list: list of h3 cells to check for intersection with in_gdf
+    :type h3_list: list of strings
+    """
+    hex_poly = lambda hex_id: Polygon(h3.cell_to_boundary(hex_id))
+    all_polys = gpd.GeoSeries(
+        list(map(hex_poly, h3_list)), index=h3_list, crs="EPSG:4326"
+    )
+    all_polys = gpd.GeoDataFrame(all_polys, crs=4326, columns=["geometry"])
+    all_polys["shape_id"] = list(all_polys.index)
+    all_polys = all_polys.set_geometry("geometry")
+    all_polys.crs = 4326
+
+    intersecting_hexs = gpd.sjoin(
+        all_polys, in_gdf.to_crs(4326), predicate="intersects", how="inner"
+    ).index.unique().tolist()
+
+    return intersecting_hexs
+
 def generate_h3_gdf(in_gdf, h3_level=7):
     """Generate a GeoDataFrame of h3 grid cells from an input geodataframe
 
@@ -57,6 +80,10 @@ def generate_h3_gdf(in_gdf, h3_level=7):
     all_polys["shape_id"] = list(all_polys.index)
     return all_polys
 
+def h3_cell_to_polygon(h3_id):
+    h3_coords = h3.cell_to_boundary(h3_id)
+    h3_coords = [(lon, lat) for lat, lon in h3_coords]
+    return Polygon(h3_coords)
 
 def generate_lvl0_lists(
     h3_lvl,
@@ -135,8 +162,9 @@ def generate_lvl1_lists(
     return_gdf=False,
     buffer0=False,
     read_pickle=True,
-    pickle_file="h1_dictionary_of_h{lvl}_geodata_frames.pickle",
+    pickle_file="h{children_level}_dictionary_of_h{lvl}_geodata_frames.pickle",
     write_pickle=False,
+    children_level=1,
 ):
     """generate a dictionary with keys as lvl1 codes with all children at h3_lvl level as values
 
@@ -186,13 +214,11 @@ def generate_lvl1_lists(
     # Generate list of all children of h3 lvl 1 cells
     h3_lvl1_children = {}
     for h3_0 in h3_lvl0:  # Identify all lvl 0 cells
-        h3_children = list(h3.cell_to_children(h3_0, 1))
-        for (
-            h3_1
-        ) in h3_children:  # For current lvl 0 cell, loop through all level 1 children
+        h3_children = list(h3.cell_to_children(h3_0, children_level))
+        for (h3_1) in h3_children:  # For current lvl 0 cell, loop through all level 1 children
             h3_children_1 = list(h3.cell_to_children(h3_1, h3_lvl))
             if return_gdf:
-                hex_poly = lambda hex_id: Polygon(h3.cell_to_boundary(hex_id))
+                hex_poly = lambda hex_id: h3_cell_to_polygon(hex_id)
                 all_polys = gpd.GeoSeries(
                     list(map(hex_poly, h3_children_1)), index=h3_children_1, crs=4326
                 )
