@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_252fa3c54517c86bd988aea55317b333 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_252fa3c54517c86bd988aea55317b333" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_252fa3c54517c86bd988aea55317b333 = L.map(
+                "map_252fa3c54517c86bd988aea55317b333",
+                {
+                    center: [8.262020804601319, -1.1167894778161385],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_252fa3c54517c86bd988aea55317b333);
+
+            
+
+        
+    
+            var tile_layer_c098b6fe6a18b450d6f8897a081823ff = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 16,
+  "maxNativeZoom": 16,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Esri, DeLorme, NAVTEQ",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_c098b6fe6a18b450d6f8897a081823ff.addTo(map_252fa3c54517c86bd988aea55317b333);
+        
+    
+            map_252fa3c54517c86bd988aea55317b333.fitBounds(
+                [[5.622930402717959, -2.616516686195191], [10.901111206484678, 0.38293773056291425]],
+                {}
+            );
+        
+    
+        function geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_styler(feature) {
+            switch(feature.id) {
+                case "194430": 
+                    return {"color": "#27808e", "fillColor": "#27808e", "fillOpacity": 0.5, "weight": 2};
+                case "194431": 
+                    return {"color": "#33628d", "fillColor": "#33628d", "fillOpacity": 0.5, "weight": 2};
+                case "194432": case "194826": 
+                    return {"color": "#3d4d8a", "fillColor": "#3d4d8a", "fillOpacity": 0.5, "weight": 2};
+                case "194433": 
+                    return {"color": "#26818e", "fillColor": "#26818e", "fillOpacity": 0.5, "weight": 2};
+                case "194434": 
+                    return {"color": "#2e6e8e", "fillColor": "#2e6e8e", "fillOpacity": 0.5, "weight": 2};
+                case "194435": 
+                    return {"color": "#32658e", "fillColor": "#32658e", "fillOpacity": 0.5, "weight": 2};
+                case "194436": 
+                    return {"color": "#1fa188", "fillColor": "#1fa188", "fillOpacity": 0.5, "weight": 2};
+                case "194437": 
+                    return {"color": "#423f85", "fillColor": "#423f85", "fillOpacity": 0.5, "weight": 2};
+                case "194438": 
+                    return {"color": "#8bd646", "fillColor": "#8bd646", "fillOpacity": 0.5, "weight": 2};
+                case "194439": 
+                    return {"color": "#3e4a89", "fillColor": "#3e4a89", "fillOpacity": 0.5, "weight": 2};
+                case "194440": 
+                    return {"color": "#e2e418", "fillColor": "#e2e418", "fillOpacity": 0.5, "weight": 2};
+                case "194441": 
+                    return {"color": "#81d34d", "fillColor": "#81d34d", "fillOpacity": 0.5, "weight": 2};
+                case "194442": case "194825": 
+                    return {"color": "#28ae80", "fillColor": "#28ae80", "fillOpacity": 0.5, "weight": 2};
+                case "194443": 
+                    return {"color": "#24868e", "fillColor": "#24868e", "fillOpacity": 0.5, "weight": 2};
+                case "194444": 
+                    return {"color": "#20a486", "fillColor": "#20a486", "fillOpacity": 0.5, "weight": 2};
+                case "194445": 
+                    return {"color": "#fde725", "fillColor": "#fde725", "fillOpacity": 0.5, "weight": 2};
+                case "194446": 
+                    return {"color": "#39558c", "fillColor": "#39558c", "fillOpacity": 0.5, "weight": 2};
+                case "194448": 
+                    return {"color": "#2b758e", "fillColor": "#2b758e", "fillOpacity": 0.5, "weight": 2};
+                case "194449": 
+                    return {"color": "#46c06f", "fillColor": "#46c06f", "fillOpacity": 0.5, "weight": 2};
+                case "194450": 
+                    return {"color": "#482878", "fillColor": "#482878", "fillOpacity": 0.5, "weight": 2};
+                case "194451": case "194842": 
+                    return {"color": "#2c718e", "fillColor": "#2c718e", "fillOpacity": 0.5, "weight": 2};
+                case "194453": 
+                    return {"color": "#54c568", "fillColor": "#54c568", "fillOpacity": 0.5, "weight": 2};
+                case "194454": 
+                    return {"color": "#5cc863", "fillColor": "#5cc863", "fillOpacity": 0.5, "weight": 2};
+                case "194489": 
+                    return {"color": "#218f8d", "fillColor": "#218f8d", "fillOpacity": 0.5, "weight": 2};
+                case "194709": 
+                    return {"color": "#42be71", "fillColor": "#42be71", "fillOpacity": 0.5, "weight": 2};
+                case "194710": 
+                    return {"color": "#2a778e", "fillColor": "#2a778e", "fillOpacity": 0.5, "weight": 2};
+                case "194713": 
+                    return {"color": "#5ac864", "fillColor": "#5ac864", "fillOpacity": 0.5, "weight": 2};
+                case "194723": 
+                    return {"color": "#4ac16d", "fillColor": "#4ac16d", "fillOpacity": 0.5, "weight": 2};
+                case "194724": 
+                    return {"color": "#58c765", "fillColor": "#58c765", "fillOpacity": 0.5, "weight": 2};
+                case "194821": 
+                    return {"color": "#482071", "fillColor": "#482071", "fillOpacity": 0.5, "weight": 2};
+                case "194822": 
+                    return {"color": "#2a788e", "fillColor": "#2a788e", "fillOpacity": 0.5, "weight": 2};
+                case "194823": 
+                    return {"color": "#86d549", "fillColor": "#86d549", "fillOpacity": 0.5, "weight": 2};
+                case "194824": 
+                    return {"color": "#1fa088", "fillColor": "#1fa088", "fillOpacity": 0.5, "weight": 2};
+                case "194831": 
+                    return {"color": "#27ad81", "fillColor": "#27ad81", "fillOpacity": 0.5, "weight": 2};
+                case "194840": 
+                    return {"color": "#34b679", "fillColor": "#34b679", "fillOpacity": 0.5, "weight": 2};
+                case "194841": 
+                    return {"color": "#25858e", "fillColor": "#25858e", "fillOpacity": 0.5, "weight": 2};
+                case "194843": 
+                    return {"color": "#440154", "fillColor": "#440154", "fillOpacity": 0.5, "weight": 2};
+                default:
+                    return {"color": "#277e8e", "fillColor": "#277e8e", "fillOpacity": 0.5, "weight": 2};
+            }
+        }
+        function geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {"fillOpacity": 0.75};
+            }
+        }
+        function geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_pointToLayer(feature, latlng) {
+            var opts = {
+  "stroke": true,
+  "color": "#3388ff",
+  "weight": 3,
+  "opacity": 1.0,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "#3388ff",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "radius": 10,
+};
+            
+            let style = geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_styler(feature)
+            Object.assign(opts, style)
+            
+            return new L.CircleMarker(latlng, opts)
+        }
+
+        function geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                            geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4 = L.geoJson(null, {
+                onEachFeature: geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_onEachFeature,
+            
+                style: geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_styler,
+                pointToLayer: geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_pointToLayer,
+            ...{
+}
+        });
+
+        function geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_add (data) {
+            geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4
+                .addData(data);
+        }
+            geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4_add({"bbox": [-2.616516686195191, 5.622930402717959, 0.38293773056291425, 10.901111206484678], "features": [{"bbox": [-1.893910244870435, 9.381994153648831, -1.893910244870435, 9.381994153648831], "geometry": {"coordinates": [-1.893910244870435, 9.381994153648831], "type": "Point"}, "id": "194430", "properties": {"__folium_color": "#27808e", "date_most_recent_xco2": "2023", "h3_index": "868218057ffffff", "mean_xco2": 409.08876859574093, "most_recent_xco2": 417.1368255615234, "nobs_mean": 4, "xco22014": null, "xco22015": null, "xco22016": 401.8116226196289, "xco22017": null, "xco22018": 407.0579476129441, "xco22019": 410.3486785888672, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 417.1368255615234, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.123364473010147, 9.39468076335295, -2.123364473010147, 9.39468076335295], "geometry": {"coordinates": [-2.123364473010147, 9.39468076335295], "type": "Point"}, "id": "194431", "properties": {"__folium_color": "#33628d", "date_most_recent_xco2": "2023", "h3_index": "868218167ffffff", "mean_xco2": 406.483411185686, "most_recent_xco2": 418.51156717936203, "nobs_mean": 4, "xco22014": null, "xco22015": 398.1572774251302, "xco22016": 401.2741012573242, "xco22017": null, "xco22018": 407.9906988809275, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 418.51156717936203, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.6111410754100688, 9.124347528878031, -1.6111410754100688, 9.124347528878031], "geometry": {"coordinates": [-1.6111410754100688, 9.124347528878031], "type": "Point"}, "id": "194432", "properties": {"__folium_color": "#3d4d8a", "date_most_recent_xco2": "2018", "h3_index": "8682182d7ffffff", "mean_xco2": 404.869086710612, "most_recent_xco2": 406.9619995117188, "nobs_mean": 2, "xco22014": null, "xco22015": null, "xco22016": 402.7761739095052, "xco22017": null, "xco22018": 406.9619995117188, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.3792193360209022, 9.353548324453213, -1.3792193360209022, 9.353548324453213], "geometry": {"coordinates": [-1.3792193360209022, 9.353548324453213], "type": "Point"}, "id": "194433", "properties": {"__folium_color": "#26818e", "date_most_recent_xco2": "2019", "h3_index": "8682186cfffffff", "mean_xco2": 409.15730721609935, "most_recent_xco2": 410.4689331054688, "nobs_mean": 2, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 407.8456813267299, "xco22019": 410.4689331054688, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.607697710641318, 9.366174024975185, -1.607697710641318, 9.366174024975185], "geometry": {"coordinates": [-1.607697710641318, 9.366174024975185], "type": "Point"}, "id": "194434", "properties": {"__folium_color": "#2e6e8e", "date_most_recent_xco2": "2019", "h3_index": "86821875fffffff", "mean_xco2": 407.46518961588544, "most_recent_xco2": 407.7298583984375, "nobs_mean": 2, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 407.20052083333337, "xco22019": 407.7298583984375, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.3858894988286172, 9.604042201008333, -2.3858894988286172, 9.604042201008333], "geometry": {"coordinates": [-2.3858894988286172, 9.604042201008333], "type": "Point"}, "id": "194435", "properties": {"__folium_color": "#32658e", "date_most_recent_xco2": "2021", "h3_index": "8682189afffffff", "mean_xco2": 406.7143422554125, "most_recent_xco2": 413.255810546875, "nobs_mean": 5, "xco22014": null, "xco22015": 397.2231346908881, "xco22016": null, "xco22017": 406.6460876464844, "xco22018": 407.9573137687914, "xco22019": 408.4893646240234, "xco22020": null, "xco22021": 413.255810546875, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.126048141270833, 9.152229404704373, -2.126048141270833, 9.152229404704373], "geometry": {"coordinates": [-2.126048141270833, 9.152229404704373], "type": "Point"}, "id": "194436", "properties": {"__folium_color": "#1fa188", "date_most_recent_xco2": "2020", "h3_index": "868218a1fffffff", "mean_xco2": 411.9420554801209, "most_recent_xco2": 411.9420554801209, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 411.9420554801209, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.1206346535423277, 9.63785355508042, -2.1206346535423277, 9.63785355508042], "geometry": {"coordinates": [-2.1206346535423277, 9.63785355508042], "type": "Point"}, "id": "194437", "properties": {"__folium_color": "#423f85", "date_most_recent_xco2": "2018", "h3_index": "868218c6fffffff", "mean_xco2": 403.83861832391653, "most_recent_xco2": 409.5257975260417, "nobs_mean": 2, "xco22014": null, "xco22015": 398.1514391217913, "xco22016": null, "xco22017": null, "xco22018": 409.5257975260417, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.8840638354352971, 9.616586081941486, -0.8840638354352971, 9.616586081941486], "geometry": {"coordinates": [-0.8840638354352971, 9.616586081941486], "type": "Point"}, "id": "194438", "properties": {"__folium_color": "#8bd646", "date_most_recent_xco2": "2024", "h3_index": "86821a247ffffff", "mean_xco2": 417.4158020019531, "most_recent_xco2": 417.4158020019531, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 417.4158020019531}, "type": "Feature"}, {"bbox": [-0.8802825815213318, 8.60461739406428, -0.8802825815213318, 8.60461739406428], "geometry": {"coordinates": [-0.8802825815213318, 8.60461739406428], "type": "Point"}, "id": "194439", "properties": {"__folium_color": "#3e4a89", "date_most_recent_xco2": "2020", "h3_index": "86821b267ffffff", "mean_xco2": 404.7090474056419, "most_recent_xco2": 410.6792530732996, "nobs_mean": 3, "xco22014": null, "xco22015": 399.45494358698534, "xco22016": null, "xco22017": 403.9929455566406, "xco22018": null, "xco22019": null, "xco22020": 410.6792530732996, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.8975768363558106, 8.893290382393694, -0.8975768363558106, 8.893290382393694], "geometry": {"coordinates": [-0.8975768363558106, 8.893290382393694], "type": "Point"}, "id": "194440", "properties": {"__folium_color": "#e2e418", "date_most_recent_xco2": "2024", "h3_index": "86821b3a7ffffff", "mean_xco2": 420.065185546875, "most_recent_xco2": 420.065185546875, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 420.065185546875}, "type": "Feature"}, {"bbox": [-0.6047601777918286, 9.359030408141269, -0.6047601777918286, 9.359030408141269], "geometry": {"coordinates": [-0.6047601777918286, 9.359030408141269], "type": "Point"}, "id": "194441", "properties": {"__folium_color": "#81d34d", "date_most_recent_xco2": "2023", "h3_index": "86821b4c7ffffff", "mean_xco2": 417.0276402064732, "most_recent_xco2": 417.0276402064732, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 417.0276402064732, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.6096795648833956, 9.118273778714586, -0.6096795648833956, 9.118273778714586], "geometry": {"coordinates": [-0.6096795648833956, 9.118273778714586], "type": "Point"}, "id": "194442", "properties": {"__folium_color": "#28ae80", "date_most_recent_xco2": "2024", "h3_index": "86821b637ffffff", "mean_xco2": 413.13542197732363, "most_recent_xco2": 420.8288269042969, "nobs_mean": 4, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 408.5228433048024, "xco22019": 409.7345733642578, "xco22020": null, "xco22021": 413.4554443359375, "xco22022": null, "xco22023": null, "xco22024": 420.8288269042969}, "type": "Feature"}, {"bbox": [-0.6145735540803529, 8.878235252294584, -0.6145735540803529, 8.878235252294584], "geometry": {"coordinates": [-0.6145735540803529, 8.878235252294584], "type": "Point"}, "id": "194443", "properties": {"__folium_color": "#24868e", "date_most_recent_xco2": "2024", "h3_index": "86821b66fffffff", "mean_xco2": 409.6552590110085, "most_recent_xco2": 421.0005798339844, "nobs_mean": 2, "xco22014": null, "xco22015": 398.3099381880327, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 421.0005798339844}, "type": "Feature"}, {"bbox": [-1.3829987676326396, 9.11199855440962, -1.3829987676326396, 9.11199855440962], "geometry": {"coordinates": [-1.3829987676326396, 9.11199855440962], "type": "Point"}, "id": "194444", "properties": {"__folium_color": "#20a486", "date_most_recent_xco2": "2024", "h3_index": "86821b807ffffff", "mean_xco2": 412.28837229410806, "most_recent_xco2": 421.0180740356445, "nobs_mean": 3, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 406.2917327880859, "xco22019": 409.5553100585938, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 421.0180740356445}, "type": "Feature"}, {"bbox": [-1.1026100496075144, 8.856116265642909, -1.1026100496075144, 8.856116265642909], "geometry": {"coordinates": [-1.1026100496075144, 8.856116265642909], "type": "Point"}, "id": "194445", "properties": {"__folium_color": "#fde725", "date_most_recent_xco2": "2024", "h3_index": "86821ba87ffffff", "mean_xco2": 421.0538558959961, "most_recent_xco2": 421.0538558959961, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": 421.0538558959961}, "type": "Feature"}, {"bbox": [-1.1161811192466233, 9.38739465816879, -1.1161811192466233, 9.38739465816879], "geometry": {"coordinates": [-1.1161811192466233, 9.38739465816879], "type": "Point"}, "id": "194446", "properties": {"__folium_color": "#39558c", "date_most_recent_xco2": "2020", "h3_index": "86821bc0fffffff", "mean_xco2": 405.5014444986979, "most_recent_xco2": 411.9038391113281, "nobs_mean": 2, "xco22014": null, "xco22015": 399.0990498860677, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 411.9038391113281, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.616516686195191, 9.617011783632531, -2.616516686195191, 9.617011783632531], "geometry": {"coordinates": [-2.616516686195191, 9.617011783632531], "type": "Point"}, "id": "194448", "properties": {"__folium_color": "#2b758e", "date_most_recent_xco2": "2023", "h3_index": "86821c287ffffff", "mean_xco2": 408.14232581002375, "most_recent_xco2": 419.4235992431641, "nobs_mean": 4, "xco22014": null, "xco22015": 397.4568001883371, "xco22016": null, "xco22017": null, "xco22018": 407.0958251953125, "xco22019": 408.5930786132813, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 419.4235992431641, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.6123646035730443, 10.106426112723398, -2.6123646035730443, 10.106426112723398], "geometry": {"coordinates": [-2.6123646035730443, 10.106426112723398], "type": "Point"}, "id": "194449", "properties": {"__folium_color": "#46c06f", "date_most_recent_xco2": "2023", "h3_index": "86821c457ffffff", "mean_xco2": 414.8333129882813, "most_recent_xco2": 414.8333129882813, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 414.8333129882813, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.3835059989157794, 9.848111057672163, -2.3835059989157794, 9.848111057672163], "geometry": {"coordinates": [-2.3835059989157794, 9.848111057672163], "type": "Point"}, "id": "194450", "properties": {"__folium_color": "#482878", "date_most_recent_xco2": "2019", "h3_index": "86821c6f7ffffff", "mean_xco2": 402.30581855773926, "most_recent_xco2": 408.3287048339844, "nobs_mean": 2, "xco22014": null, "xco22015": 396.2829322814941, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": 408.3287048339844, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-2.6144674876780494, 9.861362110797733, -2.6144674876780494, 9.861362110797733], "geometry": {"coordinates": [-2.6144674876780494, 9.861362110797733], "type": "Point"}, "id": "194451", "properties": {"__folium_color": "#2c718e", "date_most_recent_xco2": "2023", "h3_index": "86821c70fffffff", "mean_xco2": 407.80207396450203, "most_recent_xco2": 416.52117919921875, "nobs_mean": 8, "xco22014": null, "xco22015": 397.7468492780413, "xco22016": 400.4469463641827, "xco22017": 404.329736328125, "xco22018": 406.6476821899414, "xco22019": 408.86326260036896, "xco22020": null, "xco22021": 412.0581708635603, "xco22022": 415.8027648925781, "xco22023": 416.52117919921875, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.6085476711534787, 10.882762452953806, -1.6085476711534787, 10.882762452953806], "geometry": {"coordinates": [-1.6085476711534787, 10.882762452953806], "type": "Point"}, "id": "194453", "properties": {"__folium_color": "#54c568", "date_most_recent_xco2": "2021", "h3_index": "86821e48fffffff", "mean_xco2": 415.425173441569, "most_recent_xco2": 415.425173441569, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.425173441569, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.8748706879847163, 10.849960728707332, -1.8748706879847163, 10.849960728707332], "geometry": {"coordinates": [-1.8748706879847163, 10.849960728707332], "type": "Point"}, "id": "194454", "properties": {"__folium_color": "#5cc863", "date_most_recent_xco2": "2021", "h3_index": "86821e50fffffff", "mean_xco2": 415.6942355248236, "most_recent_xco2": 415.6942355248236, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.6942355248236, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.4014099301698792, 5.622930402717959, -1.4014099301698792, 5.622930402717959], "geometry": {"coordinates": [-1.4014099301698792, 5.622930402717959], "type": "Point"}, "id": "194489", "properties": {"__folium_color": "#218f8d", "date_most_recent_xco2": "2024", "h3_index": "86825244fffffff", "mean_xco2": 410.3810855637585, "most_recent_xco2": 422.6322415000514, "nobs_mean": 6, "xco22014": null, "xco22015": 399.7632517496745, "xco22016": null, "xco22017": 403.4863484700521, "xco22018": null, "xco22019": 408.3918678433287, "xco22020": null, "xco22021": 412.3502163357205, "xco22022": 415.6625874837239, "xco22023": null, "xco22024": 422.6322415000514}, "type": "Feature"}, {"bbox": [-0.11029692983575895, 10.642495750593834, -0.11029692983575895, 10.642495750593834], "geometry": {"coordinates": [-0.11029692983575895, 10.642495750593834], "type": "Point"}, "id": "194709", "properties": {"__folium_color": "#42be71", "date_most_recent_xco2": "2021", "h3_index": "8682a9057ffffff", "mean_xco2": 414.6983032226563, "most_recent_xco2": 414.6983032226563, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 414.6983032226563, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.10458241535182695, 10.887141190111363, -0.10458241535182695, 10.887141190111363], "geometry": {"coordinates": [-0.10458241535182695, 10.887141190111363], "type": "Point"}, "id": "194710", "properties": {"__folium_color": "#2a778e", "date_most_recent_xco2": "2020", "h3_index": "8682a919fffffff", "mean_xco2": 408.34950256347656, "most_recent_xco2": 412.2604064941406, "nobs_mean": 2, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 404.4385986328125, "xco22019": null, "xco22020": 412.2604064941406, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.37335627401124527, 10.609722351515634, -0.37335627401124527, 10.609722351515634], "geometry": {"coordinates": [-0.37335627401124527, 10.609722351515634], "type": "Point"}, "id": "194713", "properties": {"__folium_color": "#5ac864", "date_most_recent_xco2": "2021", "h3_index": "8682a9b97ffffff", "mean_xco2": 415.6744079589844, "most_recent_xco2": 415.6744079589844, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.6744079589844, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.8829586772435073, 10.886751665033387, -0.8829586772435073, 10.886751665033387], "geometry": {"coordinates": [-0.8829586772435073, 10.886751665033387], "type": "Point"}, "id": "194723", "properties": {"__folium_color": "#4ac16d", "date_most_recent_xco2": "2021", "h3_index": "8682ad2a7ffffff", "mean_xco2": 415.0161590576172, "most_recent_xco2": 415.0161590576172, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.0161590576172, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-1.1125831556185226, 10.901111206484678, -1.1125831556185226, 10.901111206484678], "geometry": {"coordinates": [-1.1125831556185226, 10.901111206484678], "type": "Point"}, "id": "194724", "properties": {"__folium_color": "#58c765", "date_most_recent_xco2": "2021", "h3_index": "8682ad337ffffff", "mean_xco2": 415.5596069335937, "most_recent_xco2": 415.5596069335937, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.5596069335937, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.10674258757753348, 6.625167721124579, 0.10674258757753348, 6.625167721124579], "geometry": {"coordinates": [0.10674258757753348, 6.625167721124579], "type": "Point"}, "id": "194821", "properties": {"__folium_color": "#482071", "date_most_recent_xco2": "2017", "h3_index": "8682e3057ffffff", "mean_xco2": 401.7573501586914, "most_recent_xco2": 403.4827331542969, "nobs_mean": 2, "xco22014": null, "xco22015": 400.0319671630859, "xco22016": null, "xco22017": 403.4827331542969, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.11262942463720675, 6.857321555912023, 0.11262942463720675, 6.857321555912023], "geometry": {"coordinates": [0.11262942463720675, 6.857321555912023], "type": "Point"}, "id": "194822", "properties": {"__folium_color": "#2a788e", "date_most_recent_xco2": "2023", "h3_index": "8682e319fffffff", "mean_xco2": 408.4267642635488, "most_recent_xco2": 419.8056640625, "nobs_mean": 6, "xco22014": null, "xco22015": 399.2893350290698, "xco22016": 403.7851257324219, "xco22017": 403.6240958077567, "xco22018": null, "xco22019": null, "xco22020": 412.3336680094401, "xco22021": 411.7226969401042, "xco22022": null, "xco22023": 419.8056640625, "xco22024": null}, "type": "Feature"}, {"bbox": [0.3766217621477754, 6.382301718607175, 0.3766217621477754, 6.382301718607175], "geometry": {"coordinates": [0.3766217621477754, 6.382301718607175], "type": "Point"}, "id": "194823", "properties": {"__folium_color": "#86d549", "date_most_recent_xco2": "2022", "h3_index": "8682e32d7ffffff", "mean_xco2": 417.1853755070613, "most_recent_xco2": 417.1853755070613, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": 417.1853755070613, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.12178121602001743, 6.346674090207786, 0.12178121602001743, 6.346674090207786], "geometry": {"coordinates": [0.12178121602001743, 6.346674090207786], "type": "Point"}, "id": "194824", "properties": {"__folium_color": "#1fa088", "date_most_recent_xco2": "2022", "h3_index": "8682e3357ffffff", "mean_xco2": 411.8277120345678, "most_recent_xco2": 417.1048325758714, "nobs_mean": 3, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": 403.306282043457, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": 415.072021484375, "xco22022": 417.1048325758714, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.3684250669568164, 6.892632113755896, 0.3684250669568164, 6.892632113755896], "geometry": {"coordinates": [0.3684250669568164, 6.892632113755896], "type": "Point"}, "id": "194825", "properties": {"__folium_color": "#28ae80", "date_most_recent_xco2": "2020", "h3_index": "8682e345fffffff", "mean_xco2": 413.2105454154636, "most_recent_xco2": 413.2105454154636, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 413.2105454154636, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.38293773056291425, 6.613372125393016, 0.38293773056291425, 6.613372125393016], "geometry": {"coordinates": [0.38293773056291425, 6.613372125393016], "type": "Point"}, "id": "194826", "properties": {"__folium_color": "#3d4d8a", "date_most_recent_xco2": "2020", "h3_index": "8682e375fffffff", "mean_xco2": 404.8480120058413, "most_recent_xco2": 412.7266540527344, "nobs_mean": 3, "xco22014": null, "xco22015": 399.5233450995551, "xco22016": 402.2940368652344, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": 412.7266540527344, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [0.36857566604613873, 9.401230373463276, 0.36857566604613873, 9.401230373463276], "geometry": {"coordinates": [0.36857566604613873, 9.401230373463276], "type": "Point"}, "id": "194831", "properties": {"__folium_color": "#27ad81", "date_most_recent_xco2": "2023", "h3_index": "8682f091fffffff", "mean_xco2": 413.07749553393296, "most_recent_xco2": 419.29028566422, "nobs_mean": 2, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 406.86470540364587, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 419.29028566422, "xco22024": null}, "type": "Feature"}, {"bbox": [0.10846490146953994, 9.367612087135125, 0.10846490146953994, 9.367612087135125], "geometry": {"coordinates": [0.10846490146953994, 9.367612087135125], "type": "Point"}, "id": "194840", "properties": {"__folium_color": "#34b679", "date_most_recent_xco2": "2024", "h3_index": "8682f421fffffff", "mean_xco2": 413.904731241862, "most_recent_xco2": 421.6982828776042, "nobs_mean": 4, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": 407.7376098632813, "xco22019": 410.1236907958984, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": 416.0593414306641, "xco22024": 421.6982828776042}, "type": "Feature"}, {"bbox": [-0.11713306207540745, 9.380172346373833, -0.11713306207540745, 9.380172346373833], "geometry": {"coordinates": [-0.11713306207540745, 9.380172346373833], "type": "Point"}, "id": "194841", "properties": {"__folium_color": "#25858e", "date_most_recent_xco2": "2019", "h3_index": "8682f432fffffff", "mean_xco2": 409.5767550227618, "most_recent_xco2": 409.5767550227618, "nobs_mean": 1, "xco22014": null, "xco22015": null, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": 409.5767550227618, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.37821153174613636, 9.34646762549598, -0.37821153174613636, 9.34646762549598], "geometry": {"coordinates": [-0.37821153174613636, 9.34646762549598], "type": "Point"}, "id": "194842", "properties": {"__folium_color": "#2c718e", "date_most_recent_xco2": "2023", "h3_index": "8682f4a2fffffff", "mean_xco2": 407.7881333487374, "most_recent_xco2": 419.0582580566406, "nobs_mean": 6, "xco22014": null, "xco22015": 399.4037984212239, "xco22016": 401.8638916015625, "xco22017": 403.2243499755859, "xco22018": null, "xco22019": 409.0227860950289, "xco22020": null, "xco22021": 414.1557159423828, "xco22022": null, "xco22023": 419.0582580566406, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.6194420507013694, 8.638920009102248, -0.6194420507013694, 8.638920009102248], "geometry": {"coordinates": [-0.6194420507013694, 8.638920009102248], "type": "Point"}, "id": "194843", "properties": {"__folium_color": "#440154", "date_most_recent_xco2": "2015", "h3_index": "8682f5967ffffff", "mean_xco2": 399.9375828334263, "most_recent_xco2": 399.9375828334263, "nobs_mean": 1, "xco22014": null, "xco22015": 399.9375828334263, "xco22016": null, "xco22017": null, "xco22018": null, "xco22019": null, "xco22020": null, "xco22021": null, "xco22022": null, "xco22023": null, "xco22024": null}, "type": "Feature"}, {"bbox": [-0.3834617105255602, 9.105985293866262, -0.3834617105255602, 9.105985293866262], "geometry": {"coordinates": [-0.3834617105255602, 9.105985293866262], "type": "Point"}, "id": "194844", "properties": {"__folium_color": "#277e8e", "date_most_recent_xco2": "2023", "h3_index": "8682f5d27ffffff", "mean_xco2": 408.84853019865005, "most_recent_xco2": 418.4395751953125, "nobs_mean": 7, "xco22014": null, "xco22015": 398.6669616699219, "xco22016": null, "xco22017": 403.3987121582031, "xco22018": 408.4872286814564, "xco22019": 409.69344135040933, "xco22020": 410.3714218139648, "xco22021": 412.8823705212823, "xco22022": null, "xco22023": 418.4395751953125, "xco22024": null}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+    geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["h3_index", "xco22014", "xco22015", "xco22016", "xco22017", "xco22018", "xco22019", "xco22020", "xco22021", "xco22022", "xco22023", "xco22024", "most_recent_xco2", "date_most_recent_xco2", "mean_xco2", "nobs_mean"];
+    let aliases = ["h3_index", "xco22014", "xco22015", "xco22016", "xco22017", "xco22018", "xco22019", "xco22020", "xco22021", "xco22022", "xco22023", "xco22024", "most_recent_xco2", "date_most_recent_xco2", "mean_xco2", "nobs_mean"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+            geo_json_681b6b9fc1a48cfc1cd3b88b13ff37b4.addTo(map_252fa3c54517c86bd988aea55317b333);
+        
+    
+    var color_map_614652650b32a51fceb8b39e03308550 = {};
+
+    
+    color_map_614652650b32a51fceb8b39e03308550.color = d3.scale.threshold()
+              .domain([399.9375828334263, 399.9799000139124, 400.02221719439854, 400.0645343748846, 400.1068515553707, 400.14916873585685, 400.19148591634297, 400.2338030968291, 400.27612027731516, 400.3184374578013, 400.3607546382874, 400.4030718187735, 400.44538899925965, 400.48770617974577, 400.53002336023184, 400.57234054071796, 400.6146577212041, 400.6569749016902, 400.6992920821763, 400.7416092626624, 400.7839264431485, 400.82624362363464, 400.86856080412076, 400.9108779846069, 400.95319516509295, 400.9955123455791, 401.0378295260652, 401.0801467065513, 401.12246388703744, 401.1647810675235, 401.20709824800963, 401.24941542849575, 401.2917326089819, 401.334049789468, 401.3763669699541, 401.4186841504402, 401.4610013309263, 401.50331851141243, 401.54563569189855, 401.5879528723847, 401.63027005287074, 401.67258723335686, 401.714904413843, 401.7572215943291, 401.79953877481523, 401.8418559553013, 401.8841731357874, 401.92649031627354, 401.96880749675967, 402.0111246772458, 402.05344185773185, 402.095759038218, 402.1380762187041, 402.1803933991902, 402.22271057967635, 402.26502776016247, 402.30734494064853, 402.34966212113466, 402.3919793016208, 402.4342964821069, 402.476613662593, 402.5189308430791, 402.5612480235652, 402.60356520405134, 402.64588238453746, 402.6881995650236, 402.73051674550965, 402.77283392599577, 402.8151511064819, 402.857468286968, 402.89978546745414, 402.9421026479402, 402.9844198284263, 403.02673700891245, 403.06905418939857, 403.1113713698847, 403.1536885503708, 403.1960057308569, 403.238322911343, 403.2806400918291, 403.32295727231525, 403.3652744528014, 403.40759163328744, 403.44990881377356, 403.4922259942597, 403.5345431747458, 403.57686035523193, 403.619177535718, 403.6614947162041, 403.70381189669024, 403.74612907717636, 403.7884462576625, 403.83076343814855, 403.8730806186347, 403.9153977991208, 403.9577149796069, 404.00003216009304, 404.04234934057916, 404.08466652106523, 404.12698370155135, 404.1693008820375, 404.2116180625236, 404.2539352430097, 404.2962524234958, 404.3385696039819, 404.38088678446803, 404.42320396495415, 404.4655211454403, 404.50783832592634, 404.55015550641247, 404.5924726868986, 404.6347898673847, 404.67710704787083, 404.7194242283569, 404.761741408843, 404.80405858932914, 404.84637576981527, 404.8886929503014, 404.9310101307875, 404.9733273112736, 405.0156444917597, 405.0579616722458, 405.10027885273195, 405.14259603321807, 405.18491321370414, 405.22723039419026, 405.2695475746764, 405.3118647551625, 405.3541819356486, 405.3964991161347, 405.4388162966208, 405.48113347710694, 405.52345065759306, 405.5657678380792, 405.60808501856525, 405.65040219905137, 405.6927193795375, 405.7350365600236, 405.77735374050974, 405.81967092099586, 405.8619881014819, 405.90430528196805, 405.9466224624542, 405.9889396429403, 406.0312568234264, 406.0735740039125, 406.1158911843986, 406.15820836488473, 406.20052554537085, 406.242842725857, 406.28515990634304, 406.32747708682916, 406.3697942673153, 406.4121114478014, 406.45442862828753, 406.49674580877365, 406.5390629892597, 406.58138016974584, 406.62369735023196, 406.6660145307181, 406.7083317112042, 406.7506488916903, 406.7929660721764, 406.8352832526625, 406.87760043314864, 406.91991761363477, 406.96223479412083, 407.00455197460695, 407.0468691550931, 407.0891863355792, 407.1315035160653, 407.1738206965514, 407.2161378770375, 407.25845505752363, 407.30077223800976, 407.3430894184959, 407.38540659898194, 407.42772377946807, 407.4700409599542, 407.5123581404403, 407.55467532092644, 407.59699250141256, 407.6393096818986, 407.68162686238475, 407.72394404287087, 407.766261223357, 407.8085784038431, 407.8508955843292, 407.8932127648153, 407.9355299453014, 407.97784712578755, 408.02016430627367, 408.06248148675974, 408.10479866724586, 408.147115847732, 408.1894330282181, 408.2317502087042, 408.27406738919035, 408.3163845696764, 408.35870175016254, 408.40101893064866, 408.4433361111348, 408.4856532916209, 408.527970472107, 408.5702876525931, 408.6126048330792, 408.65492201356534, 408.69723919405146, 408.73955637453753, 408.78187355502365, 408.8241907355098, 408.8665079159959, 408.908825096482, 408.9511422769681, 408.9934594574542, 409.03577663794033, 409.07809381842645, 409.1204109989126, 409.16272817939864, 409.20504535988476, 409.2473625403709, 409.289679720857, 409.33199690134313, 409.37431408182925, 409.4166312623153, 409.45894844280144, 409.50126562328757, 409.5435828037737, 409.5858999842598, 409.6282171647459, 409.670534345232, 409.7128515257181, 409.75516870620424, 409.79748588669037, 409.83980306717643, 409.88212024766256, 409.9244374281487, 409.9667546086348, 410.0090717891209, 410.05138896960705, 410.0937061500931, 410.13602333057923, 410.17834051106536, 410.2206576915515, 410.2629748720376, 410.30529205252367, 410.3476092330098, 410.3899264134959, 410.43224359398204, 410.47456077446816, 410.5168779549542, 410.55919513544035, 410.60151231592647, 410.6438294964126, 410.6861466768987, 410.7284638573848, 410.7707810378709, 410.813098218357, 410.85541539884315, 410.8977325793293, 410.94004975981534, 410.98236694030146, 411.0246841207876, 411.0670013012737, 411.10931848175983, 411.15163566224595, 411.193952842732, 411.23627002321814, 411.27858720370426, 411.3209043841904, 411.3632215646765, 411.4055387451626, 411.4478559256487, 411.4901731061348, 411.53249028662094, 411.57480746710706, 411.61712464759313, 411.65944182807925, 411.7017590085654, 411.7440761890515, 411.7863933695376, 411.82871055002374, 411.8710277305098, 411.91334491099593, 411.95566209148205, 411.9979792719682, 412.0402964524543, 412.08261363294037, 412.1249308134265, 412.1672479939126, 412.20956517439873, 412.25188235488486, 412.2941995353709, 412.33651671585704, 412.37883389634317, 412.4211510768293, 412.4634682573154, 412.5057854378015, 412.5481026182876, 412.5904197987737, 412.63273697925985, 412.67505415974597, 412.71737134023203, 412.75968852071816, 412.8020057012043, 412.8443228816904, 412.8866400621765, 412.92895724266265, 412.9712744231487, 413.01359160363484, 413.05590878412096, 413.0982259646071, 413.1405431450932, 413.18286032557927, 413.2251775060654, 413.2674946865515, 413.30981186703764, 413.35212904752376, 413.3944462280098, 413.43676340849595, 413.4790805889821, 413.5213977694682, 413.5637149499543, 413.60603213044044, 413.6483493109265, 413.6906664914126, 413.73298367189875, 413.7753008523849, 413.817618032871, 413.85993521335706, 413.9022523938432, 413.9445695743293, 413.98688675481543, 414.02920393530155, 414.0715211157876, 414.11383829627374, 414.15615547675986, 414.198472657246, 414.2407898377321, 414.2831070182182, 414.3254241987043, 414.3677413791904, 414.41005855967654, 414.45237574016267, 414.49469292064873, 414.53701010113485, 414.579327281621, 414.6216444621071, 414.6639616425932, 414.70627882307934, 414.7485960035654, 414.79091318405153, 414.83323036453766, 414.8755475450238, 414.9178647255099, 414.96018190599597, 415.0024990864821, 415.0448162669682, 415.08713344745433, 415.12945062794046, 415.1717678084265, 415.21408498891265, 415.25640216939877, 415.2987193498849, 415.341036530371, 415.38335371085714, 415.4256708913432, 415.4679880718293, 415.51030525231545, 415.55262243280157, 415.5949396132877, 415.63725679377376, 415.6795739742599, 415.721891154746, 415.7642083352321, 415.80652551571825, 415.8488426962043, 415.89115987669044, 415.93347705717656, 415.9757942376627, 416.0181114181488, 416.06042859863487, 416.102745779121, 416.1450629596071, 416.18738014009324, 416.22969732057936, 416.2720145010654, 416.31433168155155, 416.3566488620377, 416.3989660425238, 416.4412832230099, 416.48360040349604, 416.5259175839821, 416.56823476446823, 416.61055194495435, 416.6528691254405, 416.6951863059266, 416.73750348641266, 416.7798206668988, 416.8221378473849, 416.86445502787103, 416.90677220835715, 416.9490893888433, 416.99140656932934, 417.03372374981546, 417.0760409303016, 417.1183581107877, 417.16067529127383, 417.2029924717599, 417.245309652246, 417.28762683273214, 417.32994401321827, 417.3722611937044, 417.41457837419046, 417.4568955546766, 417.4992127351627, 417.5415299156488, 417.58384709613495, 417.626164276621, 417.66848145710713, 417.71079863759326, 417.7531158180794, 417.7954329985655, 417.83775017905157, 417.8800673595377, 417.9223845400238, 417.96470172050994, 418.00701890099606, 418.0493360814822, 418.09165326196825, 418.13397044245437, 418.1762876229405, 418.2186048034266, 418.26092198391274, 418.3032391643988, 418.3455563448849, 418.38787352537105, 418.43019070585717, 418.4725078863433, 418.51482506682936, 418.5571422473155, 418.5994594278016, 418.6417766082877, 418.68409378877385, 418.72641096926, 418.76872814974604, 418.81104533023216, 418.8533625107183, 418.8956796912044, 418.93799687169053, 418.9803140521766, 419.0226312326627, 419.06494841314884, 419.10726559363496, 419.1495827741211, 419.19189995460715, 419.2342171350933, 419.2765343155794, 419.3188514960655, 419.36116867655164, 419.4034858570377, 419.44580303752383, 419.48812021800995, 419.5304373984961, 419.5727545789822, 419.61507175946826, 419.6573889399544, 419.6997061204405, 419.74202330092663, 419.78434048141276, 419.8266576618988, 419.86897484238494, 419.91129202287107, 419.9536092033572, 419.9959263838433, 420.03824356432943, 420.0805607448155, 420.1228779253016, 420.16519510578775, 420.20751228627387, 420.24982946676, 420.29214664724606, 420.3344638277322, 420.3767810082183, 420.4190981887044, 420.46141536919055, 420.50373254967667, 420.54604973016274, 420.58836691064886, 420.630684091135, 420.6730012716211, 420.7153184521072, 420.7576356325933, 420.7999528130794, 420.84226999356554, 420.88458717405166, 420.9269043545378, 420.96922153502385, 421.01153871550997, 421.0538558959961])
+              .range(['#440154ff', '#440155ff', '#440256ff', '#440356ff', '#450457ff', '#450458ff', '#450559ff', '#450659ff', '#46075aff', '#46075bff', '#46085cff', '#46095cff', '#460a5dff', '#460a5eff', '#460b5eff', '#460c5fff', '#470d60ff', '#470d61ff', '#470e61ff', '#470f62ff', '#471063ff', '#471064ff', '#471164ff', '#471265ff', '#471365ff', '#481366ff', '#481467ff', '#481568ff', '#481668ff', '#481669ff', '#481769ff', '#48176aff', '#48186bff', '#48196cff', '#481a6cff', '#481a6dff', '#481b6dff', '#481c6eff', '#481c6eff', '#481d6fff', '#481d6fff', '#481f70ff', '#481f70ff', '#482071ff', '#482072ff', '#482173ff', '#482273ff', '#482374ff', '#482374ff', '#482475ff', '#482476ff', '#482576ff', '#482577ff', '#482677ff', '#482778ff', '#482878ff', '#482879ff', '#482979ff', '#47297aff', '#472a7aff', '#472b7aff', '#472c7aff', '#472c7bff', '#472d7bff', '#472d7cff', '#472e7cff', '#472e7dff', '#472f7dff', '#462f7eff', '#46307eff', '#46317eff', '#46327eff', '#46327fff', '#46337fff', '#463480ff', '#453480ff', '#453581ff', '#453581ff', '#453681ff', '#453781ff', '#453882ff', '#443882ff', '#443983ff', '#443983ff', '#443a83ff', '#443a83ff', '#443b84ff', '#433c84ff', '#433d84ff', '#433d85ff', '#433e85ff', '#423e85ff', '#423f85ff', '#423f86ff', '#424086ff', '#424086ff', '#424186ff', '#414187ff', '#414287ff', '#414387ff', '#414487ff', '#404488ff', '#404588ff', '#404588ff', '#404688ff', '#3f4688ff', '#3f4788ff', '#3f4789ff', '#3f4889ff', '#3e4889ff', '#3e4989ff', '#3e4a89ff', '#3e4a89ff', '#3e4b8aff', '#3d4c8aff', '#3d4d8aff', '#3d4d8aff', '#3d4e8aff', '#3c4e8aff', '#3c4f8aff', '#3c4f8aff', '#3c508bff', '#3b508bff', '#3b518bff', '#3b518bff', '#3b528bff', '#3a528bff', '#3a538bff', '#3a538bff', '#3a548cff', '#39548cff', '#39558cff', '#39558cff', '#39568cff', '#38578cff', '#38588cff', '#38588cff', '#38598cff', '#37598cff', '#375a8cff', '#375a8dff', '#375b8dff', '#365b8dff', '#365c8dff', '#365c8dff', '#365d8dff', '#355d8dff', '#355e8dff', '#355f8dff', '#355f8dff', '#34608dff', '#34608dff', '#34618dff', '#34618dff', '#33628dff', '#33628dff', '#33638dff', '#32638dff', '#32648eff', '#32648eff', '#32658eff', '#31658eff', '#31668eff', '#31668eff', '#31678eff', '#31678eff', '#31688eff', '#30688eff', '#30698eff', '#30698eff', '#306a8eff', '#2f6a8eff', '#2f6b8eff', '#2f6b8eff', '#2f6c8eff', '#2e6c8eff', '#2e6d8eff', '#2e6d8eff', '#2e6e8eff', '#2e6e8eff', '#2e6f8eff', '#2d6f8eff', '#2d708eff', '#2d708eff', '#2d718eff', '#2c718eff', '#2c718eff', '#2c728eff', '#2c728eff', '#2c738eff', '#2c738eff', '#2b748eff', '#2b748eff', '#2b758eff', '#2b758eff', '#2a768eff', '#2a768eff', '#2a778eff', '#2a778eff', '#2a788eff', '#29788eff', '#29798eff', '#29798eff', '#297a8eff', '#297a8eff', '#297b8eff', '#287b8eff', '#287c8eff', '#287c8eff', '#287d8eff', '#277d8eff', '#277e8eff', '#277e8eff', '#277f8eff', '#277f8eff', '#27808eff', '#26808eff', '#26818eff', '#26818eff', '#26828eff', '#26828eff', '#26828eff', '#25828eff', '#25838eff', '#25838eff', '#25848eff', '#25858eff', '#25858eff', '#24868eff', '#24868eff', '#24878eff', '#24878eff', '#23888eff', '#23888eff', '#23898eff', '#23898eff', '#238a8dff', '#238a8dff', '#228b8dff', '#228b8dff', '#228c8dff', '#228c8dff', '#228d8dff', '#218d8dff', '#218e8dff', '#218e8dff', '#218f8dff', '#218f8dff', '#21908dff', '#21908dff', '#21918cff', '#20918cff', '#20928cff', '#20928cff', '#20928cff', '#20928cff', '#20938cff', '#1f938cff', '#1f948cff', '#1f948cff', '#1f958bff', '#1f958bff', '#1f968bff', '#1f968bff', '#1f978bff', '#1f988bff', '#1f988bff', '#1f998bff', '#1f998aff', '#1f9a8aff', '#1f9a8aff', '#1e9b8aff', '#1e9b8aff', '#1e9c8aff', '#1e9c89ff', '#1e9d89ff', '#1e9d89ff', '#1e9e89ff', '#1f9e89ff', '#1f9f88ff', '#1f9f88ff', '#1fa088ff', '#1fa088ff', '#1fa188ff', '#1fa188ff', '#1fa187ff', '#1fa187ff', '#1fa287ff', '#1fa287ff', '#1fa386ff', '#20a386ff', '#20a486ff', '#20a486ff', '#20a585ff', '#21a585ff', '#21a685ff', '#21a685ff', '#21a785ff', '#22a785ff', '#22a884ff', '#22a884ff', '#22a983ff', '#23a983ff', '#23aa83ff', '#24ab83ff', '#25ab82ff', '#25ac82ff', '#25ac82ff', '#25ad82ff', '#26ad81ff', '#26ad81ff', '#27ad81ff', '#27ae81ff', '#28ae80ff', '#28af80ff', '#29af7fff', '#29b07fff', '#2ab07fff', '#2bb17eff', '#2cb17eff', '#2cb27dff', '#2db27dff', '#2db37cff', '#2eb37cff', '#2eb47cff', '#2fb47cff', '#30b57bff', '#31b57bff', '#31b67aff', '#32b67aff', '#33b679ff', '#34b679ff', '#34b779ff', '#35b779ff', '#36b878ff', '#37b878ff', '#37b977ff', '#38b977ff', '#39ba76ff', '#3aba76ff', '#3abb75ff', '#3bbb75ff', '#3cbc74ff', '#3dbc74ff', '#3ebc73ff', '#3fbd73ff', '#40bd72ff', '#40be72ff', '#41be71ff', '#42bf71ff', '#43bf70ff', '#45c070ff', '#46c06fff', '#47c16fff', '#48c16eff', '#49c16eff', '#4ac16dff', '#4bc26cff', '#4cc26cff', '#4dc36bff', '#4ec36bff', '#4fc46aff', '#50c46aff', '#51c569ff', '#52c569ff', '#53c568ff', '#54c568ff', '#55c667ff', '#56c667ff', '#57c766ff', '#58c765ff', '#59c864ff', '#5ac864ff', '#5bc863ff', '#5cc863ff', '#5dc962ff', '#5ec962ff', '#5fca61ff', '#60ca60ff', '#62cb5fff', '#63cb5fff', '#64cb5eff', '#65cc5dff', '#66cc5cff', '#67cd5cff', '#68cd5bff', '#6acd5bff', '#6bcd5aff', '#6cce59ff', '#6ece58ff', '#6fcf58ff', '#70cf57ff', '#71d057ff', '#72d056ff', '#74d055ff', '#75d054ff', '#76d153ff', '#77d153ff', '#78d152ff', '#7ad151ff', '#7bd250ff', '#7cd250ff', '#7dd34fff', '#7fd34eff', '#80d34dff', '#81d34dff', '#82d44cff', '#84d44bff', '#85d54aff', '#86d549ff', '#88d548ff', '#89d548ff', '#8ad647ff', '#8bd646ff', '#8dd645ff', '#8ed645ff', '#8fd744ff', '#90d743ff', '#92d742ff', '#93d741ff', '#94d840ff', '#96d83fff', '#97d83eff', '#99d93dff', '#9ad93cff', '#9bd93cff', '#9dd93bff', '#9eda3aff', '#9fda39ff', '#a1da38ff', '#a2da37ff', '#a3db36ff', '#a4db36ff', '#a6db35ff', '#a8db34ff', '#a9dc33ff', '#aadc32ff', '#abdc31ff', '#addc30ff', '#aedd2fff', '#b0dd2fff', '#b1dd2eff', '#b2dd2dff', '#b3de2cff', '#b5de2bff', '#b6de2aff', '#b8de29ff', '#b9de28ff', '#bade28ff', '#bcdf27ff', '#bddf26ff', '#bfdf25ff', '#c0df25ff', '#c1df24ff', '#c2df23ff', '#c4e022ff', '#c5e021ff', '#c7e020ff', '#c8e020ff', '#c9e11fff', '#cbe11eff', '#cce11dff', '#cee11dff', '#cfe11cff', '#d1e11bff', '#d2e21bff', '#d3e21aff', '#d4e21aff', '#d6e219ff', '#d7e219ff', '#d9e319ff', '#dae319ff', '#dbe318ff', '#dde318ff', '#dee318ff', '#dfe318ff', '#e0e418ff', '#e2e418ff', '#e3e418ff', '#e5e418ff', '#e6e419ff', '#e7e419ff', '#e8e519ff', '#eae519ff', '#ebe51aff', '#ece51aff', '#ede51bff', '#efe51bff', '#f0e51cff', '#f1e51dff', '#f3e61dff', '#f4e61eff', '#f5e61eff', '#f6e61fff', '#f7e620ff', '#f8e621ff', '#fae722ff', '#fbe723ff', '#fce724ff', '#fde725ff']);
+    
+
+    color_map_614652650b32a51fceb8b39e03308550.x = d3.scale.linear()
+              .domain([399.9375828334263, 421.0538558959961])
+              .range([0, 450 - 50]);
+
+    color_map_614652650b32a51fceb8b39e03308550.legend = L.control({position: 'topright'});
+    color_map_614652650b32a51fceb8b39e03308550.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_614652650b32a51fceb8b39e03308550.legend.addTo(map_252fa3c54517c86bd988aea55317b333);
+
+    color_map_614652650b32a51fceb8b39e03308550.xAxis = d3.svg.axis()
+        .scale(color_map_614652650b32a51fceb8b39e03308550.x)
+        .orient("top")
+        .tickSize(1)
+        .tickValues([399.9375828334263, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 402.09061459666873, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 404.2436463599111, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 406.39667812315355, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 408.54970988639593, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 410.70274164963837, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 412.85577341288075, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 415.0088051761232, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 417.16183693936557, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 419.314868702608, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+
+    color_map_614652650b32a51fceb8b39e03308550.svg = d3.select(".legend.leaflet-control").append("svg")
+        .attr("id", 'legend')
+        .attr("width", 450)
+        .attr("height", 40);
+
+    color_map_614652650b32a51fceb8b39e03308550.g = color_map_614652650b32a51fceb8b39e03308550.svg.append("g")
+        .attr("class", "key")
+        .attr("fill", "black")
+        .attr("transform", "translate(25,16)");
+
+    color_map_614652650b32a51fceb8b39e03308550.g.selectAll("rect")
+        .data(color_map_614652650b32a51fceb8b39e03308550.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_614652650b32a51fceb8b39e03308550.x(color_map_614652650b32a51fceb8b39e03308550.color.domain()[i - 1]) : color_map_614652650b32a51fceb8b39e03308550.x.range()[0],
+            x1: i < color_map_614652650b32a51fceb8b39e03308550.color.domain().length ? color_map_614652650b32a51fceb8b39e03308550.x(color_map_614652650b32a51fceb8b39e03308550.color.domain()[i]) : color_map_614652650b32a51fceb8b39e03308550.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 40 - 30)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+
+    color_map_614652650b32a51fceb8b39e03308550.g.call(color_map_614652650b32a51fceb8b39e03308550.xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", 21)
+        .attr("fill", "black")
+        .text("mean_xco2");
+</script>
+</html>
